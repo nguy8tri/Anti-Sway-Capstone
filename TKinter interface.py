@@ -52,11 +52,11 @@ class SimulationInterface:
 
 
         # Create GUI elements
-        self.create_controller_box()
-        self.create_antisway_box()
         self.create_simulation_parameters_box()
         self.create_velocity_settings_box()
         self.create_force_settings_box()
+        self.create_controller_box()
+        self.create_antisway_box()
 
 
         # Run button
@@ -68,6 +68,7 @@ class SimulationInterface:
     def create_controller_box(self):
         controller_frame = ttk.LabelFrame(self.root, text="Controller")
         controller_frame.pack(padx=10, pady=10, side=tk.LEFT)
+        self.controller_frame = controller_frame
 
         controller_enabled_check = ttk.Checkbutton(controller_frame, text="Enabled", variable=self.controller_enabled)
         controller_enabled_check.grid(row=0, column=0, columnspan=2, pady=5)
@@ -83,8 +84,8 @@ class SimulationInterface:
         ki_entry.grid(row=2, column=1, pady=5)
 
     def create_antisway_box(self):
-        antisway_frame = ttk.LabelFrame(self.root, text="Anti Sway")
-        antisway_frame.pack(padx=10, pady=10, side=tk.LEFT)
+        antisway_frame = ttk.LabelFrame(self.controller_frame, text="Anti Sway")
+        antisway_frame.grid(row=3, column=0, columnspan=2, pady=10)
 
         antisway_enabled_check = ttk.Checkbutton(antisway_frame, text="Enabled", variable=self.antisway_enabled)
         antisway_enabled_check.grid(row=0, column=0, columnspan=2, pady=5)
@@ -117,8 +118,12 @@ class SimulationInterface:
         run_pygame.grid(row=row+1, column=0, columnspan=2, pady=5)
 
     def create_velocity_settings_box(self):
-        vel_settings_frame = ttk.LabelFrame(self.root, text="Velocity Settings")
-        vel_settings_frame.pack(padx=10, pady=10, side=tk.LEFT)
+        inputs_frame = ttk.LabelFrame(self.root, text="Input Settings")
+        inputs_frame.pack(padx=10, pady=10, side=tk.LEFT)
+        self.inputs_frame = inputs_frame
+        
+        vel_settings_frame = ttk.LabelFrame(self.inputs_frame, text="Velocity")
+        vel_settings_frame.pack(padx=10, pady=10, side=tk.TOP)
 
         vel_types = ["Step", "Ramp", "Sine", "Cosine", "Piecewise", "Constant", "None"]
         vel_type_menu = ttk.Combobox(vel_settings_frame, values=vel_types, textvariable=self.vel_type)
@@ -131,8 +136,8 @@ class SimulationInterface:
         ramp_entry.grid(row=1, column=1, pady=5)
         
     def create_force_settings_box(self):
-        force_settings_frame = ttk.LabelFrame(self.root, text="Force Settings")
-        force_settings_frame.pack(padx=10, pady=10, side=tk.LEFT)
+        force_settings_frame = ttk.LabelFrame(self.inputs_frame, text="Force")
+        force_settings_frame.pack(padx=10, pady=10, side=tk.TOP)
 
         f_types = ["Step", "Ramp", "Sine", "Cosine", "Piecewise", "Constant", "None"]
         f_types_menu = ttk.Combobox(force_settings_frame, values=f_types, textvariable=self.force_type)
@@ -229,7 +234,7 @@ class SimulationInterface:
         elif v_type == 'Step':
             for i in range(len(Vset)):
                 length = len(Vset)
-                divide = int(length/2)
+                divide = int(length/4)
                 if i < divide:
                     Vset[i] = 0
                 else:
@@ -237,17 +242,21 @@ class SimulationInterface:
         elif v_type == 'Ramp':
             for i in range(len(Vset)):
                 length = len(Vset)
-                divide = int(length/3)
-                if i < divide:
+                divide = int(length/6)
+                if i < 2*divide:
                     Vset[i] = 0
+                elif i < divide*4:
+                    Vset[i] = ramp*dt*(i-2*divide)
                 else:
-                    Vset[i] = ramp*dt*(i-divide)
+                    Vset[i] = ramp*dt*(divide*2)
+
+                    
         elif v_type == 'Sine':
-            Vset = ramp*np.sin(time)
+            Vset = ramp*np.sin(time/3)
         elif v_type == 'Cosine':
             Vset = ramp*np.cos(time)
         elif v_type == 'Constant':
-            Vset = ramp*np.ones_like(time)
+            Vset = ramp*np.ones_like(time/3)
         else:
             Vset = np.zeros_like(time)
         return Vset
@@ -292,7 +301,7 @@ class SimulationInterface:
 
         ######
 
-        stored = [F, time, dt, M0, M1, B0, B1, g, l, Xi, Ti, F_app, percentage, controller, velocity_set, Kp, Ki, Vset, anti_sway]
+        stored = [F, time, dt, M0, M1, B0, B1, g, l, Xi, Ti, F_app, percentage, controller, velocity_set, Kp, Ki, Vset, anti_sway, as_gain]
         # Run simulation
         Theta, X, dX, F = FE.fetch_pendulum_mode(stored)
         

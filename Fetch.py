@@ -37,7 +37,7 @@ class PIController:
 
 #SIMULATE LOOP
 def fetch_pendulum_mode(stored):
-    F, time, dt, M0, M1, B0, B1, g, l, Xi, Ti, F_app, percentage, controller, velocity_set, Kp, Ki, Vset, anti_sway = stored
+    F, time, dt, M0, M1, B0, B1, g, l, Xi, Ti, F_app, percentage, controller, velocity_set, Kp, Ki, Vset, anti_sway, as_gain = stored
     if controller:
         PI_control = PIController(Kp,Ki, M1, dt)
         F = [0]
@@ -62,7 +62,7 @@ def fetch_pendulum_mode(stored):
         if not i == len(time) - 1:
             if controller:
                 if anti_sway:
-                    K = 2*np.sqrt(l/g)
+                    K = 2*np.sqrt(l/g)*as_gain
                     F.append(PI_control.compute((Vset[i]+(K*g*Theta[i]))-dX[i]))
                 else:
                     F.append(PI_control.compute(Vset[i]-dX[i]))
