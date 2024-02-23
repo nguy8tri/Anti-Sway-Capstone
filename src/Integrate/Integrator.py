@@ -103,9 +103,13 @@ class Euler(DI):
                 forcing[j] = self.differentiate(g_fun, t)
 
         res = i_v
-        for row in range(len(res)):
-
-
+        for j in range(1, len(t)):
+            for i in range(len(res) - 1):
+                # If eq is like a0s^2x + a1sx + a2x = forcing
+                # Then the first eq becomes sx = v -> x_n+1 = v_n*dt + x_n
+                # Second eq becomes a0sv+a1v+a2x = forcing
+                res[i].append(res[i + 1][-1] * self.dt + res[i][-1])
+            # Last equation is (forcing - aNx-aN-1sx - ...) * dt / a0 + (s^Nx)_n
 class Tustin(Euler):
     pass
 class RK4(Tustin):
