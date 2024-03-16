@@ -37,22 +37,22 @@ class PIController:
 
 #SIMULATE LOOP
 def fetch_pendulum_mode(stored):
-    F, time, dt, M0, M1, B0, B1, g, l, Xi, Ti, F_app, percentage, controller, velocity_set, Kp, Ki, Vset, anti_sway, as_gain = stored
+    F, time, dt, M0, M1, B0, B1, g, l, Xi, Ti, F_app, percentage, controller, velocity_set, Kp, Ki, Vset, anti_sway, as_gain, u, dThi = stored
     if controller:
         PI_control = PIController(Kp,Ki, M1, dt)
         F = [0]
     
     ddX = [0]; dX = [0]; X = [Xi]
-    ddTheta = [0]; dTheta = [0]; Theta = [Ti]
+    ddTheta = [0]; dTheta = [dThi]; Theta = [Ti]
     
     def step_X(i, F, dt):
-        ddX_n = (F-(M0*l*ddTheta[i])-(B0*dX[i]))/(M0+M1)
+        ddX_n = (F-(M0*l*ddTheta[i])-(B1*dX[i]))/(M0+M1)
         dX_n = ddX_n*dt + dX[i]
         X_n = dX_n*dt + X[i]
         ddX.append(ddX_n); dX.append(dX_n); X.append(X_n)
 
     def step_Theta(i, dt):
-        ddTheta_n = (-ddX[i]-g*Theta[i]-B1*dTheta[i])/l
+        ddTheta_n = (-ddX[i]-g*Theta[i]-B0*dTheta[i])/l
         dTheta_n = ddTheta_n*dt + dTheta[i]
         Theta_n = dTheta_n*dt + Theta[i]
         ddTheta.append(ddTheta_n); dTheta.append(dTheta_n); Theta.append(Theta_n)
@@ -70,48 +70,55 @@ def fetch_pendulum_mode(stored):
             step_Theta(i, dt)
             
             
-    return Theta, X, dX, F
+    return Theta, X, dX, F, dTheta
 
 
 #SIMULATE LOOP
 def fetch_tracking_mode(stored):
-    F, time, dt, M0, M1, B0, B1, g, l, Xi, Ti, F_app, percentage = stored
+    F, time, dt, M0, M1, B0, B1, g, l, Xi, Ti, F_app, percentage, controller, velocity_set, Kp, Ki, Vset, anti_sway, as_gain, u, dThi = stored
     
-    Xmi = Xi
-    Xpi = (l*np.cos(Ti)*Ti)+Xmi
-    F_supp =  g*M1*percentage
-    
-    ddXp = [0]; dXp = [0]; Xp = [Xpi] #FILL LATER
-    ddXm = [0]; dXm = [0]; Xm = [Xmi] #FILL LATER
-    dTheta = [0]; Theta = [Ti]
-    
-    F_supp = 0
-    
-    def step_Xp(i):
-        ddX_n = -Theta[i]*F_supp + F_app[i]
-        dX_n = ddX_n*dt + dXp[i]
-        X_n = dX_n*dt + Xp[i]
-        ddXp.append(ddX_n); dXp.append(dX_n); Xp.append(X_n)
+    if controller:
+        PI_control = PIController(Kp,Ki, M1, dt)
+        F = [0]
         
-    def step_Theta(i):
-        dTheta_n = (dXp[i]-dXm[i])/(l*np.cos(Theta[i]))
+    def saturate(Val):
+        if np.abs(Val) > 10:
+            return np.abs(Val)*10/Val
+        else:
+            return Val
+    
+    
+    ddX = [0]; dX = [0]; X = [Xi]
+    ddTheta = [0]; dTheta = [dThi]; Theta = [Ti]
+    
+    def step_X(i, F, u, dt):
+        #+(u*Theta[i])
+        ddX_n = (F+(u*np.abs(Theta[i]))-(M0*l*(ddTheta[i])+(B1*dX[i])))/(M0+M1)
+        dX_n = ddX_n*dt + dX[i]
+        X_n = dX_n*dt + X[i]
+        ddX.append(ddX_n); dX.append(dX_n); X.append(X_n)
+
+    def step_Theta(i, F, u, dt):
+        #ddTheta_n = (g*Theta[i] - (l/M0)*(u+F))/(l-((l**2)/(M0*(M1+M0))))
+        ddTheta_n = (-1*g*Theta[i]/l) + u/(l*(M0+M1)) - ddX[i]/l
+        dTheta_n = ddTheta_n*dt + dTheta[i]
         Theta_n = dTheta_n*dt + Theta[i]
-        dTheta.append(dTheta_n); Theta.append(Theta_n)
+        ddTheta.append(ddTheta_n); dTheta.append(dTheta_n); Theta.append(Theta_n)
         
-    def step_Xm(i):
-        ddX_n = (-B0*dXm[i] + Theta[i]*F_supp + F[i])/M0 #neglecting friction for now
-        dX_n = ddX_n*dt + dXm[i]
-        X_n = dX_n*dt + Xm[i]
-        ddXm.append(ddX_n); dXm.append(dX_n); Xm.append(X_n)
-        
-        
+    Vset = 0
     for i in range(len(time)):
         if not i == len(time) - 1:
-            step_Xp(i)
-            step_Xm(i)
-            step_Theta(i)
+            #if i > 0:
+               # f_pass += g*M0*Theta[i]
+            if controller:
+                K = 2*np.sqrt(l/g)*as_gain
+                F.append(saturate(PI_control.compute(((Vset + K*g*Theta[i]))-dX[i])))
+                
+            step_X(i, F[i], u[i], dt)
+            step_Theta(i, F[i], u[i], dt)
             
             
-    return Theta, Xp, Xm
+    return Theta, X, dX, F, dTheta
+    
     
 

@@ -38,9 +38,14 @@ class SimulationInterface:
         self.l = tk.DoubleVar()
         self.xi = tk.DoubleVar()
         self.ti = tk.DoubleVar()
+        self.dThi = tk.DoubleVar()
         self.dt = tk.DoubleVar()
         self.sim_speed = tk.DoubleVar()
-        self.sim_length = tk.DoubleVar()        
+        self.sim_length = tk.DoubleVar()  
+        self.motor_constant = tk.DoubleVar()        
+        self.amp_constant = tk.DoubleVar()   
+        self.gear_radius = tk.DoubleVar()        
+
 
         self.vel_type = tk.StringVar()
         self.vel_type.set("Step")
@@ -48,16 +53,41 @@ class SimulationInterface:
         self.force_type.set("Step")
         self.ramp = tk.DoubleVar()
         self.force_ramp = tk.DoubleVar()
+        
+        self.u_type = tk.StringVar()
+        self.u_type.set("Step")
+        self.u_ramp = tk.DoubleVar()
+        
+        self.model_type = tk.StringVar()
+        self.model_type.set("Anti-Sway")
+        
+        self.plot_F = tk.BooleanVar()
+        self.plot_u = tk.BooleanVar()
+        self.plot_u_Vel = tk.BooleanVar()
+        self.plot_X = tk.BooleanVar()
+        self.plot_Theta = tk.BooleanVar()
+        self.plot_Vset = tk.BooleanVar()
+        self.plot_Vact = tk.BooleanVar()
+        
+        self.plot_amps = tk.BooleanVar()
+        self.plot_volts = tk.BooleanVar()
+        self.plot_torque = tk.BooleanVar()
+        self.plot_rpm = tk.BooleanVar()
 
-
+        self.plot_separate = tk.BooleanVar()
+        self.grid_on = tk.BooleanVar()
+        self.zoom = tk.DoubleVar()
 
         # Create GUI elements
         self.create_simulation_parameters_box()
         self.create_velocity_settings_box()
         self.create_force_settings_box()
+        self.create_u_settings_box()
+        self.create_mode_box()
         self.create_controller_box()
         self.create_antisway_box()
-
+        self.create_motor_box()
+        self.create_plot_outputs_box()
 
         # Run button
         run_button = tk.Button(root, text="RUN", command=self.run_simulation)
@@ -82,6 +112,25 @@ class SimulationInterface:
         ki_label.grid(row=2, column=0, pady=5)
         ki_entry = ttk.Entry(controller_frame, textvariable=self.ki)
         ki_entry.grid(row=2, column=1, pady=5)
+    
+    def create_motor_box(self):
+        controller_frame = ttk.LabelFrame(self.root, text="Motor")
+        controller_frame.pack(padx=10, pady=10, side=tk.LEFT)
+
+        kp_label = ttk.Label(controller_frame, text="Motor Constant: (N-m/A)")
+        kp_label.grid(row=1, column=0, pady=5)
+        kp_entry = ttk.Entry(controller_frame, textvariable=self.motor_constant)
+        kp_entry.grid(row=1, column=1, pady=5)
+
+        asd = ttk.Label(controller_frame, text="Amp Constant: (A/V)")
+        asd.grid(row=2, column=0, pady=5)
+        asdd = ttk.Entry(controller_frame, textvariable=self.amp_constant)
+        asdd.grid(row=2, column=1, pady=5)
+        
+        ki_label = ttk.Label(controller_frame, text="Gear Radius: (m)")
+        ki_label.grid(row=3, column=0, pady=5)
+        ki_entry = ttk.Entry(controller_frame, textvariable=self.gear_radius)
+        ki_entry.grid(row=3, column=1, pady=5)
 
     def create_antisway_box(self):
         antisway_frame = ttk.LabelFrame(self.controller_frame, text="Anti Sway")
@@ -105,7 +154,8 @@ class SimulationInterface:
             ("g", self.g), ("l", self.l),
             ("Xi", self.xi), ("Ti", self.ti),
             ("dt", self.dt), ("sim_speed", self.sim_speed),
-            ("sim_length", self.sim_length)
+            ("sim_length", self.sim_length), ("dTheta_i", self.dThi),
+            ("Zoom", self.zoom)
         ]
 
         for row, (param_name, param_var) in enumerate(params):
@@ -116,16 +166,35 @@ class SimulationInterface:
             
         run_pygame = ttk.Checkbutton(sim_params_frame, text="Visual Simulation?", variable=self.run_sim)
         run_pygame.grid(row=row+1, column=0, columnspan=2, pady=5)
+        
+    def create_plot_outputs_box(self):
+        sim_params_frame = ttk.LabelFrame(self.root, text="Plot These Outputs")
+        sim_params_frame.pack(padx=10, pady=10, side=tk.LEFT)
+        params = [
+            ("Force on Trolley", self.plot_F), ("Force on Mass", self.plot_u),
+            ("Velocity of Mass", self.plot_u_Vel), ("Trolley Position", self.plot_X),
+            ("Theta", self.plot_Theta), ("Trolley V Set", self.plot_Vset),
+            ("Trolley Velocity", self.plot_Vact), ("Motor Amps", self.plot_amps),
+            ("Motor Volts", self.plot_volts), ("Motor Torque", self.plot_torque),
+            ("Motor RPM", self.plot_rpm),
+            ("PLOT SEPARATE?", self.plot_separate),
+            ("Grid On?", self.grid_on)
+        ]
+
+        for row, (param_name, param_var) in enumerate(params):
+            run_pygame = ttk.Checkbutton(sim_params_frame, text=param_name, variable=param_var)
+            run_pygame.pack(side="top", anchor="w", padx=5, pady=5)
+
 
     def create_velocity_settings_box(self):
         inputs_frame = ttk.LabelFrame(self.root, text="Input Settings")
         inputs_frame.pack(padx=10, pady=10, side=tk.LEFT)
         self.inputs_frame = inputs_frame
         
-        vel_settings_frame = ttk.LabelFrame(self.inputs_frame, text="Velocity")
+        vel_settings_frame = ttk.LabelFrame(self.inputs_frame, text="Velocity (Overrides Forces)")
         vel_settings_frame.pack(padx=10, pady=10, side=tk.TOP)
 
-        vel_types = ["Step", "Ramp", "Sine", "Cosine", "Piecewise", "Constant", "None"]
+        vel_types = ["Step", "Ramp", "Sine", "Cosine", "Piecewise", "Constant","Square", "Double Square", "None"]
         vel_type_menu = ttk.Combobox(vel_settings_frame, values=vel_types, textvariable=self.vel_type)
         vel_type_menu.grid(row=0, column=0, columnspan=2, pady=5)
         vel_type_menu.current(0)  # Set the default value
@@ -136,10 +205,10 @@ class SimulationInterface:
         ramp_entry.grid(row=1, column=1, pady=5)
         
     def create_force_settings_box(self):
-        force_settings_frame = ttk.LabelFrame(self.inputs_frame, text="Force")
+        force_settings_frame = ttk.LabelFrame(self.inputs_frame, text="Force on Trolley")
         force_settings_frame.pack(padx=10, pady=10, side=tk.TOP)
 
-        f_types = ["Step", "Ramp", "Sine", "Cosine", "Piecewise", "Constant", "None"]
+        f_types = ["Step", "Ramp", "Sine", "Cosine", "Piecewise", "Constant","Square", "Double Square", "None"]
         f_types_menu = ttk.Combobox(force_settings_frame, values=f_types, textvariable=self.force_type)
         f_types_menu.grid(row=0, column=0, columnspan=2, pady=5)
         f_types_menu.current(0)  # Set the default value
@@ -149,31 +218,151 @@ class SimulationInterface:
         ramp_entry = ttk.Entry(force_settings_frame, textvariable=self.force_ramp)
         ramp_entry.grid(row=1, column=1, pady=5)
         
-    def plot_matplotlib(self, time, X, dX, Vset, Theta, F, M1):
+    def create_u_settings_box(self):
+        u_settings_frame = ttk.LabelFrame(self.inputs_frame, text="Force on Mass")
+        u_settings_frame.pack(padx=10, pady=10, side=tk.TOP)
+
+        f_types = ["Step", "Ramp", "Sine", "Cosine", "Piecewise", "Constant","Square", "Double Square", "None"]
+        f_types_menu = ttk.Combobox(u_settings_frame, values=f_types, textvariable=self.u_type)
+        f_types_menu.grid(row=0, column=0, columnspan=2, pady=5)
+        f_types_menu.current(0)  # Set the default value
+        
+        u_ramp_label = ttk.Label(u_settings_frame, text="Scale")
+        u_ramp_label.grid(row=1, column=0, pady=5)
+        ramp_entry = ttk.Entry(u_settings_frame, textvariable=self.u_ramp)
+        ramp_entry.grid(row=1, column=1, pady=5)
+        
+    def create_mode_box(self):
+        u_settings_frame = ttk.LabelFrame(self.inputs_frame, text="Plant Model Type")
+        u_settings_frame.pack(padx=10, pady=10, side=tk.TOP)
+
+        f_types = ["Anti-Sway", "Tracking"]
+        f_types_menu = ttk.Combobox(u_settings_frame, values=f_types, textvariable=self.model_type)
+        f_types_menu.grid(row=0, column=0, columnspan=2, pady=5)
+        f_types_menu.current(0)  # Set the default value
+        
+    def plot_matplotlib(self, time, X, dX, Vset, Theta, F, M1, u=None, dTheta=None):
         # Create a new Tkinter window for the Matplotlib plot
         plot_window = tk.Toplevel(self.root)
         plot_window.title("Matplotlib Plot")
         
-        # Create Matplotlib Figure and Axes
-        figure, ax = Figure(figsize=(5, 4), dpi=100), None
-        canvas = FigureCanvasTkAgg(figure, master=plot_window)
-        canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)
+        u_Vel = []
+        l = self.l.get()
+        for v, d0 in zip(dX, dTheta):
+            u_Vel.append(v+d0*l)
+            
+        torque = []; amps = []; volts = []; rpm = []
+        for fnow, v in zip(F, dX):
+            torque.append(fnow*self.gear_radius.get())
+            amps.append(torque[-1]/self.motor_constant.get())
+            volts.append(amps[-1]/self.amp_constant.get())
+            rev_per_s = v/(2*np.pi*self.gear_radius.get())
+            curr_rpm = rev_per_s*60
+            rpm.append(curr_rpm)
+            
+        outputs = f'Outputs: ThetaMax={int(100*max(np.abs(Theta))*180/np.pi)/100}deg, Vp Max={int(max(u_Vel)*100)/100} m/s, Vt Max={int(max(dX)*100)/100} m/s'
+        inputs = f'Inputs: Ki={self.ki.get()} (Ns/m), Kp={self.kp.get()} (Ns/m), Gain={self.antisway_gain.get()}, Model={self.model_type.get()}'
+        if self.plot_separate.get():
+            tries = [self.plot_X, self.plot_Vset, self.plot_Vact, self.plot_u_Vel, self.plot_F, self.plot_u, self.plot_Theta, self.plot_amps, self.plot_volts, self.plot_torque, self.plot_rpm]
+            to_plot = []
+            for i in range(len(tries)):
+                if tries[i].get():
+                    to_plot.append(i)
+            
+            figure, axs = plt.subplots(len(to_plot), 1, sharex=True, figsize=(12, 9))
+            canvas = FigureCanvasTkAgg(figure, master=plot_window)
+            canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)
+            count = 0
+            def find_max(inp, decimals=3):
+                return(int(max(np.abs(inp))*(10**decimals))/(10**decimals))
+            
+            for i in to_plot:
+                if i == 0:
+                    axs[count].plot(time, X, label=f'Trolley X (m), max={find_max(X)}', color="green")
+                    axs[count].set_ylabel("Trolley X (m)")
+                elif i == 1:
+                    axs[count].plot(time, Vset, label=f'V Desired Trolley (m/s), max={find_max(Vset)}', color="blue")
+                    axs[count].set_ylabel("V Desired Trolley (m/s)")
+                elif i == 2:
+                    axs[count].plot(time, dX, label=f'V Actual Trolley (m/s), max={find_max(dX)}', color="red")
+                    axs[count].set_ylabel("V Actual Trolley (m/s)")
+                elif i == 3:
+                    axs[count].plot(time, np.array(u_Vel), label= f'V Actual Mass (m/s), max={find_max(u_Vel)}', color="orange")
+                    axs[count].set_ylabel("V Actual Mass (m/s)")
+                elif i == 4:
+                    axs[count].plot(time, np.array(F), label=f'F Motor (N), max={find_max(F)}', color="pink")
+                    axs[count].set_ylabel("F Motor (N)")
+                elif i == 5 and u is not None:
+                    axs[count].plot(time, np.array(u), label= f'F on Mass (N), max={find_max(u)}', color="purple")
+                    axs[count].set_ylabel("F on Mass (N)")
+                elif i == 6:
+                    axs[count].plot(time, 180*np.array(Theta)/np.pi, label = f"Theta (deg), max={find_max(Theta)}", color="cyan")      
+                    axs[count].set_ylabel("Theta (deg)")
+                elif i == 7:
+                    axs[count].plot(time, np.array(amps), label = f"Motor Amps (A), max={find_max(amps)}", color="forestgreen")      
+                    axs[count].set_ylabel("Motor Amps (A)")
+                elif i == 8:
+                    axs[count].plot(time, np.array(volts), label = f"Motor Volts (V), max={find_max(volts)}", color="darkblue")      
+                    axs[count].set_ylabel("Motor Volts (V)")
+                elif i == 9:
+                    axs[count].plot(time, np.array(torque), label = f"Motor Torque (N-m/s), max={find_max(torque)}", color="magenta")      
+                    axs[count].set_ylabel("Motor Torque (N-m/s)")
+                elif i == 10:
+                    axs[count].plot(time, np.array(rpm), label = f"Motor Rpm, max={find_max(rpm)}", color="grey")      
+                    axs[count].set_ylabel("Motor Rpm")
+                axs[count].legend()
+                count += 1
+               
+            if self.grid_on.get():
+                for x in axs:
+                    x.grid()
+            figure.suptitle(f'{inputs}\n{outputs}', fontsize=16)
+            axs[len(to_plot)-1].set_xlabel('Time (s)', fontsize=16)
+            plt.tight_layout()
+            plt.savefig('plot.pdf')
+            canvas.draw()
+        else:
+            # Create Matplotlib Figure and Axes
+            figure, ax = Figure(figsize=(12, 9), dpi=100), None
+            canvas = FigureCanvasTkAgg(figure, master=plot_window)
+            canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)
+            ax = figure.add_subplot(111)
+
+            if self.plot_X.get():
+                ax.plot(time, X, label='Trolley X (m)', color="green")
+            if self.plot_Vset.get():
+                ax.plot(time, Vset, label='V Desired Trolley (m/s)', color="blue")
+            if self.plot_Vact.get():
+                ax.plot(time, dX, label='V Actual Trolley (m/s)', color="red")
+            if self.plot_u_Vel.get():
+                ax.plot(time, np.array(u_Vel), label= 'V Actual Mass (m/s)', color="orange")
+            if self.plot_F.get():
+                ax.plot(time, np.array(F), label='F Motor (N)', color="pink")
+            if u is not None and self.plot_u.get():
+                ax.plot(time, np.array(u), label= 'F on Mass (N)', color="purple")
+            if self.plot_Theta.get():
+                ax.plot(time, 3*np.array(Theta), label = '3*Theta (rad)', color="cyan")
+            if self.plot_amps.get():
+                ax.plot(time, np.array(amps), label = "Motor Amps (A)", color="forestgreen")      
+            if self.plot_volts.get():
+                ax.plot(time, np.array(volts), label = "Motor Volts (V)", color="darkblue")      
+            if self.plot_torque.get():
+                ax.plot(time, np.array(torque), label = "Motor Torque (N-m/s)", color="magenta")      
+            if self.plot_rpm.get():
+                ax.plot(time, np.array(rpm), label = "Motor Rpm", color="grey")      
+                
+            if self.grid_on.get(): ax.grid()
+            ax.set_title(f'{inputs}\n{outputs}', fontsize=16)
+            ax.set_xlabel('Time (s)', fontsize=16)
+            ax.set_ylabel('Variables', fontsize = 16)
+            ax.legend()
+            figure.savefig('plot.pdf')
+            canvas.draw()
+
         
-        ax = figure.add_subplot(111)
-        ax.plot(time, X, label='X')
-        ax.plot(time, dX, label='Vel')
-        ax.plot(time, Vset, label='VelSet')
-        ax.plot(time, 3*np.array(Theta), label = '3*Theta')
-        ax.plot(time, np.array(F)/M1, label='F/M Motor')
-        ax.set_title('Outputs')
-        ax.set_xlabel('Time (s)')
-        ax.set_ylabel('Variables')
-        ax.legend()
-        canvas.draw()
-        
-    def pygame_pendulum_animation(self, time, theta, string_length, x, f, M1, simulation_speed, dt):
+    def pygame_pendulum_animation(self, time, theta, string_length, x, f, M1, simulation_speed, dt, u=None):
         #pixel to length ratio:
-        ptlr = 25
+        ptlr = 500*self.zoom.get()
         pygame.init()
         string_length *= -1*ptlr
 
@@ -188,6 +377,7 @@ class SimulationInterface:
         xyz = (width // 2, height // 4)  # Apex position in the middle of the screen
 
         # Main loop
+        count = 0
         for t, angle, x0, F0 in zip(time, theta, x, f):
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -208,7 +398,9 @@ class SimulationInterface:
             pygame.draw.circle(screen, pendulum_color, (pendulum_x, pendulum_y), 15)  # Draw the pendulum as a red circle
             pygame.draw.line(screen, 'black', (pendulum_x, pendulum_y),(apex_position),1)
             pygame.draw.line(screen, 'green', (apex_position),(vector_end),2)
-
+            if u is not None:
+                pygame.draw.line(screen, 'blue', (pendulum_x, pendulum_y),(pendulum_x + u[count]*ptlr/(M1), pendulum_y),2)
+            count += 1
 
             pygame.display.flip()
             clock.tick(2*(simulation_speed/5)/dt)  # Adjust the frame rate
@@ -218,9 +410,9 @@ class SimulationInterface:
         Vset = np.ones_like(time)
         v_type = str(v_type)
         if v_type == 'Piecewise':
+            length = len(Vset)
+            divide = int(length/5)
             for i in range(len(Vset)):
-                length = len(Vset)
-                divide = int(length/5)
                 if i < divide:
                     Vset[i] = i*dt*ramp
                 elif i < divide*2:
@@ -232,23 +424,23 @@ class SimulationInterface:
                 else:
                     Vset[i] = ramp*np.sin(i*dt)
         elif v_type == 'Step':
+            length = len(Vset)
+            divide = int(length/4)
             for i in range(len(Vset)):
-                length = len(Vset)
-                divide = int(length/4)
                 if i < divide:
                     Vset[i] = 0
                 else:
                     Vset[i] = ramp
         elif v_type == 'Ramp':
+            length = len(Vset)
+            divide = int(length/6)
             for i in range(len(Vset)):
-                length = len(Vset)
-                divide = int(length/6)
-                if i < 2*divide:
+                if i < 3.7*divide:
                     Vset[i] = 0
                 elif i < divide*4:
-                    Vset[i] = ramp*dt*(i-2*divide)
+                    Vset[i] = 15*ramp*dt*(i-3.7*divide)
                 else:
-                    Vset[i] = ramp*dt*(divide*2)
+                    Vset[i] = 15*ramp*dt*(0.3*divide)
 
                     
         elif v_type == 'Sine':
@@ -257,6 +449,28 @@ class SimulationInterface:
             Vset = ramp*np.cos(time)
         elif v_type == 'Constant':
             Vset = ramp*np.ones_like(time/3)
+        elif v_type == 'Square':
+            length = len(Vset)
+            divide = int(length/5)
+            for i in range(len(Vset)):
+                if i < 2*divide:
+                    Vset[i] = 0
+                elif i < 3*divide:
+                    Vset[i] = ramp
+                else:
+                    Vset[i] = 0
+        elif v_type == 'Double Square':
+            length = len(Vset)
+            divide = int(length/5)
+            for i in range(len(Vset)):
+                if i < divide:
+                    Vset[i] = 0
+                elif i < 2*divide:
+                    Vset[i] = ramp
+                elif i < 3*divide:
+                    Vset[i] = -ramp
+                else:
+                    Vset[i] = 0
         else:
             Vset = np.zeros_like(time)
         return Vset
@@ -283,6 +497,7 @@ class SimulationInterface:
         v_type = self.vel_type.get()
         ramp = self.ramp.get()
         percentage = 0.4
+        dThi = self.dThi.get()
         
         self.save_parameters_to_file()
         
@@ -294,21 +509,30 @@ class SimulationInterface:
         #CURRENTLY UNUSED OLD PARAMS
         #force parameters:
         DISTANCE = False #specify the distance and get there with 0 sway. else velocity mode
-        F_app = 0; F = M1*self.get_vset(self.force_type.get(), time, dt, self.force_ramp.get())
+        F_app = 0
+        F = self.get_vset(self.force_type.get(), time, dt, self.force_ramp.get())
+        if self.model_type.get() == "Tracking":
+            u = self.get_vset(self.u_type.get(), time, dt, self.u_ramp.get())
+        else:
+            u = None
+
         theta_max = 40 #degrees, maximum sway angle
         track_destination = 10 #meters, for distance mode
         velocity_set = 3 #for velocity mode
 
         ######
 
-        stored = [F, time, dt, M0, M1, B0, B1, g, l, Xi, Ti, F_app, percentage, controller, velocity_set, Kp, Ki, Vset, anti_sway, as_gain]
+        stored = [F, time, dt, M0, M1, B0, B1, g, l, Xi, Ti, F_app, percentage, controller, velocity_set, Kp, Ki, Vset, anti_sway, as_gain, u, dThi]
         # Run simulation
-        Theta, X, dX, F = FE.fetch_pendulum_mode(stored)
+        if self.model_type.get() == "Anti-Sway":
+            Theta, X, dX, F, dTheta = FE.fetch_pendulum_mode(stored)
+        else:
+            Theta, X, dX, F, dTheta = FE.fetch_tracking_mode(stored)
         
-        self.plot_matplotlib(time, X, dX, Vset, Theta, F, M1)
+        self.plot_matplotlib(time, X, dX, Vset, Theta, F, M1, u, dTheta)
         
         if self.run_sim.get():
-            self.pygame_pendulum_animation(time, Theta, l, X, F, M1, simulation_speed, dt)
+            self.pygame_pendulum_animation(time, Theta, l, X, F, M1, simulation_speed, dt, u)
         
     def save_parameters_to_file(self):
         parameters = {
@@ -332,7 +556,28 @@ class SimulationInterface:
             "ramp": self.ramp.get(),
             "force_ramp": self.force_ramp.get(),
             "force_type": self.force_type.get(),
-            "run_sim": self.run_sim.get()
+            "run_sim": self.run_sim.get(),
+            "u_type": self.u_type.get(),
+            "u_ramp": self.u_ramp.get(),
+            "plot_F": self.plot_F.get(),
+            "plot_u": self.plot_u.get(),
+            "plot_u_Vel": self.plot_u_Vel.get(),
+            "plot_X": self.plot_X.get(),
+            "plot_Theta": self.plot_Theta.get(),
+            "plot_Vset": self.plot_Vset.get(),
+            "plot_Vact": self.plot_Vact.get(),
+            "model_type": self.model_type.get(),
+            "dThi": self.dThi.get(),
+            "plot_separate": self.plot_separate.get(),
+            "grid_on": self.grid_on.get(),
+            "zoom": self.zoom.get(),
+            "motor_constant": self.motor_constant.get(),
+            "amp_constant": self.amp_constant.get(),
+            "gear_radius": self.gear_radius.get(),
+            "plot_amps": self.plot_amps.get(),
+            "plot_volts": self.plot_volts.get(),
+            "plot_torque": self.plot_torque.get(),
+            "plot_rpm": self.plot_rpm.get()
         }
 
         with open("simulation_parameters.txt", "w") as file:
