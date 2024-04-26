@@ -5,6 +5,7 @@
 #include <pthread.h>
 #include <stdint.h>
 
+#include "setup.h"
 #include "io.h"
 #include "thread-lib.h"
 #include "discrete-lib.h"
@@ -13,6 +14,7 @@
 
 
 /* Thread Number & Resources */
+
 
 // Thread ID
 pthread_t tracking_thread = NULL;
@@ -140,7 +142,8 @@ static inline int TrackingControlLaw(Angle angle_input,
                                NULL,
                                &(scheme->inner_diff));
 
-    if (SetVoltage(final_output)) return EXIT_FAILURE;
+    static int error;
+    VERIFY(error, SetVoltage(final_output));
 
     return EXIT_SUCCESS;
 }

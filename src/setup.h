@@ -5,6 +5,12 @@
 #define SETUP_H_
 
 
+/* Error Macro (for setup/shutdown) */
+
+
+#define VERIFY(code, statement) \
+    if (code = statement) return code
+
 /* Global Setup/Shutdown Functions */
 
 

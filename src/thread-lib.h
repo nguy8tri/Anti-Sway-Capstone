@@ -9,6 +9,8 @@
 
 #include "DIIRQ.h"
 #include "TimerIRQ.h"
+
+#include "setup.h"
 #include "io.h"
 
 /* Thread Data Structures */
@@ -49,7 +51,8 @@ typedef struct {
 */
 #define START_THREAD(thread, function, resource) \
     resource.irq_thread_rdy = true; \
-    if (pthread_create(&thread, NULL, function, &resource)) return EXIT_FAILURE
+    int error; \
+    VERIFY(error, pthread_create(&thread, NULL, function, &resource))
 
 /**
  * Registers the timer (global) with a particular thread (via its resource)
@@ -76,7 +79,8 @@ typedef struct {
 */
 #define STOP_THREAD(thread, resource) \
     resource.irq_thread_rdy = false; \
-    if (pthread_join(thread, NULL)) return EXIT_FAILURE
+    int error;
+    VERIFY(error, pthread_join(thread, NULL))
 
 /**
  * Dissasociates a thread with a timer (via its resource)

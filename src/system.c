@@ -89,8 +89,8 @@ static States state = START;
 
 
 int SystemExec() {
-    int error = 0;
-    if (error = Setup()) return error;
+    int error;
+    VERIFY(error, Setup());
 
     while (state != ERROR && state != END) {
         states[state]();
@@ -100,7 +100,7 @@ int SystemExec() {
 
     states[state]();
 
-    if (error = Shutdown()) return error;
+    VERIFY(error, Shutdown());
 
     return EXIT_SUCCESS
 }
