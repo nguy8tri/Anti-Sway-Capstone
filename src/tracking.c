@@ -19,7 +19,7 @@
 // Thread ID
 pthread_t tracking_thread = NULL;
 // Thread Resources (Shared Resources)
-Resource resource;
+ThreadResource resource;
 
 
 /* Inner-Outer Loop Control Definition */
@@ -28,7 +28,7 @@ Resource resource;
 /**
  * Represents the Inner and Outer Loop Elements
 */
-typedef struct {
+typedef struct TCS {
     Biquad outer_block;
     Proportional inner_prop;
     Differentiator inner_diff;
@@ -98,7 +98,7 @@ int TrackingJoin() {
 }
 
 static void *TrackingModeThread(void *resource) {
-    TrackingResource *thread_resource = (TrackingResource *) resource;
+    ThreadResource *thread_resource = (ThreadResource *) resource;
 
     while (thread_resource->irq_thread_rdy) {
         uint32_t irq_assert = 0;
