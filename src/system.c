@@ -1,4 +1,5 @@
-// Copyright 2024 Tri Nguyen
+// Copyright 2024 Anti-Sway Team (Nguyen, Tri; Espinola, Malachi;
+// Tevy, Vattanary; Hokenstad, Ethan; Neff, Callen)
 
 #include <stdlib.h>
 
@@ -24,6 +25,13 @@ static void AntiSwayState();
  * 2) Executing Transitions from this State
 */
 static void TrackingState();
+
+/**
+ * Executes the Idle State, which includes
+ * 1) Doing Nothing
+ * 2) Executing Transitions from this State
+*/
+static void IdleState();
 
 /**
  * Executes the Error State, which includes
@@ -58,6 +66,7 @@ static void EndState();
 typedef enum {
     ANTI_SWAY,
     TRACKING,
+    IDLE,
     ERROR,
     START,
     END
@@ -68,6 +77,7 @@ typedef enum {
 // State Functions
 static void (* states[])() = {AntiSwayState,
                               TrackingState,
+                              IdleState,
                               ErrorState,
                               StartState,
                               EndState};
@@ -105,6 +115,10 @@ static void TrackingState() {
     TrackingFork();
 
     // TODO(nguy8tri): other code for anti-sway, error, and stop transitions
+}
+
+static void IdleState() {
+    // TODO(nguy8tri): other code for tracking, anti-sway, and stop transitions
 }
 
 static void ErrorState() {

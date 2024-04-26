@@ -1,4 +1,5 @@
-// Copyright 2024 Tri Nguyen
+// Copyright 2024 Anti-Sway Team (Nguyen, Tri; Espinola, Malachi;
+// Tevy, Vattanary; Hokenstad, Ethan; Neff, Callen)
 
 #include "MyRio.h"
 #include "T1.h"

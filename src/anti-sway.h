@@ -1,4 +1,5 @@
-// Copyright 2024 Tri Nguyen
+// Copyright 2024 Anti-Sway Team (Nguyen, Tri; Espinola, Malachi;
+// Tevy, Vattanary; Hokenstad, Ethan; Neff, Callen)
 
 #ifndef ANTI_SWAY_H_
 #define ANTI_SWAY_H_

@@ -1,4 +1,5 @@
-// Copyright 2024 Tri Nguyen
+// Copyright 2024 Anti-Sway Team (Nguyen, Tri; Espinola, Malachi;
+// Tevy, Vattanary; Hokenstad, Ethan; Neff, Callen)
 
 #include <stdbool.h>
 #include <pthread.h>
@@ -21,6 +22,7 @@ Resource resource;
 
 /* Inner-Outer Loop Control Definition */
 
+
 /**
  * Represents the Inner and Outer Loop Elements
 */
@@ -33,6 +35,7 @@ typedef struct {
 
 /* Control-Loop Variables */
 
+
 // The Control Scheme for the X Motor
 // TODO(nguy8tri): Define this statically
 static TrackingControlScheme x_control;
@@ -42,6 +45,7 @@ static TrackingControlScheme y_control;
 
 
 /* Thread Functions */
+
 
 /**
  * The Thread Function for Tracking Mode
@@ -74,6 +78,10 @@ static inline int TrackingControlLaw(Angle angle_input,
                                      Position pos_input,
                                      TrackingControlScheme *scheme,
                                      int (* SetVoltage)(Voltage voltage));
+
+
+/* Tracking Mode Function Definitions */
+
 
 int TrackingFork() {
     REGISTER_TIMER(resource);
