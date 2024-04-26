@@ -1,5 +1,7 @@
-#ifndef _SETUP_H_
-#define _SETUP_H_
+// Copyright 2024 Tri Nguyen
+
+#ifndef SETUP_H_
+#define SETUP_H_
 
 
 /* Global Setup/Shutdown Functions */
@@ -22,4 +24,4 @@ int Setup();
 */
 int Shutdown();
 
-#endif
+#endif  // SETUP_H_

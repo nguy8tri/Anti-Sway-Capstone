@@ -1,5 +1,7 @@
-#ifndef _SYSTEM_H_
-#define _SYSTEM_H_
+// Copyright 2024 Tri Nguyen
+
+#ifndef SYSTEM_H_
+#define SYSTEM_H_
 
 
 /* Execution Function */
@@ -13,4 +15,4 @@
 */
 int SystemExec();
 
-#endif
+#endif  // SYSTEM_H_

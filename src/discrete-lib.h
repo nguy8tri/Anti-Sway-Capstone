@@ -1,16 +1,34 @@
-#ifndef _DISCRETE_LIB_H_
-#define _DISCRETE_LIB_H_
+// Copyright 2024 Tri Nguyen
+
+#ifndef DISCRETE_LIB_H_
+#define DISCRETE_LIB_H_
+
+#include <float.h>
+
+/* Non-saturation constants */
+#define POS_INF DBL_MAX
+#define NEG_INF DBL_MIN
+
 
 /* Discrete-Time Data Structures */
+
 
 /**
  * A struct representing a biquad
 */
 typedef struct {
-    double numerator[3];  // The numerator coefficients, in decreasing order of time delays (z^0, z^-1, z^-2)
-    double denominator[3]; // The denominator coefficients, in decreasing order of time delays (z^0, z^-1, z^-2)
-    double prev_input[2]; // The previous inputs, in increasing time delays (z^-1, z^-2)
-    double prev_output[2]; // The previous outputs, in increasing time delays (z^-1, z^-2)
+    // The numerator coefficients, in decreasing order of time delays
+    // (z^0, z^-1, z^-2)
+    double numerator[3];
+    // The denominator coefficients, in decreasing order of time delays
+    // (z^0, z^-1, z^-2)
+    double denominator[3];
+    // The previous inputs, in increasing time delays
+    // (z^-1, z^-2)
+    double prev_input[2];
+    // The previous outputs, in increasing time delays
+    // (z^-1, z^-2)
+    double prev_output[2];
 } Biquad;
 
 /**
@@ -22,19 +40,27 @@ typedef float Proportional;
  * A struct representing an integrator
 */
 typedef struct {
-    Proportional gain; // Accounts for timestep
-    Biquad integral = {{1.0, 1.0, 0.0}, {2.0, -2.0, 0.0}, {0.0, 0.0}, {0.0, 0.0}};
+    Proportional gain;  // Accounts for timestep
+    // Biquad integral =
+    // {{1.0, 1.0, 0.0}, {2.0, -2.0, 0.0}, {0.0, 0.0}, {0.0, 0.0}};
+    double prev_input;
+    double prev_output;
 } Integrator;
 
 /**
  * A struct representing a derivative term
 */
 typedef struct {
-    Proportional gain; // Accounts for timestep
-    Biquad derivative = {{2.0, -2.0, 0.0}, {1.0, 1.0, 0.0}, {0.0, 0.0}, {0.0, 0.0}};
+    Proportional gain;  // Accounts for timestep
+    // Biquad derivative =
+    // {{2.0, -2.0, 0.0}, {1.0, 1.0, 0.0}, {0.0, 0.0}, {0.0, 0.0}};
+    double prev_input;
+    double prev_output;
 } Differentiator;
 
+
 /* Initialization Functions */
+
 
 /**
  * Initializes an Integrator
@@ -60,10 +86,13 @@ void IntegratorInit(Proportional gain, double timestep, Integrator *result);
  * @return result, which will be an differentiator with a gain gain, and
  * the timestep
 */
-void DifferentiatorInit(Proportional gain, double timestep, Differentiator *result);
+void DifferentiatorInit(Proportional gain,
+                        double timestep,
+                        Differentiator *result);
 
 
 /* Time-Stepping Functions */
+
 
 /**
  * Executes a dynamic, discrete time system by using
@@ -81,7 +110,11 @@ void DifferentiatorInit(Proportional gain, double timestep, Differentiator *resu
  * the system 
  * @post The system is updated with current/past calculated values
 */
-inline double Cascade(double input, Biquad sys[], int size, double lower_lim, double upper_lim);
+inline double Cascade(double input,
+                      Biquad sys[],
+                      int size,
+                      double lower_lim,
+                      double upper_lim);
 
 /**
  * Timesteps an Integration
@@ -97,7 +130,10 @@ inline double Cascade(double input, Biquad sys[], int size, double lower_lim, do
  * the system
  * @post term is updated with current/past calculated values
 */
-inline double Integrate(double input, Integrator *term, double lower_lim, double upper_lim);
+inline double Integrate(double input,
+                        Integrator *term,
+                        double lower_lim,
+                        double upper_lim);
 
 /**
  * Timesteps a Differentiation
@@ -113,7 +149,10 @@ inline double Integrate(double input, Integrator *term, double lower_lim, double
  * the system
  * @post term is updated with current/past calculated values
 */
-inline double Differentiate(double input, Differentiator *term, double lower_lim, double upper_lim);
+inline double Differentiate(double input,
+                            Differentiator *term,
+                            double lower_lim,
+                            double upper_lim);
 
 /**
  * Timesteps a PID Controller
@@ -129,8 +168,14 @@ inline double Differentiate(double input, Differentiator *term, double lower_lim
  * 
  * @pre The input is the next sampled value of the input to
  * the system
+ * @pre If p, i or d is NULL, then those terms don't contribute
  * @post i and d are updated with current/past calculated values
 */
-inline double PID(double input, Proportional *p, Integrator *i, Differentiator *d, double lower_lim, double upper_lim);
+inline double PID(double input,
+                  Proportional *p,
+                  Integrator *i,
+                  Differentiator *d,
+                  double lower_lim,
+                  double upper_lim);
 
-#endif  // _DISCRETE_LIB_H_
+#endif  // DISCRETE_LIB_H_
