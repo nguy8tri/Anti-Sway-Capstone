@@ -169,7 +169,8 @@ inline double Differentiate(double input,
  * 
  * @pre The input is the next sampled value of the input to
  * the system
- * @pre If p, i or d is NULL, then those terms don't contribute
+ * @pre If p, i or d is NULL, then those NULL terms don't contribute
+ * @pre if p, i and d are all NULL, then the output is 0.0
  * @post i and d are updated with current/past calculated values
 */
 inline double PID(double input,

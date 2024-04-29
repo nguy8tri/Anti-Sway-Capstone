@@ -24,7 +24,7 @@ typedef struct {
 } ThreadResource;
 
 
-/* Global Constants */
+/* Time Constants */
 
 
 // The timestep, in microseconds (us)
@@ -33,6 +33,22 @@ typedef struct {
 #define BTI_MS 5
 // The timestep, in seconds (s)
 #define BTI_S 0.005
+
+
+/* Physical Constants */
+
+
+// Acceleration due to Gravity (m/s^2)
+#define g 9.81
+// Pi
+#define PI 3.141592653549
+// Length of Rope (m)
+// TODO(nguy8tri): Define this quantity
+#define l 0.5
+// Mass of Trolley (kg)
+#define m_t 1.0
+// Mass of User (kg)
+#define m_p 2.0
 
 
 /* Thread Construction/Destruction */

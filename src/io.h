@@ -4,13 +4,22 @@
 #ifndef IO_H_
 #define IO_H_
 
+#include <stdbool.h>
+
 #include "TimerIRQ.h"
+
+
+/* Reset Feature */
+// Reset Flag for GetTrolleyPosition
+// and GetVelocityPosition
+bool reset = true;
 
 
 /* Input/Output Data Types */
 
 typedef float Angle;
 typedef float Position;
+typedef float Velocity;
 typedef float Voltage;
 
 
@@ -32,6 +41,15 @@ typedef struct {
     Position y_pos;
 } Positions;
 
+/**
+ * Defines the velocity of an object
+ * in 2D space, in meters/second
+*/
+typedef struct {
+    Velocity x_vel;
+    Velocity y_vel;
+} Velocities;
+
 /* Sensor Variables */
 // The Timer
 MyRio_IrqTimer timer;
@@ -49,6 +67,18 @@ MyRio_IrqTimer timer;
 #define K_a 0.41
 // Motor Constant (Nm/A)
 #define K_m 0.11
+/**
+ * Force to Voltage Conversion
+ * 
+ * @param force An int/float/double
+ * expression, which represents the force
+ * to transmit
+ * 
+ * @post Becomes the conversion between
+ * force to the voltage to output
+*/
+#define FORCE_TO_VOLTAGE(force) \
+    (force) * R / (K_a * K_m)
 
 
 /* Setup/Shutdown Functions */
@@ -82,12 +112,24 @@ int IOShutdown();
  * will become the change in position requested
  * by the user
  * 
- * @return 0 upon success, other integers
- * if otherwise
- * @return A position structure, which reflects
+ * @return 0 upon success, negative otherwise
+ * @return A Velocities structure, which reflects
  * the change in position requested from the user
 */
-int GetUserCommand(Positions *result);
+int GetReferenceVelocityCommand(Velocities *result);
+
+/**
+ * Obtains the user command (for tracking)
+ * 
+ * @param result A return parameter, which
+ * will become the desired angle requested
+ * by the user
+ * 
+ * @return 0 upon success, negative otherwise
+ * @return An Angles structure, which reflects
+ * the angle requested from the user
+*/
+int GetReferenceAngleCommand(Angles *result);
 
 /**
  * Obtains the angle of the harness
@@ -97,7 +139,7 @@ int GetUserCommand(Positions *result);
  * 
  * @return 0 upon success, other integers
  * if otherwise
- * @return result, which will define the 
+ * @return result, which will define the
  * angle of the harness along 
  * both lateral directions
 */
@@ -107,29 +149,61 @@ int GetAngle(Angles *result);
  * Obtains the Trolley Position
  * 
  * @param result A return parameter, which
- * will become the position of the motor
+ * will become the position of the trolley
  * 
  * @return 0 upon success, other integers
  * if otherwise
- * @return A Position structure, which
+ * @return A Positions structure, which
  * defines the Position of the Motor in
  * the lateral plane
 */
-int GetTrolleyPosition(Position *result);
+int GetTrolleyPosition(Positions *result);
+
+/**
+ * Obtains the Trolley Velocity
+ * 
+ * @param result A return parameter, which
+ * will become the velocity of the trolley
+ * 
+ * @return 0 upon success, other integers
+ * if otherwise
+ * @return A Velocities structure, which
+ * defines the velocity of the trolley in
+ * the lateral plane
+*/
+int GetTrolleyVelocity(Velocities *result);
 
 /**
  * Obtains the User Position
  * 
+ * @param angle The rope angle
+ * @param pos The trolley position
  * @param result A return parameter, which
  * will become the position of the user
  * 
  * @return 0 upon success, other integers
  * if otherwise
- * @return A Position structure, which
+ * @return A Positions structure, which
  * defines the Position of the User in
  * the lateral plane
 */
-int GetUserPosition(Position *result);
+int GetUserPosition(Angles *angle, Positions *pos, Positions *result);
+
+/**
+ * Obtains the User Velocity
+ * 
+ * @param angle The rope angle
+ * @param vel The trolley velocity
+ * @param result A return parameter, which
+ * will become the velocity of the user
+ * 
+ * @return 0 upon success, other integers
+ * if otherwise
+ * @return A Velocities structure, which
+ * defines the Velocity of the User in
+ * the lateral plane
+*/
+int GetUserVelocity(Angles *angle, Velocities *vel, Velocities *result);
 
 
 /* Actuator Functions */
