@@ -11,6 +11,7 @@
 #include "setup.h"
 #include "anti-sway.h"
 #include "tracking.h"
+#include "idle.h"
 #include "io.h"
 
 #include "system.h"
@@ -151,31 +152,10 @@ static int TrackingState() {
 
 static int IdleState() {
     // TODO(nguy8tri): other code for tracking, anti-sway, and stop transitions
-    static Positions trolley_pos;
-    static Velocities trolley_vel;
-    static Angles rope_ang;
-    if (GetTrolleyPosition(&trolley_pos) || GetTrolleyVelocity(&trolley_vel) ||
-        GetAngle(&rope_ang)) {
-        state = ERROR;
-        return EXIT_FAILURE;
-    }
-#define DECIMAL_PRECISION "3"
-#define RAD_2_DEG(value) value * 180.0 / PI
-    printf_lcd("\f"
-               "Trolley Position: (%." DECIMAL_PRECISION "f, %."
-                                       DECIMAL_PRECISION "f) m\n"
-               "Trolley Velocity: (%." DECIMAL_PRECISION "f, %."
-                                       DECIMAL_PRECISION "f) m/s\n"
-                "Rope Angle: (%. " DECIMAL_PRECISION "f, %."
-                                   DECIMAL_PRECISION "f) deg\n",
-                trolley_pos.x_pos, trolley_pos.y_pos,
-                trolley_vel.x_vel, trolley_vel.y_vel,
-                RAD_2_DEG(rope_ang.x_angle), RAD_2_DEG(rope_ang.y_angle));
     if (PressedDelete()) {
+        IdleJoin();
         state = MENU;
     }
-#undef DECIMAL_PRECISION
-#undef RAD_2_DEG
     return EXIT_SUCCESS;
 }
 
@@ -198,6 +178,7 @@ static int MenuState() {
             state = ANTI_SWAY;
             break;
         case '3':
+            IdleFork();
             state = IDLE;
             break;
         case '4':
@@ -208,7 +189,7 @@ static int MenuState() {
             return EXIT_FAILURE;
     }
 
-   Reset();
+    Reset();
     return EXIT_SUCCESS;
 }
 

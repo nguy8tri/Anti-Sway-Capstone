@@ -23,13 +23,16 @@ pthread_t anti_sway_thread = NULL;
 ThreadResource anti_sway_resource;
 
 
-/* Inner-Outer Loop Control Definition */
+/* Inner-Outer Loop Control Characteristics */
 
 
 // The proportional constant for inner-loop
 #define K_p 37.7
 // The integral constant for inner-loop control
 #define K_i 25.1
+
+
+/* Control Loop Scheme */
 
 
 /**
@@ -55,6 +58,8 @@ static AntiSwayControlScheme y_control;
 
 
 /* Error Code */
+
+
 static int error;
 
 

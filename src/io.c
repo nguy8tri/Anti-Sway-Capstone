@@ -146,6 +146,10 @@ static int error;
 
 
 int IOSetup() {
+    // Setup Timer
+    timer.timerWrite = IRQTIMERWRITE;
+    timer.timerSet = IRQTIMERSETTIME;
+
     // Calibration Message
     printf_lcd("\fPlease stablize for calibration.\n"
                "Press ENTR when ready.");

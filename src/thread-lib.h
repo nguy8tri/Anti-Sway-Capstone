@@ -101,7 +101,7 @@ NiFpga_Session myrio_session;
 */
 #define STOP_THREAD(thread, resource) \
     resource.irq_thread_rdy = false; \
-    VERIFY(error, pthread_join(thread, NULL));
+    VERIFY(error, pthread_join(thread, NULL))
 
 /**
  * Dissasociates a thread with a timer (via its resource)
@@ -111,7 +111,7 @@ NiFpga_Session myrio_session;
  * @post The thread associated with resource is now disassociated with timer
 */
 #define UNREGISTER_TIMER(resource) \
-    Irq_UnregisterTimerIrq(&timer, resource.irq_context);
+    Irq_UnregisterTimerIrq(&timer, resource.irq_context)
 
 /**
  * Waits for a timer trigger (at the appropriate time step)
