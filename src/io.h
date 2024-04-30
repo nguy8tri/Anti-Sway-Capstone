@@ -225,4 +225,16 @@ int SetXVoltage(Voltage voltage);
 */
 int SetYVoltage(Voltage voltage);
 
+
+/* Keyboard Functions */
+
+/**
+ * Detects if the DEL key is pressed
+ * on the keyboard
+ * 
+ * @return true iff DEL is pressed on
+ * the keyboard
+*/
+bool PressedDelete();
+
 #endif  // IO_H_

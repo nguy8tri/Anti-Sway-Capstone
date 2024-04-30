@@ -6,6 +6,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include <math.h>
+#include <pthread.h>
 
 #include "MyRio.h"
 #include "T1.h"
@@ -121,10 +122,19 @@ typedef bool Keymap[9];
 */
 static inline void GetKeymap(Keymap *keymap);
 
-/* Physical Constants */
 
-// Rope Length (m)
-#define ROPE_LEN 0.5
+/* Keypad Definitions and Variables */
+// Number of Channels
+#define CHANNELS 16
+// Keypad Length
+#define LCD_KEYPAD_LEN 4
+// Keyboard channels
+static MyRio_Dio channel[CHANNELS];
+// Keyboard lock
+static pthread_mutex_t keyboard;
+
+/* Error Handling */
+static int error;
 
 
 /* Setup/Shutdown Functions */
@@ -160,6 +170,16 @@ int IOSetup() {
     Aio_InitCO0(&x_motor);
     Aio_InitCO1(&y_motor);
 
+    // Setup Keyboard
+    uint8_t i;
+    for (i = 0; i < CHANNELS; i++) {
+        channel[i].dir = DIOB_70DIR;
+        channel[i].out = DIOB_70OUT;
+        channel[i].in = DIOB_70IN;
+        channel[i].bit = i;
+    }
+    VERIFY(error, pthread_mutex_init(&keyboard, NULL));
+
     printf_lcd("Calibration Finished\n");
 
     return EXIT_SUCCESS;
@@ -179,6 +199,9 @@ int IOShutdown() {
     // Disassociate with Motor
     memset(&x_motor, 0, sizeof(MyRio_Aio));
     memset(&y_motor, 0, sizeof(MyRio_Aio));
+
+    // Destroy Keyboard Lock
+    VERIFY(error, pthread_mutex_destroy(&keyboard, NULL));
 }
 
 
@@ -314,8 +337,8 @@ int GetTrolleyVelocity(Velocities *result) {
 }
 
 int GetUserPosition(Angles *angle, Positions *pos, Positions *result) {
-    result->x_pos = ROPE_LEN * SIN(angle->x_angle) + pos->x_pos;
-    result->y_pos = ROPE_LEN * SIN(angle->y_angle) + pos->y_pos;
+    result->x_pos = l * SIN(angle->x_angle) + pos->x_pos;
+    result->y_pos = l * SIN(angle->y_angle) + pos->y_pos;
 
     return EXIT_SUCCESS;
 }
@@ -339,31 +362,35 @@ int SetYVoltage(Voltage voltage) {
 }
 
 
+/* Keyboard Functions */
+
+
+bool PressedDelete() {
+#define DEL_ROW 7
+#define DEL_COL 3
+    pthread_mutex_lock(&keyboard);
+    uint8_t j;
+    for (j = 0; j < LCD_KEYPAD_LEN; j++) {
+        Dio_WriteBit(channel + j, j == DEL_COL ? NiFpga_False : NiFpga_True);
+    }
+
+    if (!Dio_ReadBit(channel + DEL_ROW)) {
+        pthread_mutex_unlock(&keyboard);
+        return true;
+    }
+
+    pthread_mutex_unlock(&keyboard);
+    return false;
+#undef DEL_ROW
+#undef DEL_COL
+}
+
+
 /* Keymap Helper Function */
 
 
 static inline void GetKeymap(Keymap *keymap) {
-    /* Static Local Variables for MyRio Keypad */
-    // Number of Channels
-    #define CHANNELS 16
-    // Keypad Length
-    #define LCD_KEYPAD_LEN 4
-    // Keyboard channels
-    static MyRio_Dio channel[CHANNELS];
-    // Indicator if channel is set up
-    static bool keypad = false;
-
-    if (!keypad) {
-        uint8_t i;
-        for (i = 0; i < CHANNELS; i++) {
-            channel[i].dir = DIOB_70DIR;
-            channel[i].out = DIOB_70OUT;
-            channel[i].in = DIOB_70IN;
-            channel[i].bit = i;
-        }
-
-        keypad = true;
-    }
+    pthread_mutex_lock(&keyboard);
     uint8_t i, j;
 
     memset(keymap, false, sizeof(Keymap));
@@ -375,9 +402,10 @@ static inline void GetKeymap(Keymap *keymap) {
             }
             for (j = LCD_KEYPAD_LEN; j < 2 * LCD_KEYPAD_LEN - 1; j++) {
                 if (!Dio_ReadBit(channel + j)) {
-                    keymap[3 * (j - LCD_KEYPAD_LEN - 1) + i] = true;
+                    keymap[3 * (j - LCD_KEYPAD_LEN) + i] = true;
                 }
             }
         }
     }
+    pthread_mutex_unlock(&keyboard);
 }

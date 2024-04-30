@@ -2,13 +2,16 @@
 // Tevy, Vattanary; Hokenstad, Ethan; Neff, Callen)
 
 #include <stdlib.h>
+#include <stdbool.h>
 
 #include "MyRio.h"
 #include "T1.h"
 
+#include "thread-lib.h"
 #include "setup.h"
 #include "anti-sway.h"
 #include "tracking.h"
+#include "io.h"
 
 #include "system.h"
 
@@ -111,11 +114,14 @@ static int (* states[])() = {AntiSwayState,
 static States state = START;
 
 
+/* Error Handling */
+static int error;
+
+
 /* Function Definitions */
 
 
 int SystemExec() {
-    int error;
     VERIFY(error, StartState());
 
     while (state != ERROR && state != END) {
@@ -127,14 +133,46 @@ int SystemExec() {
 
 static void AntiSwayState() {
     // TODO(nguy8tri): other code for tracking, error, and stop transitions
+    if (PressedDelete()) {
+        AntiSwayJoin();
+        state = MENU;
+    }
 }
 
 static void TrackingState() {
     // TODO(nguy8tri): other code for anti-sway, error, and stop transitions
+    if (PressedDelete()) {
+        TrackingJoin();
+        state = MENU;
+    }
 }
 
 static void IdleState() {
     // TODO(nguy8tri): other code for tracking, anti-sway, and stop transitions
+    static Positions trolley_pos;
+    static Velocities trolley_vel;
+    static Angles rope_ang;
+    if (GetTrolleyPosition(&trolley_pos) || GetTrolleyVelocity(&trolley_vel) ||
+        GetAngle(&rope_ang)) {
+        state = ERROR;
+    }
+#define DECIMAL_PRECISION 3
+#define RAD_2_DEG(value) value * 180.0 / PI
+    printf_lcd("\f"
+               "Trolley Position: (%." DECIMAL_PRECISION "f, %."
+                                       DECIMAL_PRECISION "f) m\n"
+               "Trolley Velocity: (%." DECIMAL_PRECISION "f, %."
+                                       DECIMAL_PRECISION "f) m/s\n"
+                "Rope Angle: (%. " DECIMAL_PRECISION "f, %."
+                                   DECIMAL_PRECISION "f) deg\n",
+                trolley_pos->x_pos, trolley_pos->y_pos,
+                trolley_vel->x_vel, trolley_pos->y_vel,
+                RAD_2_DEG(rope_ang->x_angle), RAD_2_DEG(rope_ang->y_angle));
+    if (PressedDelete()) {
+        state = MENU;
+    }
+#undef DECIMAL_PRECISION
+#undef RAD_2_DEG
 }
 
 static void MenuState() {
@@ -166,6 +204,7 @@ static void MenuState() {
             return EXIT_FAILURE;
     }
 
+    reset = true;
     return EXIT_SUCCESS;
 }
 
@@ -178,13 +217,13 @@ static void ErrorState() {
 
 static int StartState() {
     // TODO(nguy8tri): Print out the beginning message
-    VERIFY(int error, Setup());
+    VERIFY(error, Setup());
     state = MENU;
     return EXIT_SUCCESS;
 }
 
 static int EndState() {
     // TODO(nguy8tri): Print out a stopping message
-    VERIFY(int error, Shutdown());
+    VERIFY(error, Shutdown());
     return EXIT_SUCCESS;
 }

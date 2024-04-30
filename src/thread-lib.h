@@ -60,6 +60,7 @@ typedef struct {
  * @param function The Thread Function to execute for the thread
  * @param resource The ThreadResource to give the function
  * 
+ * @pre An integer variable named error must be declared in this context
  * @post thread will contain the new PID (Process ID) of the thread
  * @post A new thread that runs function will now be running concurrently
  * 
@@ -67,7 +68,6 @@ typedef struct {
 */
 #define START_THREAD(thread, function, resource) \
     resource.irq_thread_rdy = true; \
-    int error; \
     VERIFY(error, pthread_create(&thread, NULL, function, &resource))
 
 /**
