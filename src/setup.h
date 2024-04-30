@@ -9,8 +9,7 @@
 
 
 #define VERIFY(code, statement) \
-    if (code = statement) return code
-
+	if ((code = statement)) return code
 
 /* Global Setup/Shutdown Functions */
 

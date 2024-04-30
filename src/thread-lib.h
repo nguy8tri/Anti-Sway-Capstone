@@ -7,6 +7,9 @@
 #include <stdbool.h>
 #include <pthread.h>
 
+#include "MyRio.h"
+#include "AIO.h"
+#include "NiFpga.h"
 #include "DIIRQ.h"
 #include "TimerIRQ.h"
 
@@ -50,6 +53,9 @@ typedef struct {
 // Mass of User (kg)
 #define m_p 2.0
 
+
+/* MyRio Session */
+NiFpga_Session myrio_session;
 
 /* Thread Construction/Destruction */
 
@@ -95,8 +101,7 @@ typedef struct {
 */
 #define STOP_THREAD(thread, resource) \
     resource.irq_thread_rdy = false; \
-    int error;
-    VERIFY(error, pthread_join(thread, NULL))
+    VERIFY(error, pthread_join(thread, NULL));
 
 /**
  * Dissasociates a thread with a timer (via its resource)
@@ -120,9 +125,9 @@ typedef struct {
  * @post The timer will trigger after waiting for the standard time step (BTI_S/MS/US)
 */
 #define TIMER_TRIGGER(irq_assert, resource) \
-    Irq_Wait(resource->irq_context,
-             TIMERIRQNO,
-             &irq_assert,
+    Irq_Wait(resource->irq_context, \
+             TIMERIRQNO, \
+             &irq_assert, \
              (NiFpga_Bool *) &(resource->irq_thread_rdy)); \
     NiFpga_WriteU32(myrio_session, IRQTIMERWRITE, BTI_US); \
     NiFpga_WriteBool(myrio_session, IRQTIMERSETTIME, NiFpga_True)

@@ -7,14 +7,19 @@
 #include <stdbool.h>
 #include <math.h>
 #include <pthread.h>
+#include <math.h>
 
 #include "MyRio.h"
+#include "DIO.h"
 #include "T1.h"
 #include "conC_Encoder_initialize.h"
 
 #include "thread-lib.h"
 
 #include "io.h"
+
+/* Reset Variable */
+static bool reset;
 
 
 /* Connector ID Convention */
@@ -57,9 +62,9 @@ static int32_t first_enc_state[2];
 // is caled), for both the X and Y Encoders
 static int32_t prev_enc_state[2];
 // Indicator if the holding for velocity is set
-static boolean holding_vel_set;
+static bool holding_vel_set;
 // Indicator if the holding for position is set
-static boolean holding_pos_set;
+static bool holding_pos_set;
 // Encoder Holding for velocity
 static Velocities holding_vel;
 // Encoder Holding for position
@@ -120,7 +125,7 @@ typedef bool Keymap[9];
  * the ith number is being pressed, and false
  * otherwise
 */
-static inline void GetKeymap(Keymap *keymap);
+static inline void GetKeymap(Keymap keymap);
 
 
 /* Keypad Definitions and Variables */
@@ -153,10 +158,11 @@ int IOSetup() {
 
     // Set Reference Positions
     first_enc_state[0] = Encoder_Counter(&x_encoder);
-    first_enc_state[1] = Encoder_counter(&y_encoder);
+    first_enc_state[1] = Encoder_Counter(&y_encoder);
 
     // Setup the holding
-    holding_set = false;
+    holding_vel_set = false;
+    holding_pos_set = false;
 
     // Setup Potentiometer Voltage Channels
     Aio_InitCI0(&x_potentiometer);
@@ -182,6 +188,9 @@ int IOSetup() {
 
     printf_lcd("Calibration Finished\n");
 
+    // Setup Reset flag
+    reset = true;
+
     return EXIT_SUCCESS;
 }
 
@@ -201,7 +210,9 @@ int IOShutdown() {
     memset(&y_motor, 0, sizeof(MyRio_Aio));
 
     // Destroy Keyboard Lock
-    VERIFY(error, pthread_mutex_destroy(&keyboard, NULL));
+    VERIFY(error, pthread_mutex_destroy(&keyboard));
+
+    return EXIT_SUCCESS;
 }
 
 
@@ -213,7 +224,7 @@ int GetReferenceVelocityCommand(Velocities *result) {
     static Keymap keymap;
 
     // Get the keymap
-    GetKeymap(&keymap);
+    GetKeymap(keymap);
 
     // Setup discrete velocity comands,
     // -1, 0, and 1
@@ -251,7 +262,7 @@ int GetAngle(Angles *result) {
 
     result->x_angle =
         POTENTIOMETER_SLOPE * (x_voltage - potentiometer_v_x_intercept);
-    result->y_anlge =
+    result->y_angle =
         POTENTIOMETER_SLOPE * (y_voltage - potentiometer_v_y_intercept);
 
     return EXIT_SUCCESS;
@@ -268,8 +279,8 @@ int GetTrolleyPosition(Positions *result) {
     }
 
     if (holding_pos_set) {
-        result->x_pos = holding->x_pos;
-        result->y_pos = holding->y_pos;
+    	result->x_pos = holding_pos.x_pos;
+        result->y_pos = holding_pos.y_pos;
 
         holding_pos_set = false;
 
@@ -283,8 +294,8 @@ int GetTrolleyPosition(Positions *result) {
     result->y_pos = ENC_2_POS((double) (next_enc_state[1] - first_enc_state[1]));
 
     if (!holding_vel_set) {
-        holding_vel->x_pos = ENC_2_VEL((double) (next_enc_state[0] - prev_enc_state[0]));
-        holding_vel->y_pos = ENC_2_VEL((double) (next_enc_state[1] - prev_enc_state[1]));
+        holding_vel.x_vel = ENC_2_VEL((double) (next_enc_state[0] - prev_enc_state[0]));
+        holding_vel.y_vel = ENC_2_VEL((double) (next_enc_state[1] - prev_enc_state[1]));
         holding_vel_set = true;
     }
 
@@ -310,8 +321,8 @@ int GetTrolleyVelocity(Velocities *result) {
     }
 
     if (holding_vel_set) {
-        result->x_vel = holding_vel->x_vel;
-        result->y_vel = holding_vel->y_vel;
+        result->x_vel = holding_vel.x_vel;
+        result->y_vel = holding_vel.y_vel;
 
         holding_vel_set = false;
 
@@ -321,12 +332,12 @@ int GetTrolleyVelocity(Velocities *result) {
     next_enc_state[0] = (int32_t) Encoder_Counter(&x_encoder);
     next_enc_state[1] = (int32_t) Encoder_Counter(&y_encoder);
 
-    result->x_pos = ENC_2_VEL((double) (next_enc_state[0] - prev_enc_state[0]));
-    result->y_pos = ENC_2_VEL((double) (next_enc_state[1] - prev_enc_state[1]));
+    result->x_vel = ENC_2_VEL((double) (next_enc_state[0] - prev_enc_state[0]));
+    result->y_vel = ENC_2_VEL((double) (next_enc_state[1] - prev_enc_state[1]));
 
     if (!holding_pos_set) {
-        holding->x_pos = ENC_2_POS((double) (next_enc_state[0] - first_enc_state[0]));
-        holding->y_pos = ENC_2_POS((double) (next_enc_state[1] - first_enc_state[1]));
+        holding_pos.x_pos = ENC_2_POS((double) (next_enc_state[0] - first_enc_state[0]));
+        holding_pos.y_pos = ENC_2_POS((double) (next_enc_state[1] - first_enc_state[1]));
         holding_pos_set = true;
     }
 
@@ -337,8 +348,8 @@ int GetTrolleyVelocity(Velocities *result) {
 }
 
 int GetUserPosition(Angles *angle, Positions *pos, Positions *result) {
-    result->x_pos = l * SIN(angle->x_angle) + pos->x_pos;
-    result->y_pos = l * SIN(angle->y_angle) + pos->y_pos;
+    result->x_pos = l * sin(angle->x_angle) + pos->x_pos;
+    result->y_pos = l * sin(angle->y_angle) + pos->y_pos;
 
     return EXIT_SUCCESS;
 }
@@ -355,10 +366,12 @@ int GetUserVelocity(Angles *angle, Velocities *vel, Velocities *result) {
 
 int SetXVoltage(Voltage voltage) {
     Aio_Write(&x_motor, voltage);
+    return EXIT_SUCCESS;
 }
 
 int SetYVoltage(Voltage voltage) {
     Aio_Write(&y_motor, voltage);
+    return EXIT_SUCCESS;
 }
 
 
@@ -389,7 +402,7 @@ bool PressedDelete() {
 /* Keymap Helper Function */
 
 
-static inline void GetKeymap(Keymap *keymap) {
+static inline void GetKeymap(Keymap keymap) {
     pthread_mutex_lock(&keyboard);
     uint8_t i, j;
 
@@ -408,4 +421,11 @@ static inline void GetKeymap(Keymap *keymap) {
         }
     }
     pthread_mutex_unlock(&keyboard);
+}
+
+
+/* Reset Functions */
+
+void Reset() {
+	reset = true;
 }

@@ -12,7 +12,7 @@
 /* Reset Feature */
 // Reset Flag for GetTrolleyPosition
 // and GetVelocityPosition
-bool reset = true;
+void Reset();
 
 
 /* Input/Output Data Types */

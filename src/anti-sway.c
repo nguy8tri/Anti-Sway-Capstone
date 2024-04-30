@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include <pthread.h>
 #include <stdint.h>
+#include <stdlib.h>
 
 #include "setup.h"
 #include "io.h"
@@ -51,6 +52,10 @@ static AntiSwayControlScheme x_control;
 // The Control Scheme for the Y Motor
 // TODO(nguy8tri): Define this statically
 static AntiSwayControlScheme y_control;
+
+
+/* Error Code */
+static int error;
 
 
 /* Scheme Setup Functions */
@@ -128,7 +133,7 @@ static void *AntiSwayModeThread(void *resource) {
         TIMER_TRIGGER(irq_assert, thread_resource);
         Velocities reference_vel;  // Reference Velocity
         Angles input;  // Rope Angle
-        Velocity trolley_vel;  // Trolley Velocity
+        Velocities trolley_vel;  // Trolley Velocity
 
         if (irq_assert) {
             // Do the loop for both motors
@@ -164,7 +169,9 @@ static inline int AntiSwayControlLaw(Velocity vel_ref,
     Voltage final_output = PID(FORCE_TO_VOLTAGE(outer_output - vel_input),
                                &(scheme->inner_prop),
                                &(scheme->inner_int),
-                               NULL);
+                               NULL,
+                               MOTOR_V_LIM_L,
+                               MOTOR_V_LIM_H);
 
     static int error;
     VERIFY(error, SetVoltage(final_output));
@@ -174,6 +181,6 @@ static inline int AntiSwayControlLaw(Velocity vel_ref,
 
 static inline void SetupScheme(AntiSwayControlScheme *scheme) {
     scheme->outer_feedback = l * g;
-    scheme->inner_prop = (m_p * m_t) * K_p
+    scheme->inner_prop = (m_p * m_t) * K_p;
     IntegratorInit(K_i, BTI_S, &(scheme->inner_int));
 }

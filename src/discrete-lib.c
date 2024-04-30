@@ -1,6 +1,8 @@
 // Copyright 2024 Anti-Sway Team (Nguyen, Tri; Espinola, Malachi;
 // Tevy, Vattanary; Hokenstad, Ethan; Neff, Callen)
 
+#include <stdlib.h>
+
 #include "discrete-lib.h"
 
 // Saturates a value (val) given a low (lo) and high (hi) value
@@ -95,7 +97,7 @@ inline double PID(double input,
                   Differentiator *d,
                   double lower_lim,
                   double upper_lim) {
-    result = 0.0;
+    double result = 0.0;
     if (p != NULL) result += *p * input;
     if (i != NULL) result += Integrate(input, i, NEG_INF, POS_INF);
     if (d != NULL) result += Differentiate(input, d, NEG_INF, POS_INF);

@@ -1,23 +1,25 @@
 // Copyright 2024 Anti-Sway Team (Nguyen, Tri; Espinola, Malachi;
 // Tevy, Vattanary; Hokenstad, Ethan; Neff, Callen)
 
+
 #include <stdbool.h>
 #include <pthread.h>
 #include <stdint.h>
+#include <stdlib.h>
 
 #include "setup.h"
 #include "io.h"
 #include "thread-lib.h"
 #include "discrete-lib.h"
 
-#include "tracking.h"
 
+#include "tracking.h"
 
 /* Thread Number & Resources */
 
 
 // Thread ID
-pthread_t tracking_thread = NULL;
+pthread_t tracking_thread;
 // Thread Resources (Shared Resources)
 ThreadResource resource;
 
@@ -58,6 +60,10 @@ static TrackingControlScheme y_control;
 #define K_po -3356.156
 // The artifical damping
 #define B (8 * m_p / T_s)
+
+
+/* Error Code */
+static int error;
 
 /**
  * Sets up a TrackingControl Scheme
@@ -139,7 +145,7 @@ static void *TrackingModeThread(void *resource) {
 
             // Get the inputs
             if (GetReferenceAngleCommand(&angle_ref)) EXIT_THREAD();
-            if (GetAngle(&input)) EXIT_THREAD();
+            if (GetAngle(&angle_input)) EXIT_THREAD();
             if (GetTrolleyPosition(&trolley_pos)) EXIT_THREAD();
             // Run both control laws
             if (TrackingControlLaw(angle_ref.x_angle,
@@ -172,7 +178,9 @@ static inline int TrackingControlLaw(Angle angle_ref,
     Voltage final_output = PID(FORCE_TO_VOLTAGE(outer_output - pos_input),
                                &(scheme->inner_prop),
                                NULL,
-                               &(scheme->inner_diff));
+                               &(scheme->inner_diff),
+                               MOTOR_V_LIM_L,
+                               MOTOR_V_LIM_H);
 
     static int error;
     VERIFY(error, SetVoltage(final_output));
@@ -183,10 +191,11 @@ static inline int TrackingControlLaw(Angle angle_ref,
 static inline void SetupScheme(TrackingControlScheme *scheme) {
     // K_po * K_pi / (K_pi + Bs) =
     //  K_po * K_pi * (1 + z^-1)/((K_pi+2*B/T)+(K_pi-2*B/T)*z^-1)
-    scheme->outer_block = {{K_po * K_pi, K_po * K_pi, 0},
-                           {K_pi + 2 * B / BTI_S, K_pi - 2 * B / BTI_S, 0},
-                           {0, 0},
-                           {0, 0}};
-    scheme->inner_prop = K_i;
+   Biquad new_b = {{K_po * K_pi, K_po * K_pi, 0.0},
+                           {K_pi + 2 * B / BTI_S, K_pi - 2 * B / BTI_S, 0.0},
+                           {0.0, 0.0},
+                           {0.0, 0.0}};
+    scheme->outer_block = new_b;
+    scheme->inner_prop = K_pi;
     DifferentiatorInit(B, BTI_S, &(scheme->inner_diff));
 }

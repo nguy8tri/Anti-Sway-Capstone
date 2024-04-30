@@ -12,11 +12,11 @@
  * 
  * @post If its already running, does nothing
 */
-void AntiSwayFork();
+int AntiSwayFork();
 
 /**
  * Stops Anti-Sway Mode (concurrent process)
 */
-void AntiSwayJoin();
+int AntiSwayJoin();
 
 #endif  // ANTI_SWAY_H_

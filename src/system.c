@@ -131,23 +131,25 @@ int SystemExec() {
     return states[state]();
 }
 
-static void AntiSwayState() {
+static int AntiSwayState() {
     // TODO(nguy8tri): other code for tracking, error, and stop transitions
     if (PressedDelete()) {
         AntiSwayJoin();
         state = MENU;
     }
+    return EXIT_SUCCESS;
 }
 
-static void TrackingState() {
+static int TrackingState() {
     // TODO(nguy8tri): other code for anti-sway, error, and stop transitions
     if (PressedDelete()) {
         TrackingJoin();
         state = MENU;
     }
+    return EXIT_SUCCESS;
 }
 
-static void IdleState() {
+static int IdleState() {
     // TODO(nguy8tri): other code for tracking, anti-sway, and stop transitions
     static Positions trolley_pos;
     static Velocities trolley_vel;
@@ -155,8 +157,9 @@ static void IdleState() {
     if (GetTrolleyPosition(&trolley_pos) || GetTrolleyVelocity(&trolley_vel) ||
         GetAngle(&rope_ang)) {
         state = ERROR;
+        return EXIT_FAILURE;
     }
-#define DECIMAL_PRECISION 3
+#define DECIMAL_PRECISION "3"
 #define RAD_2_DEG(value) value * 180.0 / PI
     printf_lcd("\f"
                "Trolley Position: (%." DECIMAL_PRECISION "f, %."
@@ -165,17 +168,18 @@ static void IdleState() {
                                        DECIMAL_PRECISION "f) m/s\n"
                 "Rope Angle: (%. " DECIMAL_PRECISION "f, %."
                                    DECIMAL_PRECISION "f) deg\n",
-                trolley_pos->x_pos, trolley_pos->y_pos,
-                trolley_vel->x_vel, trolley_pos->y_vel,
-                RAD_2_DEG(rope_ang->x_angle), RAD_2_DEG(rope_ang->y_angle));
+                trolley_pos.x_pos, trolley_pos.y_pos,
+                trolley_vel.x_vel, trolley_vel.y_vel,
+                RAD_2_DEG(rope_ang.x_angle), RAD_2_DEG(rope_ang.y_angle));
     if (PressedDelete()) {
         state = MENU;
     }
 #undef DECIMAL_PRECISION
 #undef RAD_2_DEG
+    return EXIT_SUCCESS;
 }
 
-static void MenuState() {
+static int MenuState() {
     printf_lcd("\fIndicate a mode to go to:\n"
                "\t1) Tracking\n"
                "\t2) Anti-Sway\n"
@@ -204,11 +208,11 @@ static void MenuState() {
             return EXIT_FAILURE;
     }
 
-    reset = true;
+   Reset();
     return EXIT_SUCCESS;
 }
 
-static void ErrorState() {
+static int ErrorState() {
     // TODO(nguy8tri): Determine the error that happened and print it
     printf_lcd("An error has occured. Exiting Program\n");
     Shutdown();
