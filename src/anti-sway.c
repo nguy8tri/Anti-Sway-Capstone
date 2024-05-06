@@ -144,20 +144,30 @@ static void *AntiSwayModeThread(void *resource) {
             // Do the loop for both motors
 
             // Get the inputs
-            if (GetReferenceVelocityCommand(&reference_vel)) EXIT_THREAD();
-            if (GetAngle(&input)) EXIT_THREAD();
-            if (GetTrolleyVelocity(&trolley_vel)) EXIT_THREAD();
+            if (GetReferenceVelocityCommand(&reference_vel)) {
+            	EXIT_THREAD();
+            }
+            if (GetAngle(&input)) {
+            	EXIT_THREAD();
+            }
+            if (GetTrolleyVelocity(&trolley_vel)) {
+            	EXIT_THREAD();
+            }
             // Run both control laws
             if (AntiSwayControlLaw(reference_vel.x_vel,
                                    input.x_angle,
                                    trolley_vel.x_vel,
                                    &x_control,
-                                   SetXVoltage)) EXIT_THREAD();
+                                   SetXVoltage)) {
+            	EXIT_THREAD();
+            }
             if (AntiSwayControlLaw(reference_vel.y_vel,
                                    input.y_angle,
                                    trolley_vel.y_vel,
                                    &y_control,
-                                   SetYVoltage)) EXIT_THREAD();
+                                   SetYVoltage)) {
+            	EXIT_THREAD();
+            }
         }
     }
 

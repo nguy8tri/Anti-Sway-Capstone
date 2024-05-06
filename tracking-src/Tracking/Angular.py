@@ -10,10 +10,10 @@ from typing import List, Tuple
 g = 9.81
 
 # System Parameters
-M_m = 2 # about 9 lbs
+M_m = 1 # about 9 lbs
 l_perp = 0.5 # 1.5 ft
-frac_supp = 0.3
-M_p = 1
+frac_supp = 1.0
+M_p = 0.5
 F_supp = M_p * g * frac_supp
 
 # Computer-World Interface Parameters
@@ -124,6 +124,7 @@ def gen_norm_vel_disturbance(velocity : float, max_dist : float, samples : int, 
 def simulate(X0 = 0.0, x_lim = (0.5588 ** 2 + 0.6096 ** 2) ** 0.5,
              v_lim = 0.5, samples = 100000, vel_option=False):
     B_m, K_1, K_2 = optimize(0.1, 0.05)
+    print(B_m, K_1, K_2)
 
     closed_num_reg = [-K_1 * K_2]
     closed_num_dist = [M_m, B_m, K_1]

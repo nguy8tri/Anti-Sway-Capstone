@@ -125,6 +125,8 @@ static int error;
 int SystemExec() {
     VERIFY(error, StartState());
 
+    state = MENU;
+
     while (state != ERROR && state != END) {
         states[state]();
     }
@@ -160,14 +162,15 @@ static int IdleState() {
 }
 
 static int MenuState() {
-    printf_lcd("\fIndicate a mode to go to:\n"
+	printf_lcd("\f");
+    printf_lcd("\n"
                "\t1) Tracking\n"
                "\t2) Anti-Sway\n"
-               "\t3) Idle, 4) Exit\n");
+               "\t3) Idle, 4) Exit\n"
+    		   "Indicate a mode: ");
 
     int key;
     while (!('1' <= (key = getchar_keypad()) && key <= '4')) {}
-
     switch (key) {
         case '1':
             TrackingFork();

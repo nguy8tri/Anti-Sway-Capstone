@@ -9,7 +9,7 @@
 
 
 /**
- * Executes Tracking Mode (Concurrently)
+ * Executes Tracking Mode (concurrently)
  * 
  * @post If its already running, does nothing
  * 

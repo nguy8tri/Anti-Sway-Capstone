@@ -34,7 +34,7 @@ static bool reset;
 
 // Best-Fit Potentiometer Slope (rad/V)
 // TODO(nguy8tri): Find this quantity
-#define POTENTIOMETER_SLOPE 1.0
+#define POTENTIOMETER_SLOPE -2.11 * PI / 180.0
 // Calibrated Voltage Intercept (x-intercept)
 // for X Potentiometer
 static float potentiometer_v_x_intercept;
@@ -75,7 +75,7 @@ static Positions holding_pos;
 #define ENC_CNT_REV 2000.0
 // Meters per revolution
 // Diameter of upper pulley (12 mm) * PI
-#define M_PER_REV 0.012 * PI
+#define M_PER_REV 0.01267 * PI
 /** 
  * Converts a BDI quantity to meters
  * 
@@ -168,9 +168,9 @@ int IOSetup() {
     holding_vel_set = false;
     holding_pos_set = false;
 
-    // Setup Potentiometer Voltage Channels
-    Aio_InitCI0(&x_potentiometer);
-    Aio_InitCI1(&y_potentiometer);
+    // Setup Potentiometer Voltage Channels (are swapped)
+    Aio_InitCI1(&x_potentiometer);
+    Aio_InitCI0(&y_potentiometer);
 
     // Calibrate voltage intercepts for potentiometer
     potentiometer_v_x_intercept = Aio_Read(&x_potentiometer);
@@ -412,18 +412,16 @@ static inline void GetKeymap(Keymap keymap) {
 
     memset(keymap, false, sizeof(Keymap));
 
-    while (NiFpga_True) {
-        for (i = 0; i < LCD_KEYPAD_LEN - 1; i++) {
-            for (j = 0; j < LCD_KEYPAD_LEN - 1; j++) {
-                Dio_WriteBit(channel + j, i == j ? NiFpga_False : NiFpga_True);
-            }
-            for (j = LCD_KEYPAD_LEN; j < 2 * LCD_KEYPAD_LEN - 1; j++) {
-                if (!Dio_ReadBit(channel + j)) {
-                    keymap[3 * (j - LCD_KEYPAD_LEN) + i] = true;
-                }
-            }
-        }
-    }
+	for (i = 0; i < LCD_KEYPAD_LEN - 1; i++) {
+		for (j = 0; j < LCD_KEYPAD_LEN - 1; j++) {
+			Dio_WriteBit(channel + j, i == j ? NiFpga_False : NiFpga_True);
+		}
+		for (j = LCD_KEYPAD_LEN; j < 2 * LCD_KEYPAD_LEN - 1; j++) {
+			if (!Dio_ReadBit(channel + j)) {
+				keymap[3 * (j - LCD_KEYPAD_LEN) + i] = true;
+			}
+		}
+	}
     pthread_mutex_unlock(&keyboard);
 }
 

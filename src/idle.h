@@ -5,7 +5,8 @@
 #define IDLE_H_
 
 /**
- * Executes Idle Mode (Concurrently)
+ * Executes Idle Mode (concurrently), so we see
+ * how badly we messed up our code/sensors
  *
  * @post If its already running, does nothing
  * 
@@ -14,7 +15,8 @@
 int IdleFork();
 
 /**
- * Stops Idle Mode (concurrent process)
+ * Stops Idle Mode (concurrent process) and our
+ * pain
  * 
  * @return 0 upon success, negative if error
 */

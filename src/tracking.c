@@ -57,7 +57,7 @@ static TrackingControlScheme y_control;
 // The inner-loop proportional constant
 #define K_pi 1.0
 // The outer-loop proportional constant
-#define K_po -3356.156
+#define K_po -100.43945510577155
 // The artifical damping
 #define B (8 * m_p / T_s)
 
@@ -144,20 +144,30 @@ static void *TrackingModeThread(void *resource) {
             // Do the loop for both motors
 
             // Get the inputs
-            if (GetReferenceAngleCommand(&angle_ref)) EXIT_THREAD();
-            if (GetAngle(&angle_input)) EXIT_THREAD();
-            if (GetTrolleyPosition(&trolley_pos)) EXIT_THREAD();
+            if (GetReferenceAngleCommand(&angle_ref)) {
+            	EXIT_THREAD();
+            }
+            if (GetAngle(&angle_input)) {
+            	EXIT_THREAD();
+            }
+            if (GetTrolleyPosition(&trolley_pos)) {
+            	EXIT_THREAD();
+            }
             // Run both control laws
             if (TrackingControlLaw(angle_ref.x_angle,
                                    angle_input.x_angle,
                                    trolley_pos.x_pos,
                                    &x_control,
-                                   SetXVoltage)) EXIT_THREAD();
+                                   SetXVoltage)) {
+            	EXIT_THREAD();
+            }
             if (TrackingControlLaw(angle_ref.y_angle,
                                    angle_input.y_angle,
                                    trolley_pos.y_pos,
                                    &y_control,
-                                   SetYVoltage)) EXIT_THREAD();
+                                   SetYVoltage)) {
+            	EXIT_THREAD();
+            }
         }
     }
 
