@@ -96,7 +96,7 @@ static void *IdleModeThread(void *resource) {
                     "V:(%." DECIMAL_PRECISION "f, %."
                                             DECIMAL_PRECISION "f) m/s"
                     "A:(%." DECIMAL_PRECISION "f, %."
-                                    DECIMAL_PRECISION "f) deg\n",
+                                    DECIMAL_PRECISION "f) deg\n\n",
                     trolley_pos.x_pos, trolley_pos.y_pos,
                     trolley_vel.x_vel, trolley_vel.y_vel,
                     RAD_2_DEG(rope_ang.x_angle),

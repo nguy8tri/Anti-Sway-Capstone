@@ -12,3 +12,4 @@
 # Ignore T1 library and .vscode library
 T1
 .vscode
+*.mat

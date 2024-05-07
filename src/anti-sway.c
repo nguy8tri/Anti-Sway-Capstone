@@ -10,6 +10,7 @@
 #include "io.h"
 #include "thread-lib.h"
 #include "discrete-lib.h"
+#include "record.h"
 
 #include "anti-sway.h"
 
@@ -61,6 +62,28 @@ static AntiSwayControlScheme y_control;
 
 
 static int error;
+
+
+/* Data Recording Structures */
+
+
+// The file ID
+static FileID_t file = -1;
+// The file Name
+static char *data_file_name = "anti-sway";
+// The number of entries
+#define DATA_LEN 9
+// The data names
+static char *data_names[DATA_LEN] = {"id", "vel_ref_x", "vel_ref_y",
+                                     "angle_x", "angle_y",
+                                     "trolley_vel_x", "trolley_vel_y",
+                                     "voltage_x", "voltage_y"};
+// Buffer for data
+static double data[DATA_LEN];
+// Pointer to next data point to insert into buffer
+static double *data_buff = data;
+// ID variable
+static int id = 1;
 
 
 /* Scheme Setup Functions */
@@ -117,6 +140,9 @@ static inline int AntiSwayControlLaw(Velocity vel_ref,
 
 
 int AntiSwayFork() {
+    if (file == -1) {
+        file = OpenDataFile(data_file_name, data_names, DATA_LEN);
+    }
     SetupScheme(&x_control);
     SetupScheme(&y_control);
     REGISTER_TIMER(anti_sway_resource);
@@ -153,6 +179,14 @@ static void *AntiSwayModeThread(void *resource) {
             if (GetTrolleyVelocity(&trolley_vel)) {
             	EXIT_THREAD();
             }
+            // Record Data
+            *data_buff++ = id;
+            *data_buff++ = reference_vel.x_vel;
+            *data_buff++ = reference_vel.y_vel;
+            *data_buff++ = input.x_angle;
+            *data_buff++ = input.y_angle;
+            *data_buff++ = trolley_vel.x_vel;
+            *data_buff++ = trolley_vel.y_vel;
             // Run both control laws
             if (AntiSwayControlLaw(reference_vel.x_vel,
                                    input.x_angle,
@@ -168,6 +202,9 @@ static void *AntiSwayModeThread(void *resource) {
                                    SetYVoltage)) {
             	EXIT_THREAD();
             }
+            // Send data into file
+            RecordData(file, data, DATA_LEN);
+            data_buff = data;
         }
     }
 
@@ -190,7 +227,7 @@ static inline int AntiSwayControlLaw(Velocity vel_ref,
 
     static int error;
     VERIFY(error, SetVoltage(final_output));
-
+    *data_buff++ = final_output;
     return EXIT_SUCCESS;
 }
 

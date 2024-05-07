@@ -75,7 +75,7 @@ inline double Integrate(double input,
     double result = term->prev_output + term->gain * (input + term->prev_input);
     term->prev_input = input;
     term->prev_output = result;
-    return result;
+    return SATURATE(result, lower_lim, upper_lim);
 }
 
 inline double Differentiate(double input,

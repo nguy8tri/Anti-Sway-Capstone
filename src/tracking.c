@@ -11,9 +11,10 @@
 #include "io.h"
 #include "thread-lib.h"
 #include "discrete-lib.h"
-
+#include "record.h"
 
 #include "tracking.h"
+
 
 /* Thread Number & Resources */
 
@@ -57,13 +58,34 @@ static TrackingControlScheme y_control;
 // The inner-loop proportional constant
 #define K_pi 1.0
 // The outer-loop proportional constant
-#define K_po -100.43945510577155
+#define K_po -2.43945510577155
 // The artifical damping
 #define B (8 * m_p / T_s)
 
 
 /* Error Code */
 static int error;
+
+
+/* Data Recording Structures */
+
+
+// The file ID
+static FileID_t file = -1;
+// The file Name
+static char *data_file_name = "tracking";
+// The number of entries
+#define DATA_LEN 7
+// The data names
+static char *data_names[DATA_LEN] = {"id", "angle_x", "angle_y",
+                                     "trolley_x", "trolley_y",
+                                     "voltage_x", "voltage_y"};
+// Buffer for data
+static double data[DATA_LEN];
+// Pointer to next data point to insert into buffer
+static double *data_buff = data;
+// ID variable
+static int id = 1;
 
 /**
  * Sets up a TrackingControl Scheme
@@ -74,6 +96,7 @@ static int error;
  * outer/inner-loop control characteristics
 */
 static inline void SetupScheme(TrackingControlScheme *scheme);
+
 
 /* Thread Functions */
 
@@ -117,6 +140,9 @@ static inline int TrackingControlLaw(Angle angle_ref,
 
 
 int TrackingFork() {
+    if (file == -1) {
+        file = OpenDataFile(data_file_name, data_names, DATA_LEN);
+    }
     SetupScheme(&x_control);
     SetupScheme(&y_control);
     REGISTER_TIMER(resource);
@@ -127,6 +153,7 @@ int TrackingFork() {
 int TrackingJoin() {
     STOP_THREAD(tracking_thread, resource);
     UNREGISTER_TIMER(resource);
+    id++;
     return EXIT_SUCCESS;
 }
 
@@ -153,6 +180,13 @@ static void *TrackingModeThread(void *resource) {
             if (GetTrolleyPosition(&trolley_pos)) {
             	EXIT_THREAD();
             }
+            // Record the sensor data
+            *data_buff++ = id;
+            *data_buff++ = angle_input.x_angle;
+            *data_buff++ = angle_input.y_angle;
+            *data_buff++ = trolley_pos.x_pos;
+            *data_buff++ = trolley_pos.y_pos;
+
             // Run both control laws
             if (TrackingControlLaw(angle_ref.x_angle,
                                    angle_input.x_angle,
@@ -168,6 +202,10 @@ static void *TrackingModeThread(void *resource) {
                                    SetYVoltage)) {
             	EXIT_THREAD();
             }
+
+            // Send data into file
+            RecordData(file, data, DATA_LEN);
+            data_buff = data;
         }
     }
 
@@ -194,6 +232,7 @@ static inline int TrackingControlLaw(Angle angle_ref,
 
     static int error;
     VERIFY(error, SetVoltage(final_output));
+    *data_buff++ = final_output;
 
     return EXIT_SUCCESS;
 }

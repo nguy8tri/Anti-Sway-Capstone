@@ -6,6 +6,7 @@
 #include "MyRio.h"
 #include "T1.h"
 
+#include "record.h"
 #include "io.h"
 
 #include "setup.h"
@@ -20,5 +21,6 @@ int Setup() {
 
 int Shutdown() {
     VERIFY(error, IOShutdown());
+    VERIFY(error, SaveDataFiles());
     return MyRio_Close();
 }
