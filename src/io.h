@@ -52,7 +52,7 @@ typedef struct {
 
 /* Sensor Variables */
 // The Timer
-MyRio_IrqTimer timer;
+extern MyRio_IrqTimer timer;
 
 /* Actuator Limits */
 // Motor Voltage High Limit (V)

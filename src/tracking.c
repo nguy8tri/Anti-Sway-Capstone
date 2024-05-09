@@ -58,7 +58,7 @@ static TrackingControlScheme y_control;
 // The inner-loop proportional constant
 #define K_pi 1.0
 // The outer-loop proportional constant
-#define K_po -2.43945510577155
+#define K_po -2.5
 // The artifical damping
 #define B (8 * m_p / T_s)
 
@@ -73,13 +73,14 @@ static int error;
 // The file ID
 static FileID_t file = -1;
 // The file Name
-static char *data_file_name = "tracking";
+static char *data_file_name = "tracking.mat";
 // The number of entries
-#define DATA_LEN 7
+#define DATA_LEN 10
 // The data names
-static char *data_names[DATA_LEN] = {"id", "angle_x", "angle_y",
+static char *data_names[DATA_LEN] = {"id", "t", "angle_x", "angle_y",
                                      "trolley_x", "trolley_y",
-                                     "voltage_x", "voltage_y"};
+                                     "voltage_x", "voltage_y",
+                                     "inner_x", "inner_y"};
 // Buffer for data
 static double data[DATA_LEN];
 // Pointer to next data point to insert into buffer
@@ -138,7 +139,6 @@ static inline int TrackingControlLaw(Angle angle_ref,
 
 /* Tracking Mode Function Definitions */
 
-
 int TrackingFork() {
     if (file == -1) {
         file = OpenDataFile(data_file_name, data_names, DATA_LEN);
@@ -159,13 +159,13 @@ int TrackingJoin() {
 
 static void *TrackingModeThread(void *resource) {
     ThreadResource *thread_resource = (ThreadResource *) resource;
-
+    double t = 0.0;
     while (thread_resource->irq_thread_rdy) {
-        uint32_t irq_assert = 0;
+        static uint32_t irq_assert = 1;
         TIMER_TRIGGER(irq_assert, thread_resource);
-        Angles angle_ref;
-        Angles angle_input;
-        Positions trolley_pos;
+        static Angles angle_ref;
+        static Angles angle_input;
+        static Positions trolley_pos;
 
         if (irq_assert) {
             // Do the loop for both motors
@@ -182,6 +182,7 @@ static void *TrackingModeThread(void *resource) {
             }
             // Record the sensor data
             *data_buff++ = id;
+            *data_buff++ = t;
             *data_buff++ = angle_input.x_angle;
             *data_buff++ = angle_input.y_angle;
             *data_buff++ = trolley_pos.x_pos;
@@ -206,9 +207,12 @@ static void *TrackingModeThread(void *resource) {
             // Send data into file
             RecordData(file, data, DATA_LEN);
             data_buff = data;
+            t += BTI_S;
+
+            Irq_Acknowledge(irq_assert);
         }
     }
-
+    printf("Time: %f s\n", t);
     EXIT_THREAD();
 }
 
@@ -222,6 +226,7 @@ static inline int TrackingControlLaw(Angle angle_ref,
                                   1,
                                   NEG_INF,
                                   POS_INF);
+    *data_buff++ = outer_output;
 
     Voltage final_output = PID(FORCE_TO_VOLTAGE(outer_output - pos_input),
                                &(scheme->inner_prop),
@@ -239,9 +244,10 @@ static inline int TrackingControlLaw(Angle angle_ref,
 
 static inline void SetupScheme(TrackingControlScheme *scheme) {
     // K_po * K_pi / (K_pi + Bs) =
-    //  K_po * K_pi * (1 + z^-1)/((K_pi+2*B/T)+(K_pi-2*B/T)*z^-1)
-   Biquad new_b = {{K_po * K_pi, K_po * K_pi, 0.0},
-                           {K_pi + 2 * B / BTI_S, K_pi - 2 * B / BTI_S, 0.0},
+    //  AT * (1 + z^-1) / ((2B+CT)+(CT-2B)z^-1)
+    // where A = K_poK_pi, B=B, C=K_pi
+   Biquad new_b = {{K_po * K_pi * BTI_S, K_po * K_pi * BTI_S, 0.0},
+                           {K_pi * BTI_S + 2 * B, K_pi * BTI_S - 2 * B, 0.0},
                            {0.0, 0.0},
                            {0.0, 0.0}};
     scheme->outer_block = new_b;

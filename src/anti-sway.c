@@ -28,9 +28,9 @@ ThreadResource anti_sway_resource;
 
 
 // The proportional constant for inner-loop
-#define K_p 37.7
+#define K_p -5.0
 // The integral constant for inner-loop control
-#define K_i 25.1
+#define K_i -1.0
 
 
 /* Control Loop Scheme */
@@ -70,11 +70,11 @@ static int error;
 // The file ID
 static FileID_t file = -1;
 // The file Name
-static char *data_file_name = "anti-sway";
+static char *data_file_name = "anti-sway.mat";
 // The number of entries
-#define DATA_LEN 9
+#define DATA_LEN 10
 // The data names
-static char *data_names[DATA_LEN] = {"id", "vel_ref_x", "vel_ref_y",
+static char *data_names[DATA_LEN] = {"id", "t", "vel_ref_x", "vel_ref_y",
                                      "angle_x", "angle_y",
                                      "trolley_vel_x", "trolley_vel_y",
                                      "voltage_x", "voltage_y"};
@@ -84,9 +84,13 @@ static double data[DATA_LEN];
 static double *data_buff = data;
 // ID variable
 static int id = 1;
+// timestamp
+static double t = 0.0;
 
 
 /* Scheme Setup Functions */
+
+
 /**
  * Sets up an AntiSwayControlScheme
  * 
@@ -153,6 +157,8 @@ int AntiSwayFork() {
 int AntiSwayJoin() {
     STOP_THREAD(anti_sway_thread, anti_sway_resource);
     UNREGISTER_TIMER(anti_sway_resource);
+    id++;
+    t = 0.0;
     return EXIT_SUCCESS;
 }
 
@@ -161,8 +167,11 @@ static void *AntiSwayModeThread(void *resource) {
 
     while (thread_resource->irq_thread_rdy) {
         uint32_t irq_assert = 0;
-        TIMER_TRIGGER(irq_assert, thread_resource);
-        Velocities reference_vel;  // Reference Velocity
+        Irq_Wait(thread_resource->irq_context, TIMERIRQNO, &irq_assert, (NiFpga_Bool *) &(thread_resource->irq_thread_rdy));
+
+		NiFpga_WriteU32(myrio_session, IRQTIMERWRITE, 50u);
+		NiFpga_WriteBool(myrio_session, IRQTIMERSETTIME, NiFpga_True);
+        Velocities reference_vel = {0.0, 0.0};  // Reference Velocity
         Angles input;  // Rope Angle
         Velocities trolley_vel;  // Trolley Velocity
 
@@ -170,9 +179,9 @@ static void *AntiSwayModeThread(void *resource) {
             // Do the loop for both motors
 
             // Get the inputs
-            if (GetReferenceVelocityCommand(&reference_vel)) {
+          /*  if (GetReferenceVelocityCommand(&reference_vel)) {
             	EXIT_THREAD();
-            }
+            }*/
             if (GetAngle(&input)) {
             	EXIT_THREAD();
             }
@@ -181,6 +190,7 @@ static void *AntiSwayModeThread(void *resource) {
             }
             // Record Data
             *data_buff++ = id;
+            *data_buff++ = (t += BTI_S);
             *data_buff++ = reference_vel.x_vel;
             *data_buff++ = reference_vel.y_vel;
             *data_buff++ = input.x_angle;
@@ -189,7 +199,7 @@ static void *AntiSwayModeThread(void *resource) {
             *data_buff++ = trolley_vel.y_vel;
             // Run both control laws
             if (AntiSwayControlLaw(reference_vel.x_vel,
-                                   input.x_angle,
+                                  - input.x_angle,
                                    trolley_vel.x_vel,
                                    &x_control,
                                    SetXVoltage)) {
@@ -205,6 +215,8 @@ static void *AntiSwayModeThread(void *resource) {
             // Send data into file
             RecordData(file, data, DATA_LEN);
             data_buff = data;
+
+            Irq_Acknowledge(irq_assert);
         }
     }
 
@@ -233,6 +245,6 @@ static inline int AntiSwayControlLaw(Velocity vel_ref,
 
 static inline void SetupScheme(AntiSwayControlScheme *scheme) {
     scheme->outer_feedback = l * g;
-    scheme->inner_prop = (m_p * m_t) * K_p;
-    IntegratorInit(K_i, BTI_S, &(scheme->inner_int));
+    scheme->inner_prop = (m_p + m_t) * K_p;
+    IntegratorInit(K_i * (m_p + m_t), BTI_S, &(scheme->inner_int));
 }

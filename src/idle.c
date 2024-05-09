@@ -76,6 +76,7 @@ static void *IdleModeThread(void *resource) {
             // Get trolley info
 
             if (GetTrolleyPosition(&trolley_pos)) {
+
             	EXIT_THREAD();
             }
 

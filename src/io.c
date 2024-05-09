@@ -141,6 +141,9 @@ static pthread_mutex_t keyboard;
 /* Error Handling */
 static int error;
 
+MyRio_IrqTimer timer;
+
+
 
 /* Setup/Shutdown Functions */
 

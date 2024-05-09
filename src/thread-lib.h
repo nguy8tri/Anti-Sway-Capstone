@@ -12,9 +12,9 @@
 #include "NiFpga.h"
 #include "DIIRQ.h"
 #include "TimerIRQ.h"
+#include "io.h"
 
 #include "setup.h"
-#include "io.h"
 
 /* Thread Data Structures */
 
@@ -22,8 +22,9 @@
  * Defines the general ThreadResource
 */
 typedef struct {
-    NiFpga_IrqContext irq_context;  // context
+	NiFpga_IrqContext irq_context;  // context
     NiFpga_Bool irq_thread_rdy;  // stop signal
+    int error;
 } ThreadResource;
 
 
@@ -31,9 +32,9 @@ typedef struct {
 
 
 // The timestep, in microseconds (us)
-#define BTI_US 5000
+#define BTI_US 5000u
 // The timestep, in milliseconds (ms)
-#define BTI_MS 5
+#define BTI_MS 5u
 // The timestep, in seconds (s)
 #define BTI_S 0.005
 
@@ -49,13 +50,17 @@ typedef struct {
 // TODO(nguy8tri): Define this quantity
 #define l 0.5
 // Mass of Trolley (kg)
-#define m_t 1.0
+#define m_t 2.092
+// TODO(nguy8tri): Change the masses
+// Mass of whole system 2.092 kg
+// Mass of single trolley: 0.664 kg
+// Mass of User 0.765 kg
 // Mass of User (kg)
-#define m_p 2.0
+#define m_p 0.765
 
 
 /* MyRio Session */
-NiFpga_Session myrio_session;
+extern NiFpga_Session myrio_session;
 
 /* Thread Construction/Destruction */
 
