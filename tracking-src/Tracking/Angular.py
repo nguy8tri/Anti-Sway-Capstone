@@ -10,14 +10,14 @@ from typing import List, Tuple
 g = 9.81
 
 # System Parameters
-M_m = 1 # about 9 lbs
-l_perp = 0.5 # 1.5 ft
+M_m = 2.03 # about 9 lbs
+l_perp = 0.47 # 1.5 ft
 frac_supp = 1.0
-M_p = 0.5
+M_p = 0.765
 F_supp = M_p * g * frac_supp
 
 # Computer-World Interface Parameters
-r = 0.003
+r = 0.005
 K_m = 0.11
 K_a = 0.41
 K = K_m * K_a
@@ -173,8 +173,6 @@ if __name__ == "__main__":
         (x_ref, v_ref, theta_ref), \
         (vel_real, x_real, theta_real), \
         (F_real, T_real, rpm_real, A_real, V_real) = simulate()
-
-    print(max(T_real), max(A_real))
 
     # Plot Primary Outputs
     fig, axs = plt.subplots(5, figsize=(8,8))

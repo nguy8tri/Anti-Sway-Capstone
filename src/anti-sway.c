@@ -28,9 +28,9 @@ ThreadResource anti_sway_resource;
 
 
 // The proportional constant for inner-loop
-#define K_p -5.0
+#define K_pt -5.0
 // The integral constant for inner-loop control
-#define K_i -1.0
+#define K_it -1.0
 
 
 /* Control Loop Scheme */
@@ -95,11 +95,17 @@ static double t = 0.0;
  * Sets up an AntiSwayControlScheme
  * 
  * @param scheme The scheme to setup
+ * @param K_p The proportional gain
+ * @param K_i The integral gain
+ * @param m The combined masses
  * 
  * @post scheme is now setup with zero
  * initial conditions and proper constants
 */
-static inline void SetupScheme(AntiSwayControlScheme *scheme);
+static inline void SetupScheme(AntiSwayControlScheme *scheme,
+                               Propotional K_p,
+                               Proportional K_i
+                               Proportional m);
 
 
 /* Thread Functions */
@@ -147,8 +153,8 @@ int AntiSwayFork() {
     if (file == -1) {
         file = OpenDataFile(data_file_name, data_names, DATA_LEN);
     }
-    SetupScheme(&x_control);
-    SetupScheme(&y_control);
+    SetupScheme(&x_control, K_pt, K_it, m_t + m_p);
+    SetupScheme(&y_control, K_pt, K_it, m_t + m_p);
     REGISTER_TIMER(anti_sway_resource);
     START_THREAD(anti_sway_thread, AntiSwayModeThread, anti_sway_resource);
     return EXIT_SUCCESS;
@@ -179,9 +185,9 @@ static void *AntiSwayModeThread(void *resource) {
             // Do the loop for both motors
 
             // Get the inputs
-          /*  if (GetReferenceVelocityCommand(&reference_vel)) {
+            if (GetReferenceVelocityCommand(&reference_vel)) {
             	EXIT_THREAD();
-            }*/
+            }
             if (GetAngle(&input)) {
             	EXIT_THREAD();
             }
@@ -243,8 +249,11 @@ static inline int AntiSwayControlLaw(Velocity vel_ref,
     return EXIT_SUCCESS;
 }
 
-static inline void SetupScheme(AntiSwayControlScheme *scheme) {
+static inline void SetupScheme(AntiSwayControlScheme *scheme,
+                               Propotional K_p,
+                               Proportional K_i
+                               Proportional m) {
     scheme->outer_feedback = l * g;
-    scheme->inner_prop = (m_p + m_t) * K_p;
-    IntegratorInit(K_i * (m_p + m_t), BTI_S, &(scheme->inner_int));
+    scheme->inner_prop = m * K_p;
+    IntegratorInit(K_i * m, BTI_S, &(scheme->inner_int));
 }

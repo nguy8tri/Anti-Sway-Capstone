@@ -43,10 +43,8 @@ typedef struct {
 // Reference Angle (rad)
 #define NOMINAL_REFERENCE_ANGLE 0.0
 // The Control Scheme for the X Motor
-// TODO(nguy8tri): Define this statically
 static TrackingControlScheme x_control;
 // The Control Scheme for the Y Motor
-// TODO(nguy8tri): Define this statically
 static TrackingControlScheme y_control;
 
 // The settling time (0.1 s)
@@ -60,7 +58,7 @@ static TrackingControlScheme y_control;
 // The outer-loop proportional constant
 #define K_po -2.5
 // The artifical damping
-#define B (8 * m_p / T_s)
+#define B_t (8 * m_p / T_s)
 
 
 /* Error Code */
@@ -92,11 +90,17 @@ static int id = 1;
  * Sets up a TrackingControl Scheme
  * 
  * @param scheme The scheme to setup
+ * @param K_o The outer loop gain
+ * @param K_i The inner loop gain
+ * @param B The artificial damping to impose
  * 
  * @post scheme is setup with appropriate
  * outer/inner-loop control characteristics
 */
-static inline void SetupScheme(TrackingControlScheme *scheme);
+static inline void SetupScheme(TrackingControlScheme *scheme,
+                               Proportional K_o,
+                               Proportional K_i,
+                               Proportional B);
 
 
 /* Thread Functions */
@@ -139,12 +143,13 @@ static inline int TrackingControlLaw(Angle angle_ref,
 
 /* Tracking Mode Function Definitions */
 
+
 int TrackingFork() {
     if (file == -1) {
         file = OpenDataFile(data_file_name, data_names, DATA_LEN);
     }
-    SetupScheme(&x_control);
-    SetupScheme(&y_control);
+    SetupScheme(&x_control, K_po, K_pi, B_t);
+    SetupScheme(&y_control, K_po, K_pi, B_t);
     REGISTER_TIMER(resource);
     START_THREAD(tracking_thread, TrackingModeThread, resource);
     return EXIT_SUCCESS;
@@ -242,15 +247,18 @@ static inline int TrackingControlLaw(Angle angle_ref,
     return EXIT_SUCCESS;
 }
 
-static inline void SetupScheme(TrackingControlScheme *scheme) {
+static inline void SetupScheme(TrackingControlScheme *scheme,
+                               Proportional K_o,
+                               Proportional K_i,
+                               Proportional B) {
     // K_po * K_pi / (K_pi + Bs) =
     //  AT * (1 + z^-1) / ((2B+CT)+(CT-2B)z^-1)
     // where A = K_poK_pi, B=B, C=K_pi
-   Biquad new_b = {{K_po * K_pi * BTI_S, K_po * K_pi * BTI_S, 0.0},
-                           {K_pi * BTI_S + 2 * B, K_pi * BTI_S - 2 * B, 0.0},
+   Biquad new_b = {{K_o * K_i * BTI_S, K_o * K_i * BTI_S, 0.0},
+                           {K_i * BTI_S + 2 * B, K_i * BTI_S - 2 * B, 0.0},
                            {0.0, 0.0},
                            {0.0, 0.0}};
     scheme->outer_block = new_b;
-    scheme->inner_prop = K_pi;
+    scheme->inner_prop = K_i;
     DifferentiatorInit(B, BTI_S, &(scheme->inner_diff));
 }

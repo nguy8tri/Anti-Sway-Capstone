@@ -22,9 +22,8 @@
  * Defines the general ThreadResource
 */
 typedef struct {
-	NiFpga_IrqContext irq_context;  // context
+    NiFpga_IrqContext irq_context;  // context
     NiFpga_Bool irq_thread_rdy;  // stop signal
-    int error;
 } ThreadResource;
 
 
@@ -48,9 +47,11 @@ typedef struct {
 #define PI 3.141592653549
 // Length of Rope (m)
 // TODO(nguy8tri): Define this quantity
-#define l 0.5
-// Mass of Trolley (kg)
-#define m_t 2.092
+#define l 0.47
+// Mass of the double Trolley (kg)
+#define m_dt 2.092
+// Mass of the single Trolley (kg)
+#define m_st 1.664
 // TODO(nguy8tri): Change the masses
 // Mass of whole system 2.092 kg
 // Mass of single trolley: 0.664 kg
@@ -62,7 +63,9 @@ typedef struct {
 /* MyRio Session */
 extern NiFpga_Session myrio_session;
 
+
 /* Thread Construction/Destruction */
+
 
 /**
  * Starts a thread

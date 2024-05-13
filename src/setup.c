@@ -8,12 +8,17 @@
 
 #include "record.h"
 #include "io.h"
+#include "error.h"
 
 #include "setup.h"
 
 static int error;
 
+// Declare the universal error code
+int u_error;
+
 int Setup() {
+    u_error = 0;
     if (MyRio_IsNotSuccess(MyRio_Open())) return EXIT_FAILURE;
     VERIFY(error, IOSetup());
     return EXIT_SUCCESS;

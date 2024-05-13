@@ -14,6 +14,7 @@
 #include "T1.h"
 #include "conC_Encoder_initialize.h"
 
+#include "error.h"
 #include "thread-lib.h"
 
 #include "io.h"
@@ -76,7 +77,7 @@ static Positions holding_pos;
 // Meters per revolution
 // Diameter of upper pulley (12 mm) * PI
 #define M_PER_REV 0.01267 * PI
-/** 
+/**
  * Converts a BDI quantity to meters
  * 
  * @param value THe BDI to convert
@@ -90,6 +91,8 @@ static Positions holding_pos;
 */
 #define ENC_2_VEL(value) \
     (value) / (BTI_S * ENC_CNT_REV) * M_PER_REV
+
+
 
 /* Motors and Motor Constants */
 
@@ -105,28 +108,13 @@ MyRio_Aio y_motor;
 
 // The unit velocity stop corresponding
 // to a keypad touch (m/s)
-#define UNIT_VEL 0.05
+#define UNIT_VEL 0.1
 
 /**
  * Holds booleans indicating which
  * buttons (1 through 9) are being pressed
 */
 typedef bool Keymap[9];
-
-/**
- * Obtains the numerical buttons pressed
- * (1 through 9)
- * 
- * @param keymap A return paramter, which will
- * indicate which buttons are being pressed
- * 
- * @return keymap, which for any arbitrary
- * index i, will be Keymap[i] == true iff
- * the ith number is being pressed, and false
- * otherwise
-*/
-static inline void GetKeymap(Keymap keymap);
-
 
 /* Keypad Definitions and Variables */
 // Number of Channels
@@ -137,12 +125,83 @@ static inline void GetKeymap(Keymap keymap);
 static MyRio_Dio channel[CHANNELS];
 // Keyboard lock
 static pthread_mutex_t keyboard;
+// Our keymap
+static Keymap keymap;
+// Thread for Keymap Thread
+static pthread_t keymap_thread;
+// Thread Resource for Keymap Thread
+static ThreadResource keymap_resource;
+
+/* XY (Encoder) Bounds */
+
+// Lower X Limit
+#define X_LIM_LO 0
+// Lower Y Limit
+#define Y_LIM_LO 0
+// Higher X Limit
+#define X_LIM_HI 0.3
+// Higher Y Limit
+#define Y_LIM_HI 0.3
+// Absolute Velocity Limit
+#define VEL_LIM_ABS 0.5
+
+
+/* Potentiometer Saturation Bounds */
+
+
+// Lower Angle Saturation Limit
+#define ANG_LIM_LO -15.0
+// Upper Angle Saturation Limit
+#define ANG_LIM_HI 15.0
+
 
 /* Error Handling */
 static int error;
 
 MyRio_IrqTimer timer;
 
+
+/* Static Helper Functions */
+
+
+/**
+ * Obtains the numerical buttons pressed
+ * (1 through 9)
+ * 
+ * @param keymap The thread resource to signal
+ * this thread when to stop
+ * 
+ * @return NULL
+ * 
+ * @post Updates keymap with all the number buttons,
+ * excluding 0, that are pressed
+*/
+static inline void *KeymapThread(void *resource);
+
+/**
+ * Handles Error Processing from Position/Velocity
+ * Measurements
+ * 
+ * @param curr_pos The current position
+ * @param curr_vel The current velocity
+ * 
+ * @return 0 upon no error, negative otherwise (using the universal
+ * error codes)
+ * 
+ * @post Iff negative is returned, both motors are switched off
+*/
+static inline int HandleEncoderError(Positions *curr_pos,
+                                      Velocities *curr_vel);
+
+
+/**
+ * Handles Error Processing for Potentiometer Measurements
+ * 
+ * @param curr_ang The current angle reading
+ * 
+ * @return 0 upon no error, ESTRN otherwise
+*/
+static inline int HandlePotentiometerError(Angles *curr_ang);
 
 
 /* Setup/Shutdown Functions */
@@ -153,15 +212,19 @@ int IOSetup() {
     timer.timerWrite = IRQTIMERWRITE;
     timer.timerSet = IRQTIMERSETTIME;
 
+    // Setup Encoders Channels
+    conC_Encoder_initialize(myrio_session, &x_encoder, X_CONNECTOR_ID);
+    conC_Encoder_initialize(myrio_session, &y_encoder, Y_CONNECTOR_ID);
+
+    // Setup Potentiometer Voltage Channels (are swapped)
+    Aio_InitCI1(&x_potentiometer);
+    Aio_InitCI0(&y_potentiometer);
+
     // Calibration Message
     printf_lcd("\fPlease stablize for calibration.\n"
                "Press ENTR when ready.");
     while (getkey() != ENT) {}
     printf_lcd("\fCalibrating...\n");
-
-    // Setup Encoders Channels
-    conC_Encoder_initialize(myrio_session, &x_encoder, X_CONNECTOR_ID);
-    conC_Encoder_initialize(myrio_session, &y_encoder, Y_CONNECTOR_ID);
 
     // Set Reference Positions
     first_enc_state[0] = Encoder_Counter(&x_encoder);
@@ -170,10 +233,6 @@ int IOSetup() {
     // Setup the holding
     holding_vel_set = false;
     holding_pos_set = false;
-
-    // Setup Potentiometer Voltage Channels (are swapped)
-    Aio_InitCI1(&x_potentiometer);
-    Aio_InitCI0(&y_potentiometer);
 
     // Calibrate voltage intercepts for potentiometer
     potentiometer_v_x_intercept = Aio_Read(&x_potentiometer);
@@ -197,6 +256,9 @@ int IOSetup() {
 
     // Setup Reset flag
     reset = true;
+
+    // Begin Keyboard Thread
+    START_THREAD(keymap_thread, GetKeymap, keymap_resource);
 
     return EXIT_SUCCESS;
 }
@@ -226,13 +288,6 @@ int IOShutdown() {
 /* Sensor Functions */
 
 int GetReferenceVelocityCommand(Velocities *result) {
-    /* Local Variables for Velocity Command */
-    // The keymap for this
-    static Keymap keymap;
-
-    // Get the keymap
-    GetKeymap(keymap);
-
     // Setup discrete velocity comands,
     // -1, 0, and 1
     int8_t x_vel = 0;
@@ -272,7 +327,7 @@ int GetAngle(Angles *result) {
     result->y_angle =
         POTENTIOMETER_SLOPE * (y_voltage - potentiometer_v_y_intercept);
 
-    return EXIT_SUCCESS;
+    return HandlePotentiometerError(result);
 }
 
 int GetTrolleyPosition(Positions *result) {
@@ -286,7 +341,7 @@ int GetTrolleyPosition(Positions *result) {
     }
 
     if (holding_pos_set) {
-    	result->x_pos = holding_pos.x_pos;
+        result->x_pos = holding_pos.x_pos;
         result->y_pos = holding_pos.y_pos;
 
         holding_pos_set = false;
@@ -297,19 +352,23 @@ int GetTrolleyPosition(Positions *result) {
     next_enc_state[0] = (int32_t) Encoder_Counter(&x_encoder);
     next_enc_state[1] = (int32_t) Encoder_Counter(&y_encoder);
 
-    result->x_pos = ENC_2_POS((double) (next_enc_state[0] - first_enc_state[0]));
-    result->y_pos = ENC_2_POS((double) (next_enc_state[1] - first_enc_state[1]));
+    result->x_pos
+        = ENC_2_POS((double) (next_enc_state[0] - first_enc_state[0]));
+    result->y_pos
+        = ENC_2_POS((double) (next_enc_state[1] - first_enc_state[1]));
 
     if (!holding_vel_set) {
-        holding_vel.x_vel = ENC_2_VEL((double) (next_enc_state[0] - prev_enc_state[0]));
-        holding_vel.y_vel = ENC_2_VEL((double) (next_enc_state[1] - prev_enc_state[1]));
+        holding_vel.x_vel
+            = ENC_2_VEL((double) (next_enc_state[0] - prev_enc_state[0]));
+        holding_vel.y_vel
+            = ENC_2_VEL((double) (next_enc_state[1] - prev_enc_state[1]));
         holding_vel_set = true;
     }
 
     prev_enc_state[0] = next_enc_state[0];
     prev_enc_state[1] = next_enc_state[1];
 
-    return EXIT_SUCCESS;
+    return HandleEncoderError(result, &holding_vel);
 }
 
 int GetTrolleyVelocity(Velocities *result) {
@@ -343,15 +402,17 @@ int GetTrolleyVelocity(Velocities *result) {
     result->y_vel = ENC_2_VEL((double) (next_enc_state[1] - prev_enc_state[1]));
 
     if (!holding_pos_set) {
-        holding_pos.x_pos = ENC_2_POS((double) (next_enc_state[0] - first_enc_state[0]));
-        holding_pos.y_pos = ENC_2_POS((double) (next_enc_state[1] - first_enc_state[1]));
+        holding_pos.x_pos
+            = ENC_2_POS((double) (next_enc_state[0] - first_enc_state[0]));
+        holding_pos.y_pos
+            = ENC_2_POS((double) (next_enc_state[1] - first_enc_state[1]));
         holding_pos_set = true;
     }
 
     prev_enc_state[0] = next_enc_state[0];
     prev_enc_state[1] = next_enc_state[1];
 
-    return EXIT_SUCCESS;
+    return HandleEncoderError(&holding_pos, result);
 }
 
 int GetUserPosition(Angles *angle, Positions *pos, Positions *result) {
@@ -406,31 +467,70 @@ bool PressedDelete() {
 }
 
 
-/* Keymap Helper Function */
+/* Static Helper Function */
 
 
-static inline void GetKeymap(Keymap keymap) {
-    pthread_mutex_lock(&keyboard);
+static inline void *KeymapThread(void *resource) {
+    ThreadResource *thread_resource = (ThreadResource) resource;
     uint8_t i, j;
 
-    memset(keymap, false, sizeof(Keymap));
+    while (thread_resource->irq_thread_rdy) {
+        memset(keymap, false, sizeof(Keymap));
+        pthread_mutex_lock(&keyboard);
+        for (i = 0; i < LCD_KEYPAD_LEN - 1; i++) {
+            for (j = 0; j < LCD_KEYPAD_LEN - 1; j++) {
+                Dio_WriteBit(channel + j, i == j ? NiFpga_False : NiFpga_True);
+            }
+            for (j = LCD_KEYPAD_LEN; j < 2 * LCD_KEYPAD_LEN - 1; j++) {
+                keymap[3 * (j - LCD_KEYPAD_LEN) + i]
+                    = !Dio_ReadBit(channel + j);
+            }
+        }
+        pthread_mutex_unlock(&keyboard);
+    }
 
-	for (i = 0; i < LCD_KEYPAD_LEN - 1; i++) {
-		for (j = 0; j < LCD_KEYPAD_LEN - 1; j++) {
-			Dio_WriteBit(channel + j, i == j ? NiFpga_False : NiFpga_True);
-		}
-		for (j = LCD_KEYPAD_LEN; j < 2 * LCD_KEYPAD_LEN - 1; j++) {
-			if (!Dio_ReadBit(channel + j)) {
-				keymap[3 * (j - LCD_KEYPAD_LEN) + i] = true;
-			}
-		}
-	}
-    pthread_mutex_unlock(&keyboard);
+    EXIT_THREAD();
 }
 
+
+static inline int HandleEncoderError(Positions *curr_pos,
+                                      Velocities *curr_vel) {
+    // Check Positional Limits first
+    u_error = EXIT_SUCCESS;
+    if (curr_pos->x_pos > X_LIM_HI && curr_vel->x_vel > 0 ||
+        curr_pos->x_pos < X_LIM_LO && curr_vel->x_vel < 0 ||
+        curr_pos->y_pos > Y_LIM_HI && curr_vel->y_vel > 0 ||
+        curr_pos->y_pos < Y_LIM_LO && curr_vel->y_vel < 0) {
+            u_error = EOTBD;
+    }
+    // Now, check velocity limits
+    if (fabsf(curr_vel->x_vel) > VEL_LIM_ABS ||
+        fabsf(curr_vel->y_vel) > VEL_LIM_ABS) {
+        u_error = EVTYE;
+    }
+    // Output Error
+    if (u_error) {
+        SetXVoltage(0.0);
+        SetYVoltage(0.0);
+    }
+    return u_error;
+}
+
+static inline int HandlePotentiometerError(Angles *curr_ang) {
+    u_error = EXIT_SUCCESS;
+    if (curr_ang->x_angle < ANG_LIM_LO || curr_ang->x_angle > ANG_LIM_HI ||
+        curr_ang->y_angle < ANG_LIM_HI || curr_ang->y_angle > ANG_LIM_HI) {
+        u_error = ESTRN;
+    }
+    if (u_error) {
+        SetXVoltage(0.0);
+        SetYVoltage(0.0);
+    }
+    return u_error;
+}
 
 /* Reset Functions */
 
 void Reset() {
-	reset = true;
+    reset = true;
 }

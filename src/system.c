@@ -13,6 +13,7 @@
 #include "tracking.h"
 #include "idle.h"
 #include "io.h"
+#include "error.h"
 
 #include "system.h"
 
@@ -136,7 +137,10 @@ int SystemExec() {
 
 static int AntiSwayState() {
     // TODO(nguy8tri): other code for tracking, error, and stop transitions
-    if (PressedDelete()) {
+    if (u_error) {
+        AntiSwayJoin();
+        state = ERROR;
+    } else if (PressedDelete()) {
         AntiSwayJoin();
         state = MENU;
     }
@@ -145,7 +149,10 @@ static int AntiSwayState() {
 
 static int TrackingState() {
     // TODO(nguy8tri): other code for anti-sway, error, and stop transitions
-    if (PressedDelete()) {
+    if (u_error) {
+        TrackingJoin();
+        state = ERROR;
+    } else if (PressedDelete()) {
         TrackingJoin();
         state = MENU;
     }
@@ -154,7 +161,10 @@ static int TrackingState() {
 
 static int IdleState() {
     // TODO(nguy8tri): other code for tracking, anti-sway, and stop transitions
-    if (PressedDelete()) {
+    if (u_error) {
+        IdleJoin();
+        state = ERROR;
+    } else if (PressedDelete()) {
         IdleJoin();
         state = MENU;
     }
@@ -162,12 +172,12 @@ static int IdleState() {
 }
 
 static int MenuState() {
-	printf_lcd("\f");
+    printf_lcd("\f");
     printf_lcd("\n"
                "\t1) Tracking\n"
                "\t2) Anti-Sway\n"
                "\t3) Idle, 4) Exit\n"
-    		   "Indicate a mode: ");
+               "Indicate a mode: ");
 
     int key;
     while (!('1' <= (key = getchar_keypad()) && key <= '4')) {}
@@ -198,8 +208,35 @@ static int MenuState() {
 
 static int ErrorState() {
     // TODO(nguy8tri): Determine the error that happened and print it
-    printf_lcd("An error has occured. Exiting Program\n");
-    Shutdown();
+    if (u_error == ENKWN) {
+        printf_lcd("\fAn unknown error has occured. Exiting Program...\n");
+        Shutdown();
+        return EXIT_FAILURE;
+    } else if (u_error == EOTBD || u_error == EVTYE) {
+        if (u_error == EOTBD) {
+            printf_lcd("\fThe system has gone out of bounds.");
+        } else if (u_error == EVTYE) {
+            printf_lcd("\fThe system has exceeded the velocity limit.");
+        }
+        printf_lcd("Press:\n"
+                   "1) Continue\n"
+                   "2) Exit\n");
+        int key;
+        while ((key = getkey()) != '1' && key != '2') {}
+
+        if (key == '1') {
+            printf("\fExiting Program...\n");
+            Shutdown();
+            return EXIT_SUCCESS;
+        }
+        state = MENU;
+    } else if (u_error == ESTRN) {
+        printf_lcd("\fThe system has saturated unexpectedly."
+                   "Exiting Program\n");
+        Shutdown();
+        return EXIT_FAILURE;
+    }
+
     return EXIT_FAILURE;
 }
 
