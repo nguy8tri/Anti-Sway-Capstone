@@ -368,7 +368,6 @@ class SimulationInterface:
             
             torque = []; amps = []; volts = []
             for fnow in F:
-                fnow = -fnow
                 torque.append(fnow*self.gear_radius.get())
                 amps.append(torque[-1]/self.motor_constant.get())
                 volts.append(amps[-1]/self.amp_constant.get())

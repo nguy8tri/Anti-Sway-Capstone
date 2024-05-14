@@ -1,5 +1,5 @@
 controller_enabled: True
-kp: 15.0
+kp: 10.0
 ki: 0.0
 antisway_enabled: True
 antisway_gain: 1.0
