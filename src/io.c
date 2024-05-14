@@ -258,7 +258,7 @@ int IOSetup() {
     reset = true;
 
     // Begin Keyboard Thread
-    START_THREAD(keymap_thread, GetKeymap, keymap_resource);
+    START_THREAD(keymap_thread, KeymapThread, keymap_resource);
 
     return EXIT_SUCCESS;
 }
@@ -277,6 +277,9 @@ int IOShutdown() {
     // Disassociate with Motor
     memset(&x_motor, 0, sizeof(MyRio_Aio));
     memset(&y_motor, 0, sizeof(MyRio_Aio));
+
+    // Destroy Keymap Thread
+    STOP_THREAD(keymap_thread, keymap_resource);
 
     // Destroy Keyboard Lock
     VERIFY(error, pthread_mutex_destroy(&keyboard));
@@ -471,7 +474,7 @@ bool PressedDelete() {
 
 
 static inline void *KeymapThread(void *resource) {
-    ThreadResource *thread_resource = (ThreadResource) resource;
+    ThreadResource *thread_resource = (ThreadResource *) resource;
     uint8_t i, j;
 
     while (thread_resource->irq_thread_rdy) {
@@ -497,10 +500,10 @@ static inline int HandleEncoderError(Positions *curr_pos,
                                       Velocities *curr_vel) {
     // Check Positional Limits first
     u_error = EXIT_SUCCESS;
-    if (curr_pos->x_pos > X_LIM_HI && curr_vel->x_vel > 0 ||
-        curr_pos->x_pos < X_LIM_LO && curr_vel->x_vel < 0 ||
-        curr_pos->y_pos > Y_LIM_HI && curr_vel->y_vel > 0 ||
-        curr_pos->y_pos < Y_LIM_LO && curr_vel->y_vel < 0) {
+    if ((curr_pos->x_pos > X_LIM_HI && curr_vel->x_vel > 0) ||
+        (curr_pos->x_pos < X_LIM_LO && curr_vel->x_vel < 0) ||
+        (curr_pos->y_pos > Y_LIM_HI && curr_vel->y_vel > 0) ||
+        (curr_pos->y_pos < Y_LIM_LO && curr_vel->y_vel < 0)) {
             u_error = EOTBD;
     }
     // Now, check velocity limits

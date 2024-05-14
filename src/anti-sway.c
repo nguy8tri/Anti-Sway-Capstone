@@ -103,8 +103,8 @@ static double t = 0.0;
  * initial conditions and proper constants
 */
 static inline void SetupScheme(AntiSwayControlScheme *scheme,
-                               Propotional K_p,
-                               Proportional K_i
+                               Proportional K_p,
+                               Proportional K_i,
                                Proportional m);
 
 
@@ -153,8 +153,8 @@ int AntiSwayFork() {
     if (file == -1) {
         file = OpenDataFile(data_file_name, data_names, DATA_LEN);
     }
-    SetupScheme(&x_control, K_pt, K_it, m_t + m_p);
-    SetupScheme(&y_control, K_pt, K_it, m_t + m_p);
+    SetupScheme(&x_control, K_pt, K_it, m_dt + m_p);
+    SetupScheme(&y_control, K_pt, K_it, m_st + m_p);
     REGISTER_TIMER(anti_sway_resource);
     START_THREAD(anti_sway_thread, AntiSwayModeThread, anti_sway_resource);
     return EXIT_SUCCESS;
@@ -250,8 +250,8 @@ static inline int AntiSwayControlLaw(Velocity vel_ref,
 }
 
 static inline void SetupScheme(AntiSwayControlScheme *scheme,
-                               Propotional K_p,
-                               Proportional K_i
+                               Proportional K_p,
+                               Proportional K_i,
                                Proportional m) {
     scheme->outer_feedback = l * g;
     scheme->inner_prop = m * K_p;
