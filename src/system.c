@@ -128,7 +128,7 @@ int SystemExec() {
 
     state = MENU;
 
-    while (state != ERROR && state != END) {
+    while (state != END) {
         states[state]();
     }
 
@@ -209,14 +209,14 @@ static int MenuState() {
 static int ErrorState() {
     // TODO(nguy8tri): Determine the error that happened and print it
     if (u_error == ENKWN) {
-        printf_lcd("\fAn unknown error has occured. Exiting Program...\n");
+        printf_lcd("\fAn unknown error has occurred. Exiting Program...\n");
         Shutdown();
         return EXIT_FAILURE;
     } else if (u_error == EOTBD || u_error == EVTYE) {
         if (u_error == EOTBD) {
-            printf_lcd("\fThe system has gone out of bounds.");
+            printf_lcd("\fError: Positional Limit Exceeded");
         } else if (u_error == EVTYE) {
-            printf_lcd("\fThe system has exceeded the velocity limit.");
+            printf_lcd("\fError: Velocity Limit Exceeded..");
         }
         printf_lcd("Press:\n"
                    "1) Continue\n"
@@ -224,20 +224,20 @@ static int ErrorState() {
         int key;
         while ((key = getkey()) != '1' && key != '2') {}
 
-        if (key == '1') {
+        if (key == '2') {
             printf("\fExiting Program...\n");
-            Shutdown();
+            state = END;
             return EXIT_SUCCESS;
         }
         state = MENU;
     } else if (u_error == ESTRN) {
         printf_lcd("\fThe system has saturated unexpectedly."
                    "Exiting Program\n");
-        Shutdown();
+        state = END;
         return EXIT_FAILURE;
     }
 
-    return EXIT_FAILURE;
+    return EXIT_SUCCESS;
 }
 
 static int StartState() {

@@ -32,9 +32,8 @@ ThreadResource resource;
  * Represents the Inner and Outer Loop Elements
 */
 typedef struct {
-    Biquad outer_block;
-    Proportional inner_prop;
-    Differentiator inner_diff;
+    Proportional combined_constants;
+    Proportional damping;
 } TrackingControlScheme;
 
 
@@ -56,7 +55,7 @@ static TrackingControlScheme y_control;
 // The inner-loop proportional constant
 #define K_pi 1.0
 // The outer-loop proportional constant
-#define K_po -2.5
+#define K_po -3000.0
 // The artifical damping
 #define B_t (8 * m_p / T_s)
 
@@ -122,7 +121,7 @@ static void *TrackingModeThread(void *resource);
  * 
  * @param angle_ref The reference angle for Tracking Mode
  * @param angle_input The measured rope angle for Tracking Mode
- * @param pos_input The measured position of the motor
+ * @param pos_vel The measured velocity of the motor
  * @param scheme A pointer to the TrackingControlScheme structure
  * used to execute the control law
  * @param SetVoltage The function that sets the voltage of the
@@ -136,7 +135,7 @@ static void *TrackingModeThread(void *resource);
 */
 static inline int TrackingControlLaw(Angle angle_ref,
                                      Angle angle_input,
-                                     Position pos_input,
+                                     Velocity pos_vel,
                                      TrackingControlScheme *scheme,
                                      int (* SetVoltage)(Voltage voltage));
 
@@ -170,7 +169,7 @@ static void *TrackingModeThread(void *resource) {
         TIMER_TRIGGER(irq_assert, thread_resource);
         static Angles angle_ref;
         static Angles angle_input;
-        static Positions trolley_pos;
+        static Velocities trolley_vel;
 
         if (irq_assert) {
             // Do the loop for both motors
@@ -182,7 +181,7 @@ static void *TrackingModeThread(void *resource) {
             if (GetAngle(&angle_input)) {
             	EXIT_THREAD();
             }
-            if (GetTrolleyPosition(&trolley_pos)) {
+            if (GetTrolleyVelocity(&trolley_vel)) {
             	EXIT_THREAD();
             }
             // Record the sensor data
@@ -190,20 +189,20 @@ static void *TrackingModeThread(void *resource) {
             *data_buff++ = t;
             *data_buff++ = angle_input.x_angle;
             *data_buff++ = angle_input.y_angle;
-            *data_buff++ = trolley_pos.x_pos;
-            *data_buff++ = trolley_pos.y_pos;
+            *data_buff++ = trolley_vel.x_vel;
+            *data_buff++ = trolley_vel.y_vel;
 
             // Run both control laws
             if (TrackingControlLaw(angle_ref.x_angle,
                                    angle_input.x_angle,
-                                   trolley_pos.x_pos,
+                                   trolley_vel.x_vel,
                                    &x_control,
                                    SetXVoltage)) {
             	EXIT_THREAD();
             }
             if (TrackingControlLaw(angle_ref.y_angle,
                                    angle_input.y_angle,
-                                   trolley_pos.y_pos,
+                                   trolley_vel.y_vel,
                                    &y_control,
                                    SetYVoltage)) {
             	EXIT_THREAD();
@@ -223,22 +222,14 @@ static void *TrackingModeThread(void *resource) {
 
 static inline int TrackingControlLaw(Angle angle_ref,
                                      Angle angle_input,
-                                     Position pos_input,
+                                     Velocity pos_vel,
                                      TrackingControlScheme *scheme,
                                      int (* SetVoltage)(Voltage voltage)) {
-    double outer_output = Cascade(angle_ref - angle_input,
-                                  &(scheme->outer_block),
-                                  1,
-                                  NEG_INF,
-                                  POS_INF);
+    double outer_output = scheme->combined_constants *
+        (angle_ref - angle_input);
     *data_buff++ = outer_output;
-
-    Voltage final_output = PID(FORCE_TO_VOLTAGE(outer_output - pos_input),
-                               &(scheme->inner_prop),
-                               NULL,
-                               &(scheme->inner_diff),
-                               MOTOR_V_LIM_L,
-                               MOTOR_V_LIM_H);
+    double final_output = FORCE_TO_VOLTAGE(outer_output -
+        scheme->damping * pos_vel);
 
     static int error;
     VERIFY(error, SetVoltage(final_output));
@@ -254,11 +245,6 @@ static inline void SetupScheme(TrackingControlScheme *scheme,
     // K_po * K_pi / (K_pi + Bs) =
     //  AT * (1 + z^-1) / ((2B+CT)+(CT-2B)z^-1)
     // where A = K_poK_pi, B=B, C=K_pi
-   Biquad new_b = {{K_o * K_i * BTI_S, K_o * K_i * BTI_S, 0.0},
-                           {K_i * BTI_S + 2 * B, K_i * BTI_S - 2 * B, 0.0},
-                           {0.0, 0.0},
-                           {0.0, 0.0}};
-    scheme->outer_block = new_b;
-    scheme->inner_prop = K_i;
-    DifferentiatorInit(B, BTI_S, &(scheme->inner_diff));
+    scheme->combined_constants = K_o * K_i;
+    scheme->damping = B;
 }

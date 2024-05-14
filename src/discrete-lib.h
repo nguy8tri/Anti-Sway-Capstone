@@ -8,7 +8,7 @@
 
 /* Non-saturation constants */
 #define POS_INF DBL_MAX
-#define NEG_INF DBL_MIN
+#define NEG_INF (-DBL_MAX)
 
 
 /* Discrete-Time Data Structures */

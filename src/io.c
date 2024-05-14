@@ -258,7 +258,7 @@ int IOSetup() {
     reset = true;
 
     // Begin Keyboard Thread
-    START_THREAD(keymap_thread, KeymapThread, keymap_resource);
+    // START_THREAD(keymap_thread, KeymapThread, keymap_resource);
 
     return EXIT_SUCCESS;
 }
@@ -279,7 +279,7 @@ int IOShutdown() {
     memset(&y_motor, 0, sizeof(MyRio_Aio));
 
     // Destroy Keymap Thread
-    STOP_THREAD(keymap_thread, keymap_resource);
+    // STOP_THREAD(keymap_thread, keymap_resource);
 
     // Destroy Keyboard Lock
     VERIFY(error, pthread_mutex_destroy(&keyboard));
@@ -441,7 +441,7 @@ int SetXVoltage(Voltage voltage) {
 }
 
 int SetYVoltage(Voltage voltage) {
-    Aio_Write(&y_motor, voltage);
+    Aio_Write(&y_motor, -voltage);
     return EXIT_SUCCESS;
 }
 
@@ -521,14 +521,14 @@ static inline int HandleEncoderError(Positions *curr_pos,
 
 static inline int HandlePotentiometerError(Angles *curr_ang) {
     u_error = EXIT_SUCCESS;
-    if (curr_ang->x_angle < ANG_LIM_LO || curr_ang->x_angle > ANG_LIM_HI ||
-        curr_ang->y_angle < ANG_LIM_HI || curr_ang->y_angle > ANG_LIM_HI) {
-        u_error = ESTRN;
-    }
-    if (u_error) {
-        SetXVoltage(0.0);
-        SetYVoltage(0.0);
-    }
+    // if (curr_ang->x_angle < ANG_LIM_LO || curr_ang->x_angle > ANG_LIM_HI ||
+    //     curr_ang->y_angle < ANG_LIM_HI || curr_ang->y_angle > ANG_LIM_HI) {
+    //     u_error = ESTRN;
+    // }
+    // if (u_error) {
+    //     SetXVoltage(0.0);
+    //     SetYVoltage(0.0);
+    // }
     return u_error;
 }
 

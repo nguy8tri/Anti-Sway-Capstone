@@ -28,9 +28,9 @@ ThreadResource anti_sway_resource;
 
 
 // The proportional constant for inner-loop
-#define K_pt -5.0
+#define K_pt 10.0
 // The integral constant for inner-loop control
-#define K_it -1.0
+#define K_it 0.0
 
 
 /* Control Loop Scheme */
@@ -185,9 +185,9 @@ static void *AntiSwayModeThread(void *resource) {
             // Do the loop for both motors
 
             // Get the inputs
-            if (GetReferenceVelocityCommand(&reference_vel)) {
+/*            if (GetReferenceVelocityCommand(&reference_vel)) {
             	EXIT_THREAD();
-            }
+            }*/
             if (GetAngle(&input)) {
             	EXIT_THREAD();
             }
@@ -226,6 +226,7 @@ static void *AntiSwayModeThread(void *resource) {
         }
     }
 
+    printf("Time: %f s\n", t);
     EXIT_THREAD();
 }
 
