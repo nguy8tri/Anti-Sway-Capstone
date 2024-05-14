@@ -15,6 +15,8 @@ import sys
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import Fetch as FE
+from tkinter import filedialog
+import scipy.io
 
 class SimulationInterface:
     def __init__(self, root):        
@@ -44,7 +46,7 @@ class SimulationInterface:
         self.sim_length = tk.DoubleVar()  
         self.motor_constant = tk.DoubleVar()        
         self.amp_constant = tk.DoubleVar()   
-        self.gear_radius = tk.DoubleVar()        
+        self.gear_radius = tk.DoubleVar()   
 
 
         self.vel_type = tk.StringVar()
@@ -68,7 +70,7 @@ class SimulationInterface:
         self.plot_Theta = tk.BooleanVar()
         self.plot_Vset = tk.BooleanVar()
         self.plot_Vact = tk.BooleanVar()
-        
+        self.plot_Vsend = tk.BooleanVar()
         self.plot_amps = tk.BooleanVar()
         self.plot_volts = tk.BooleanVar()
         self.plot_torque = tk.BooleanVar()
@@ -93,6 +95,8 @@ class SimulationInterface:
         run_button = tk.Button(root, text="RUN", command=self.run_simulation)
         run_button.pack(pady=10)
         
+        compare_button = tk.Button(root, text="COMPARE", command=self.compare)
+        compare_button.pack(side = "top", pady=10)
         self.load_saved_parameters()
 
     def create_controller_box(self):
@@ -173,7 +177,7 @@ class SimulationInterface:
         params = [
             ("Force on Trolley", self.plot_F), ("Force on Mass", self.plot_u),
             ("Velocity of Mass", self.plot_u_Vel), ("Trolley Position", self.plot_X),
-            ("Theta", self.plot_Theta), ("Trolley V Set", self.plot_Vset),
+            ("Theta", self.plot_Theta), ("Trolley V Set", self.plot_Vset), ("Trolley V_desired", self.plot_Vsend),
             ("Trolley Velocity", self.plot_Vact), ("Motor Amps", self.plot_amps),
             ("Motor Volts", self.plot_volts), ("Motor Torque", self.plot_torque),
             ("Motor RPM", self.plot_rpm),
@@ -241,7 +245,197 @@ class SimulationInterface:
         f_types_menu.grid(row=0, column=0, columnspan=2, pady=5)
         f_types_menu.current(0)  # Set the default value
         
-    def plot_matplotlib(self, time, X, dX, Vset, Theta, F, M1, u=None, dTheta=None):
+    def compare(self):
+        file_path = str(filedialog.askopenfilename(filetypes=[('Mat files', '*.mat')],title="Select mat file", multiple=False))   
+        data_dict = scipy.io.loadmat(file_path)
+        self.open_new_toplevel(data_dict)
+        
+    def open_new_toplevel(self, data_dict):
+        new_window = tk.Toplevel()
+        keys = list(data_dict.keys())
+        frame1 = ttk.LabelFrame(new_window, text="Includes")
+        frame1.pack(padx=10, pady=10, side=tk.LEFT)
+        
+        # Checkbox variables
+        checkbox_vars = {}
+        checks = ['angle_x', 'trolley_vel_x', 'angle_y', 'trolley_vel_y']
+        for key in data_dict:
+            if key in checks:
+                value = True
+            else:
+                value = False
+            checkbox_vars[key] = tk.BooleanVar(value=value)
+            tk.Checkbutton(frame1, text=key, variable=checkbox_vars[key]).pack(anchor='w')
+            
+        frame2 = ttk.LabelFrame(new_window, text="Conditions")
+        frame2.pack(padx=10, pady=10, side=tk.LEFT)
+    
+        # Dropdown selection boxes and labels
+        time_label = tk.Label(frame2, text="Choose your time key:")
+        time_label.pack(anchor='w')
+        time_dropdown = ttk.Combobox(frame2, values=keys)
+        time_dropdown.current(keys.index('t'))
+        time_dropdown.pack(anchor='w')
+    
+        angle_label = tk.Label(frame2, text="Choose your simulation angle variable:")
+        angle_label.pack(anchor='w')
+        angle_dropdown = ttk.Combobox(frame2, values=keys)
+        angle_dropdown.current(keys.index('angle_x'))
+        angle_dropdown.pack(anchor='w')
+    
+        velocity_label = tk.Label(frame2, text="Choose your simulation velocity variable:")
+        velocity_label.pack(anchor='w')
+        velocity_dropdown = ttk.Combobox(frame2, values=keys)
+        velocity_dropdown.current(keys.index('trolley_vel_x'))
+        velocity_dropdown.pack(anchor='w')
+    
+        # Textbox entries and labels
+        title_label = tk.Label(frame2, text="Title:")
+        title_label.pack(anchor='w')
+        title_entry = tk.Entry(frame2)
+        title_entry.insert(0, "Outputs")
+        title_entry.pack(anchor='w')
+    
+        range_min_label = tk.Label(frame2, text="Range min:")
+        range_min_label.pack(anchor='w')
+        range_min_entry = tk.Entry(frame2)
+        range_min_entry.insert(tk.END, '0')  # Initial value
+        range_min_entry.pack(anchor='w')
+    
+        end = len(list(data_dict[list(data_dict.keys())[3]])[0]) - 1
+        range_max_label = tk.Label(frame2, text=f"Range max of {end}:")
+        range_max_label.pack(anchor='w')
+        range_max_entry = tk.Entry(frame2)
+        range_max_entry.insert(tk.END, str(end))  # Initial value
+        range_max_entry.pack(anchor='w')
+    
+        # Dropdown select boxes for error match
+        error_label = tk.Label(frame2, text="Choose error match:")
+        error_label.pack(anchor='w')
+        error_dropdown1 = ttk.Combobox(frame2, values=keys)
+        error_dropdown1.pack(anchor='w')
+        error_dropdown1.current(keys.index('voltage_x'))
+        error_dropdown2 = ttk.Combobox(frame2, values=["sim_force", "sim_volts", "sim_amps", "sim_torque", "v_desired"])  # Assuming variables is a list
+        error_dropdown2.pack(anchor='w')
+        error_dropdown2.current(1)
+
+    
+        # Compare button
+        def send_outputs():
+            selected_keys = [key for key, var in checkbox_vars.items() if var.get()]
+            wanted_range = [int(range_min_entry.get()), int(range_max_entry.get())]
+            self.compare_plot(data_dict, selected_keys, wanted_range, title_entry.get(), time_dropdown.get(), error=False)
+            if compare_question.get():
+                run_error_sim()
+                self.compare_plot(data_dict, [error_dropdown1.get(), error_dropdown2.get()], wanted_range, "Error plot", time_dropdown.get(), error=True)
+            
+        def run_error_sim():
+            # Write your simulation logic here
+            dt = self.dt.get()
+            controller = self.controller_enabled.get()
+            Kp = self.kp.get()
+            Ki = self.ki.get()
+            anti_sway = self.antisway_enabled.get()
+            as_gain = self.antisway_gain.get()
+            M0 = self.m0.get()
+            M1 = self.m1.get()
+            B0 = self.b0.get()
+            B1 = self.b1.get()
+            g = self.g.get()
+            l = self.l.get()
+            Xi = self.xi.get()
+            Ti = self.ti.get()
+            percentage = 0.4
+            dThi = self.dThi.get()
+            self.save_parameters_to_file()
+            
+            #initialize
+            time = list(data_dict[time_dropdown.get()])[0][int(range_min_entry.get()):int(range_max_entry.get())]
+            Vset = np.zeros_like(time)
+
+            #CURRENTLY UNUSED OLD PARAMS
+            #force parameters:
+            F_app = 0
+            F = np.zeros_like(time)
+            u = None
+            
+            velocity_set = 3 #for velocity mode
+            act_vel = data_dict[str(velocity_dropdown.get())][0][int(range_min_entry.get()):int(range_max_entry.get())]
+            act_theta = data_dict[str(angle_dropdown.get())][0][int(range_min_entry.get()):int(range_max_entry.get())]
+
+            stored = [F, time, dt, M0, M1, B0, B1, g, l, Xi, Ti, F_app, percentage, controller, velocity_set, Kp, Ki, Vset, anti_sway, as_gain, u, dThi, act_theta, act_vel]
+            F, v_desired = FE.fetch_F_actual(stored)
+            
+            torque = []; amps = []; volts = []
+            for fnow in F:
+                fnow = -fnow
+                torque.append(fnow*self.gear_radius.get())
+                amps.append(torque[-1]/self.motor_constant.get())
+                volts.append(amps[-1]/self.amp_constant.get())
+                
+            data_dict["sim_force"] = F
+            data_dict["sim_torque"] = torque
+            data_dict["sim_amps"] = amps
+            data_dict["sim_volts"] = volts
+            data_dict["v_desired"] = v_desired
+            
+            error = list(np.array(data_dict[error_dropdown1.get()])[0][int(range_min_entry.get()):int(range_max_entry.get())] - np.array(data_dict[error_dropdown2.get()]))
+            data_dict["error"] = error
+            
+            print("done1")
+            
+
+        compare_button = tk.Button(new_window, text="Compare", command=send_outputs)
+        compare_button.pack(anchor='s')
+        
+        compare_question = tk.BooleanVar(value=False)
+        compare_answer = tk.Checkbutton(new_window, text="Calculate Error?", variable=compare_question).pack(anchor='s')
+        
+    def compare_plot(self, data_dict, wanted_keys, wanted_range, title, time_var, error=False):
+        plot_window = tk.Toplevel(self.root)
+        plot_window.title("Matplotlib Plot")
+        
+        def find_max(inp, decimals=3):
+            return 0
+        
+        f = wanted_range[0]; t = wanted_range[1] 
+        colors = ["green", "blue", "red", "orange", "pink", "purple", "cyan", "forestgreen", "darkblue", "magenta", "grey"]
+        if error == False:
+            figure, axs = plt.subplots(len(wanted_keys), 1, sharex=True, figsize=(12, 9))
+            canvas = FigureCanvasTkAgg(figure, master=plot_window)
+            canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)
+            for i, key in enumerate(wanted_keys):
+                axs[i].plot(data_dict[time_var][0][f:t], data_dict[key][0][f:t], label=f'{key}, max=0', color=colors[i])
+                axs[i].set_ylabel(key)
+                axs[i].legend()
+                axs[i].grid()
+                print(f"done{i}")
+                    
+            figure.suptitle(f'{title}', fontsize=16)
+
+        else:
+            figure, axs = plt.subplots(2, 1, sharex=True, figsize=(12, 9))
+            canvas = FigureCanvasTkAgg(figure, master=plot_window)
+            canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)
+            axs[0].plot(data_dict[time_var][0][f:t], data_dict[wanted_keys[0]][0][f:t], color=colors[0], label="actual", linewidth=1)
+            axs[0].plot(data_dict[time_var][0][f:t], data_dict[wanted_keys[1]], color=colors[1], label="theory", linewidth=1)
+            axs[0].set_ylabel("superimposed")
+            axs[0].legend()
+            axs[0].grid()
+            print("done2")
+            axs[1].plot(data_dict[time_var][0][f:t], data_dict["error"], color=colors[2])
+            axs[1].set_ylabel("error")
+            axs[1].grid()
+            figure.suptitle("Error", fontsize=16)
+            print("done4")
+           
+        axs[len(wanted_keys)-1].set_xlabel('Time (s)', fontsize=16)
+        plt.tight_layout()
+        plt.savefig('plot.pdf')
+        canvas.draw()
+
+        
+    def plot_matplotlib(self, time, X, dX, Vset, Theta, F, M1, vsend, u=None, dTheta=None):
         # Create a new Tkinter window for the Matplotlib plot
         plot_window = tk.Toplevel(self.root)
         plot_window.title("Matplotlib Plot")
@@ -263,7 +457,7 @@ class SimulationInterface:
         outputs = f'Outputs: ThetaMax={int(100*max(np.abs(Theta))*180/np.pi)/100}deg, Vp Max={int(max(u_Vel)*100)/100} m/s, Vt Max={int(max(dX)*100)/100} m/s'
         inputs = f'Inputs: Ki={self.ki.get()} (Ns/m), Kp={self.kp.get()} (Ns/m), Gain={self.antisway_gain.get()}, Model={self.model_type.get()}'
         if self.plot_separate.get():
-            tries = [self.plot_X, self.plot_Vset, self.plot_Vact, self.plot_u_Vel, self.plot_F, self.plot_u, self.plot_Theta, self.plot_amps, self.plot_volts, self.plot_torque, self.plot_rpm]
+            tries = [self.plot_X, self.plot_Vset, self.plot_Vact, self.plot_u_Vel, self.plot_F, self.plot_u, self.plot_Theta, self.plot_amps, self.plot_volts, self.plot_torque, self.plot_rpm, self.plot_Vsend]
             to_plot = []
             for i in range(len(tries)):
                 if tries[i].get():
@@ -310,6 +504,9 @@ class SimulationInterface:
                 elif i == 10:
                     axs[count].plot(time, np.array(rpm), label = f"Motor Rpm, max={find_max(rpm)}", color="grey")      
                     axs[count].set_ylabel("Motor Rpm")
+                elif i == 11:
+                    axs[count].plot(time, np.array(vsend), label = f"V_desired, max={find_max(vsend)}", color="orange")      
+                    axs[count].set_ylabel("V_desired")
                 axs[count].legend()
                 count += 1
                
@@ -349,7 +546,9 @@ class SimulationInterface:
             if self.plot_torque.get():
                 ax.plot(time, np.array(torque), label = "Motor Torque (N-m/s)", color="magenta")      
             if self.plot_rpm.get():
-                ax.plot(time, np.array(rpm), label = "Motor Rpm", color="grey")      
+                ax.plot(time, np.array(rpm), label = "Motor Rpm", color="grey")
+            if self.plot_Vsend.get():
+                ax.plot(time, np.array(vsend), label = "Motor V_desired", color="grey")  
                 
             if self.grid_on.get(): ax.grid()
             ax.set_title(f'{inputs}\n{outputs}', fontsize=16)
@@ -377,6 +576,9 @@ class SimulationInterface:
         xyz = (width // 2, height // 4)  # Apex position in the middle of the screen
 
         # Main loop
+        for j in range(1000):
+            clock.tick(2*(simulation_speed/5)/dt)  # Adjust the frame rate
+
         count = 0
         for t, angle, x0, F0 in zip(time, theta, x, f):
             for event in pygame.event.get():
@@ -451,7 +653,7 @@ class SimulationInterface:
             Vset = ramp*np.ones_like(time/3)
         elif v_type == 'Square':
             length = len(Vset)
-            divide = int(length/5)
+            divide = int(length/20)
             for i in range(len(Vset)):
                 if i < 2*divide:
                     Vset[i] = 0
@@ -461,7 +663,7 @@ class SimulationInterface:
                     Vset[i] = 0
         elif v_type == 'Double Square':
             length = len(Vset)
-            divide = int(length/5)
+            divide = int(length/20)
             for i in range(len(Vset)):
                 if i < divide:
                     Vset[i] = 0
@@ -525,11 +727,11 @@ class SimulationInterface:
         stored = [F, time, dt, M0, M1, B0, B1, g, l, Xi, Ti, F_app, percentage, controller, velocity_set, Kp, Ki, Vset, anti_sway, as_gain, u, dThi]
         # Run simulation
         if self.model_type.get() == "Anti-Sway":
-            Theta, X, dX, F, dTheta = FE.fetch_pendulum_mode(stored)
+            Theta, X, dX, F, dTheta, vsend = FE.fetch_pendulum_mode(stored)
         else:
-            Theta, X, dX, F, dTheta = FE.fetch_tracking_mode(stored)
+            Theta, X, dX, F, dTheta, vsend = FE.fetch_tracking_mode(stored)
         
-        self.plot_matplotlib(time, X, dX, Vset, Theta, F, M1, u, dTheta)
+        self.plot_matplotlib(time, X, dX, Vset, Theta, F, M1, vsend, u, dTheta)
         
         if self.run_sim.get():
             self.pygame_pendulum_animation(time, Theta, l, X, F, M1, simulation_speed, dt, u)
@@ -577,7 +779,8 @@ class SimulationInterface:
             "plot_amps": self.plot_amps.get(),
             "plot_volts": self.plot_volts.get(),
             "plot_torque": self.plot_torque.get(),
-            "plot_rpm": self.plot_rpm.get()
+            "plot_rpm": self.plot_rpm.get(),
+            "plot_Vsend": self.plot_Vsend.get()
         }
 
         with open("simulation_parameters.txt", "w") as file:

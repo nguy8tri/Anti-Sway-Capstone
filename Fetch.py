@@ -13,6 +13,7 @@ Created on Fri Jan 26 12:31:41 2024
 """
 import matplotlib.pyplot as plt
 import numpy as np
+import random
 
 class PIController:
     def __init__(self, kp, ki, M, dt):
@@ -44,6 +45,7 @@ def fetch_pendulum_mode(stored):
     
     ddX = [0]; dX = [0]; X = [Xi]
     ddTheta = [0]; dTheta = [dThi]; Theta = [Ti]
+    vsend = [0]
     
     def step_X(i, F, dt):
         ddX_n = (F-(M0*l*ddTheta[i])-(B1*dX[i]))/(M0+M1)
@@ -57,20 +59,36 @@ def fetch_pendulum_mode(stored):
         Theta_n = dTheta_n*dt + Theta[i]
         ddTheta.append(ddTheta_n); dTheta.append(dTheta_n); Theta.append(Theta_n)
         
-        
+    
     for i in range(len(time)):
         if not i == len(time) - 1:
             if controller:
                 if anti_sway:
                     K = 2*np.sqrt(l/g)*as_gain
                     F.append(PI_control.compute((Vset[i]+(K*g*Theta[i]))-dX[i]))
+                    boi = (Vset[i]+(K*g*Theta[i]))
                 else:
                     F.append(PI_control.compute(Vset[i]-dX[i]))
+                    boi = Vset[i]
             step_X(i, F[i], dt)
             step_Theta(i, dt)
-            
-            
-    return Theta, X, dX, F, dTheta
+            vsend.append(boi)
+    return Theta, X, dX, F, dTheta, vsend
+
+
+def fetch_F_actual(stored):
+    F, time, dt, M0, M1, B0, B1, g, l, Xi, Ti, F_app, percentage, controller, velocity_set, Kp, Ki, Vset, anti_sway, as_gain, u, dThi, act_theta, act_vel = stored
+    PI_control = PIController(Kp,Ki, M1, dt)
+    F = [0]
+    v_desired = [0]
+        
+    for i in range(len(time)):
+        if not i == len(time) - 1:
+            K = 2*np.sqrt(l/g)*as_gain
+            boi = (Vset[i]+(K*g*act_theta[i]))
+            F.append(PI_control.compute(Vset[i]+(K*g*act_theta[i]))-act_vel[i])
+            v_desired.append(boi)
+    return F, v_desired
 
 
 #SIMULATE LOOP
@@ -82,8 +100,8 @@ def fetch_tracking_mode(stored):
         F = [0]
         
     def saturate(Val):
-        if np.abs(Val) > 10:
-            return np.abs(Val)*10/Val
+        if np.abs(Val) > 12.9:
+            return np.abs(Val)*12.9/Val
         else:
             return Val
     
@@ -106,6 +124,7 @@ def fetch_tracking_mode(stored):
         ddTheta.append(ddTheta_n); dTheta.append(dTheta_n); Theta.append(Theta_n)
         
     Vset = 0
+    vsend = [0]
     for i in range(len(time)):
         if not i == len(time) - 1:
             #if i > 0:
@@ -116,9 +135,10 @@ def fetch_tracking_mode(stored):
                 
             step_X(i, F[i], u[i], dt)
             step_Theta(i, F[i], u[i], dt)
+            vsend.append((Vset + K*g*Theta[i]))
             
-            
-    return Theta, X, dX, F, dTheta
+    return Theta, X, dX, F, dTheta, vsend
     
+
     
 
