@@ -10,7 +10,7 @@ from typing import List, Tuple
 g = 9.81
 
 # System Parameters
-M_m = 2.03 # about 9 lbs
+M_m = 2.092 # about 9 lbs
 l_perp = 0.47 # 1.5 ft
 frac_supp = 1.0
 M_p = 0.765

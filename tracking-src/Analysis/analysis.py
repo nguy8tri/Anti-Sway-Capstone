@@ -11,7 +11,7 @@ def get_entry(data, name):
 
 
 if __name__ == "__main__":
-    data = scipy.io.loadmat("../perfection.mat")
+    data = scipy.io.loadmat("../anti-sway.mat")
 
     lo = 0
 
@@ -20,13 +20,13 @@ if __name__ == "__main__":
     id = get_entry(data, "id")
     # r = [i for i, idx in enumerate(id) if idx == 1]
     t = get_entry(data, "t")
-    trolley_y = get_entry(data, "trolley_y")#[r]
-    voltage_y = get_entry(data, "voltage_y")#[r]
+    trolley_y = get_entry(data, "trolley_vel_y")#[r]
+    voltage_y = get_entry(data, "trolley_vel_y")#[r]
     angle_y = np.rad2deg(get_entry(data, "angle_y"))#[r]
-    inner_y = get_entry(data, "inner_y")#[r]
+    # inner_y = get_entry(data, "inner_y")#[r]
 
     plt.figure(figsize=(7, 10))
-    plt.title("Position Response in X Direction")
+    plt.title("Position Response in Y Direction")
     plt.subplot(6, 1, 1)
     plt.plot(t, angle_y, label="Angle")
     plt.legend()
@@ -66,7 +66,7 @@ if __name__ == "__main__":
 
 
     plt.subplot(6, 1, 5)
-    plt.plot(t, inner_y, label="Outer Output")
+    # plt.plot(t, inner_y, label="Outer Output")
     plt.legend()
 
     plt.subplot(6, 1, 6)

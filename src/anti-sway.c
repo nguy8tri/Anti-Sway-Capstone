@@ -5,6 +5,7 @@
 #include <pthread.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include <math.h>
 
 #include "setup.h"
 #include "io.h"
@@ -254,7 +255,7 @@ static inline void SetupScheme(AntiSwayControlScheme *scheme,
                                Proportional K_p,
                                Proportional K_i,
                                Proportional m) {
-    scheme->outer_feedback = l * g;
+    scheme->outer_feedback = 2 * sqrt(l / g) * g;
     scheme->inner_prop = m * K_p;
     IntegratorInit(K_i * m, BTI_S, &(scheme->inner_int));
 }
