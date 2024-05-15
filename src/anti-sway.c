@@ -30,7 +30,7 @@ ThreadResource anti_sway_resource;
 // The proportional constant for inner-loop
 #define K_pt 10.0
 // The integral constant for inner-loop control
-#define K_it 0.0
+#define K_it 3.0
 
 
 /* Control Loop Scheme */
@@ -72,12 +72,13 @@ static FileID_t file = -1;
 // The file Name
 static char *data_file_name = "anti-sway.mat";
 // The number of entries
-#define DATA_LEN 10
+#define DATA_LEN 14
 // The data names
 static char *data_names[DATA_LEN] = {"id", "t", "vel_ref_x", "vel_ref_y",
                                      "angle_x", "angle_y",
                                      "trolley_vel_x", "trolley_vel_y",
-                                     "voltage_x", "voltage_y"};
+                                     "vel_err_x", "voltage_x", "int_out_x",
+                                     "vel_err_y", "voltage_y", "int_out_y"};
 // Buffer for data
 static double data[DATA_LEN];
 // Pointer to next data point to insert into buffer
@@ -202,7 +203,7 @@ static void *AntiSwayModeThread(void *resource) {
             *data_buff++ = trolley_vel.y_vel;
             // Run both control laws
             if (AntiSwayControlLaw(reference_vel.x_vel,
-                                  - input.x_angle,
+                                   input.x_angle,
                                    trolley_vel.x_vel,
                                    &x_control,
                                    SetXVoltage)) {
@@ -234,6 +235,8 @@ static inline int AntiSwayControlLaw(Velocity vel_ref,
                                      int (* SetVoltage)(Voltage voltage)) {
     double outer_output = vel_ref + scheme->outer_feedback * angle_input;
 
+    *data_buff++ = outer_output - vel_input;
+
     Voltage final_output = PID(FORCE_TO_VOLTAGE(outer_output - vel_input),
                                &(scheme->inner_prop),
                                &(scheme->inner_int),
@@ -244,6 +247,7 @@ static inline int AntiSwayControlLaw(Velocity vel_ref,
     static int error;
     VERIFY(error, SetVoltage(final_output));
     *data_buff++ = final_output;
+    *data_buff++ = scheme->inner_int.prev_output;
     return EXIT_SUCCESS;
 }
 
@@ -251,7 +255,7 @@ static inline void SetupScheme(AntiSwayControlScheme *scheme,
                                Proportional K_p,
                                Proportional K_i,
                                Proportional m) {
-    scheme->outer_feedback = 2 * sqrt(l / g) * g;
+    scheme->outer_feedback = l * g;
     scheme->inner_prop = m * K_p;
     IntegratorInit(K_i * m, BTI_S, &(scheme->inner_int));
 }

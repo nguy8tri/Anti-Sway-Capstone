@@ -64,23 +64,27 @@ static void *IdleModeThread(void *resource) {
 	printf("Begin Idle Mode\n");
     ThreadResource *thread_resource = (ThreadResource *) resource;
 
+    double t = 0.0;
+
     while (thread_resource->irq_thread_rdy) {
         uint32_t irq_assert = 0;
         TIMER_TRIGGER(irq_assert, thread_resource);
         static Positions trolley_pos;
         static Velocities trolley_vel;
         static Angles rope_ang;
+        t += BTI_S;
         if (irq_assert) {
             // Do the loop for both motors
 
             // Get trolley info
 
             if (GetTrolleyPosition(&trolley_pos)) {
-
+            	printf("Trolley Pos not okay\n");
             	EXIT_THREAD();
             }
 
             if (GetTrolleyVelocity(&trolley_vel)) {
+            	printf("Trolley Vel not okay\n");
             	EXIT_THREAD();
             }
 
@@ -104,9 +108,11 @@ static void *IdleModeThread(void *resource) {
                     RAD_2_DEG(rope_ang.y_angle));
 #undef DECIMAL_PRECISION
 #undef RAD_2_DEG
+
+            Irq_Acknowledge(irq_assert);
         }
     }
 
-    printf("Normal Exit\n");
+    printf("Time: %f s", t);
     EXIT_THREAD();
 }

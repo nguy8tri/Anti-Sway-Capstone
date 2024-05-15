@@ -72,12 +72,14 @@ static FileID_t file = -1;
 // The file Name
 static char *data_file_name = "tracking.mat";
 // The number of entries
-#define DATA_LEN 10
+#define DATA_LEN 12
 // The data names
-static char *data_names[DATA_LEN] = {"id", "t", "angle_x", "angle_y",
-                                     "trolley_x", "trolley_y",
-                                     "voltage_x", "voltage_y",
-                                     "inner_x", "inner_y"};
+static char *data_names[DATA_LEN] = {"id", "t",
+									 "angle_x", "angle_y",
+                                     "trolley_pos_x", "trolley_pos_y",
+                                     "trolley_vel_x", "trolley_vel_y",
+                                     "inner_x", "voltage_x",
+                                     "inner_y", "voltage_y"};
 // Buffer for data
 static double data[DATA_LEN];
 // Pointer to next data point to insert into buffer
@@ -145,7 +147,9 @@ static inline int TrackingControlLaw(Angle angle_ref,
 
 int TrackingFork() {
     if (file == -1) {
+    	printf("Trying to open datafile\n");
         file = OpenDataFile(data_file_name, data_names, DATA_LEN);
+        printf("Opened\n");
     }
     SetupScheme(&x_control, -3295.3175, 1, 155.36);
     SetupScheme(&y_control, -1040.0, 1, 53.2);
@@ -169,10 +173,12 @@ static void *TrackingModeThread(void *resource) {
         TIMER_TRIGGER(irq_assert, thread_resource);
         static Angles angle_ref;
         static Angles angle_input;
+        static Positions trolley_pos;
         static Velocities trolley_vel;
 
         if (irq_assert) {
             // Do the loop for both motors
+        	data_buff = data;
 
             // Get the inputs
             if (GetReferenceAngleCommand(&angle_ref)) {
@@ -181,14 +187,21 @@ static void *TrackingModeThread(void *resource) {
             if (GetAngle(&angle_input)) {
             	EXIT_THREAD();
             }
+            if (GetTrolleyPosition(&trolley_pos)) {
+            	EXIT_THREAD();
+            }
             if (GetTrolleyVelocity(&trolley_vel)) {
             	EXIT_THREAD();
             }
+
+
             // Record the sensor data
             *data_buff++ = id;
             *data_buff++ = t;
             *data_buff++ = angle_input.x_angle;
             *data_buff++ = angle_input.y_angle;
+            *data_buff++ = trolley_pos.x_pos;
+            *data_buff ++ = trolley_pos.y_pos;
             *data_buff++ = trolley_vel.x_vel;
             *data_buff++ = trolley_vel.y_vel;
 
@@ -210,7 +223,6 @@ static void *TrackingModeThread(void *resource) {
 
             // Send data into file
             RecordData(file, data, DATA_LEN);
-            data_buff = data;
             t += BTI_S;
 
             Irq_Acknowledge(irq_assert);

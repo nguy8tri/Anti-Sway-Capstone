@@ -208,8 +208,11 @@ static int MenuState() {
 
 static int ErrorState() {
     // TODO(nguy8tri): Determine the error that happened and print it
+	SetXVoltage(0.0);
+	SetYVoltage(0.0);
     if (u_error == ENKWN) {
         printf_lcd("\fAn unknown error has occurred. Exiting Program...\n");
+        state = END;
         Shutdown();
         return EXIT_FAILURE;
     } else if (u_error == EOTBD || u_error == EVTYE) {
@@ -227,9 +230,10 @@ static int ErrorState() {
         if (key == '2') {
             printf("\fExiting Program...\n");
             state = END;
-            return EXIT_SUCCESS;
+            return EXIT_FAILURE;
         }
         state = MENU;
+        u_error = 0;
     } else if (u_error == ESTRN) {
         printf_lcd("\fThe system has saturated unexpectedly."
                    "Exiting Program\n");

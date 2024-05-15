@@ -135,15 +135,15 @@ static ThreadResource keymap_resource;
 /* XY (Encoder) Bounds */
 
 // Lower X Limit
-#define X_LIM_LO 0
+#define X_LIM_LO 0.0
 // Lower Y Limit
-#define Y_LIM_LO 0
+#define Y_LIM_LO 0.0
 // Higher X Limit
 #define X_LIM_HI 0.3
 // Higher Y Limit
 #define Y_LIM_HI 0.3
 // Absolute Velocity Limit
-#define VEL_LIM_ABS 0.5
+#define VEL_LIM_ABS 1.0
 
 
 /* Potentiometer Saturation Bounds */
@@ -500,10 +500,10 @@ static inline int HandleEncoderError(Positions *curr_pos,
                                       Velocities *curr_vel) {
     // Check Positional Limits first
     u_error = EXIT_SUCCESS;
-/*    if ((curr_pos->x_pos > X_LIM_HI && curr_vel->x_vel > 0) ||
-        (curr_pos->x_pos < X_LIM_LO && curr_vel->x_vel < 0) ||
-        (curr_pos->y_pos > Y_LIM_HI && curr_vel->y_vel > 0) ||
-        (curr_pos->y_pos < Y_LIM_LO && curr_vel->y_vel < 0)) {
+    if ((curr_pos->x_pos > X_LIM_HI && curr_vel->x_vel > 0.0) ||
+        (curr_pos->x_pos < X_LIM_LO && curr_vel->x_vel < 0.0) ||
+        (curr_pos->y_pos > Y_LIM_HI && curr_vel->y_vel > 0.0) ||
+        (curr_pos->y_pos < Y_LIM_LO && curr_vel->y_vel < 0.0)) {
             u_error = EOTBD;
     }
     // Now, check velocity limits
@@ -515,7 +515,7 @@ static inline int HandleEncoderError(Positions *curr_pos,
     if (u_error) {
         SetXVoltage(0.0);
         SetYVoltage(0.0);
-    }*/
+    }
     return u_error;
 }
 
