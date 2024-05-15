@@ -62,7 +62,7 @@ extern MyRio_IrqTimer timer;
 
 /* Physical Parameters */
 // Pulley Radius (m)
-#define R 0.003
+#define R 0.0062
 // Current Constant (A/V)
 #define K_a 0.41
 // Motor Constant (Nm/A)

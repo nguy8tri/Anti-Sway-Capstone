@@ -51,7 +51,7 @@ typedef struct {
 // Mass of the double Trolley (kg)
 #define m_dt 2.092
 // Mass of the single Trolley (kg)
-#define m_st 1.664
+#define m_st 0.664
 // TODO(nguy8tri): Change the masses
 // Mass of whole system 2.092 kg
 // Mass of single trolley: 0.664 kg

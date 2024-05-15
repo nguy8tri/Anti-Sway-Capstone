@@ -5,7 +5,6 @@
 #include <pthread.h>
 #include <stdint.h>
 #include <stdlib.h>
-#include <math.h>
 
 #include "setup.h"
 #include "io.h"
@@ -174,10 +173,7 @@ static void *AntiSwayModeThread(void *resource) {
 
     while (thread_resource->irq_thread_rdy) {
         uint32_t irq_assert = 0;
-        Irq_Wait(thread_resource->irq_context, TIMERIRQNO, &irq_assert, (NiFpga_Bool *) &(thread_resource->irq_thread_rdy));
-
-		NiFpga_WriteU32(myrio_session, IRQTIMERWRITE, 50u);
-		NiFpga_WriteBool(myrio_session, IRQTIMERSETTIME, NiFpga_True);
+        TIMER_TRIGGER(irq_assert, thread_resource);
         Velocities reference_vel = {0.0, 0.0};  // Reference Velocity
         Angles input;  // Rope Angle
         Velocities trolley_vel;  // Trolley Velocity

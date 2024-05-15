@@ -55,7 +55,7 @@ static TrackingControlScheme y_control;
 // The inner-loop proportional constant
 #define K_pi 1.0
 // The outer-loop proportional constant
-#define K_po -3000.0
+#define K_po -2619.5
 // The artifical damping
 #define B_t (8 * m_p / T_s)
 
@@ -147,8 +147,8 @@ int TrackingFork() {
     if (file == -1) {
         file = OpenDataFile(data_file_name, data_names, DATA_LEN);
     }
-    SetupScheme(&x_control, K_po, K_pi, B_t);
-    SetupScheme(&y_control, K_po, K_pi, B_t);
+    SetupScheme(&x_control, -3295.3175, 1, 155.36);
+    SetupScheme(&y_control, -1040.0, 1, 53.2);
     REGISTER_TIMER(resource);
     START_THREAD(tracking_thread, TrackingModeThread, resource);
     return EXIT_SUCCESS;

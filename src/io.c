@@ -500,7 +500,7 @@ static inline int HandleEncoderError(Positions *curr_pos,
                                       Velocities *curr_vel) {
     // Check Positional Limits first
     u_error = EXIT_SUCCESS;
-    if ((curr_pos->x_pos > X_LIM_HI && curr_vel->x_vel > 0) ||
+/*    if ((curr_pos->x_pos > X_LIM_HI && curr_vel->x_vel > 0) ||
         (curr_pos->x_pos < X_LIM_LO && curr_vel->x_vel < 0) ||
         (curr_pos->y_pos > Y_LIM_HI && curr_vel->y_vel > 0) ||
         (curr_pos->y_pos < Y_LIM_LO && curr_vel->y_vel < 0)) {
@@ -515,7 +515,7 @@ static inline int HandleEncoderError(Positions *curr_pos,
     if (u_error) {
         SetXVoltage(0.0);
         SetYVoltage(0.0);
-    }
+    }*/
     return u_error;
 }
 
