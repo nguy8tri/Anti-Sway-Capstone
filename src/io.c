@@ -108,7 +108,7 @@ MyRio_Aio y_motor;
 
 // The unit velocity stop corresponding
 // to a keypad touch (m/s)
-#define UNIT_VEL 0.1
+#define UNIT_VEL 0.2
 
 /**
  * Holds booleans indicating which
@@ -162,6 +162,8 @@ MyRio_IrqTimer timer;
 
 
 /* Static Helper Functions */
+
+static inline void wait();
 
 
 /**
@@ -220,6 +222,26 @@ int IOSetup() {
     Aio_InitCI1(&x_potentiometer);
     Aio_InitCI0(&y_potentiometer);
 
+    // Setup Motor Channels
+       Aio_InitCO0(&x_motor);
+       Aio_InitCO1(&y_motor);
+
+       // Setup Keyboard
+       uint8_t i;
+       for (i = 0; i < CHANNELS; i++) {
+           channel[i].dir = DIOB_70DIR;
+           channel[i].out = DIOB_70OUT;
+           channel[i].in = DIOB_70IN;
+           channel[i].bit = i;
+       }
+       VERIFY(error, pthread_mutex_init(&keyboard, NULL));
+       memset(keymap, false, sizeof(Keymap));
+
+       printf_lcd("Calibration Finished\n");
+
+       // Setup Reset flag
+       reset = true;
+
     // Calibration Message
     printf_lcd("\fPlease stablize for calibration.\n"
                "Press ENTR when ready.");
@@ -238,27 +260,8 @@ int IOSetup() {
     potentiometer_v_x_intercept = Aio_Read(&x_potentiometer);
     potentiometer_v_y_intercept = Aio_Read(&y_potentiometer);
 
-    // Setup Motor Channels
-    Aio_InitCO0(&x_motor);
-    Aio_InitCO1(&y_motor);
-
-    // Setup Keyboard
-    uint8_t i;
-    for (i = 0; i < CHANNELS; i++) {
-        channel[i].dir = DIOB_70DIR;
-        channel[i].out = DIOB_70OUT;
-        channel[i].in = DIOB_70IN;
-        channel[i].bit = i;
-    }
-    VERIFY(error, pthread_mutex_init(&keyboard, NULL));
-
-    printf_lcd("Calibration Finished\n");
-
-    // Setup Reset flag
-    reset = true;
-
     // Begin Keyboard Thread
-    // START_THREAD(keymap_thread, KeymapThread, keymap_resource);
+    START_THREAD(keymap_thread, KeymapThread, keymap_resource);
 
     return EXIT_SUCCESS;
 }
@@ -279,7 +282,7 @@ int IOShutdown() {
     memset(&y_motor, 0, sizeof(MyRio_Aio));
 
     // Destroy Keymap Thread
-    // STOP_THREAD(keymap_thread, keymap_resource);
+    STOP_THREAD(keymap_thread, keymap_resource);
 
     // Destroy Keyboard Lock
     VERIFY(error, pthread_mutex_destroy(&keyboard));
@@ -477,9 +480,10 @@ static inline void *KeymapThread(void *resource) {
     ThreadResource *thread_resource = (ThreadResource *) resource;
     uint8_t i, j;
 
+    printf("Begin KeymapThread\n");
+
     while (thread_resource->irq_thread_rdy) {
-        memset(keymap, false, sizeof(Keymap));
-        pthread_mutex_lock(&keyboard);
+    	pthread_mutex_lock(&keyboard);
         for (i = 0; i < LCD_KEYPAD_LEN - 1; i++) {
             for (j = 0; j < LCD_KEYPAD_LEN - 1; j++) {
                 Dio_WriteBit(channel + j, i == j ? NiFpga_False : NiFpga_True);
@@ -536,4 +540,49 @@ static inline int HandlePotentiometerError(Angles *curr_ang) {
 
 void Reset() {
     reset = true;
+}
+
+static inline void wait() {
+	uint32_t i;
+// Wait Constant
+#define WAIT_CONST 417000
+
+	i = 0;
+	while(i++ < WAIT_CONST) {}
+
+	return;
+#undef WAIT_CONST
+}
+
+
+
+char getkey() {
+	uint8_t i,j;
+
+	// Keypad characters
+	static char keypad[LCD_KEYPAD_LEN][LCD_KEYPAD_LEN] = {{'1', '2', '3', UP},
+														  {'4', '5', '6', DN},
+														  {'7', '8', '9', ENT},
+														  {'0', '.', '-', DEL}};
+	// The lock locks/unlocks every while loop iteration to allow other methods to more truely run simultaneously
+	// This requires we lock when the while loop begins, and unlock when it ends!
+	pthread_mutex_lock(&keyboard);
+	while(NiFpga_True) {
+
+		for(i = 0; i < LCD_KEYPAD_LEN; i++) {
+			for(j = 0; j < LCD_KEYPAD_LEN; j++) {
+				Dio_WriteBit(channel + j, i == j ? NiFpga_False : NiFpga_True);
+			}
+			for(j = LCD_KEYPAD_LEN; j < 2 * LCD_KEYPAD_LEN; j++) {
+				if(!Dio_ReadBit(channel + j)) {
+					while(!Dio_ReadBit(channel + j)) {}
+					pthread_mutex_unlock(&keyboard);
+					return keypad[j - LCD_KEYPAD_LEN][i];
+				}
+			}
+			wait();
+		}
+	}
+	pthread_mutex_unlock(&keyboard);
+	return '\0';
 }

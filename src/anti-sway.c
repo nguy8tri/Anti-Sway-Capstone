@@ -181,11 +181,10 @@ static void *AntiSwayModeThread(void *resource) {
 
         if (irq_assert) {
             // Do the loop for both motors
-
             // Get the inputs
-/*            if (GetReferenceVelocityCommand(&reference_vel)) {
+            if (GetReferenceVelocityCommand(&reference_vel)) {
             	EXIT_THREAD();
-            }*/
+            }
             if (GetAngle(&input)) {
             	EXIT_THREAD();
             }
