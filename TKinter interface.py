@@ -318,11 +318,18 @@ class SimulationInterface:
         error_dropdown2 = ttk.Combobox(frame2, values=["sim_force", "sim_volts", "sim_amps", "sim_torque", "v_desired"])  # Assuming variables is a list
         error_dropdown2.pack(anchor='w')
         error_dropdown2.current(1)
+        
+        negative = tk.BooleanVar(value=False)
+        blah2 = tk.Checkbutton(frame2, text="Negative?", variable=negative).pack(anchor='w')
 
-    
         # Compare button
         def send_outputs():
             selected_keys = [key for key, var in checkbox_vars.items() if var.get()]
+            time_new = []
+            for t in range(len(data_dict["t"][0])):
+                time_new.append(t*0.005)
+            data_dict["t"] = [time_new]
+            
             wanted_range = [int(range_min_entry.get()), int(range_max_entry.get())]
             self.compare_plot(data_dict, selected_keys, wanted_range, title_entry.get(), time_dropdown.get(), error=False)
             if compare_question.get():
@@ -368,6 +375,8 @@ class SimulationInterface:
             
             torque = []; amps = []; volts = []
             for fnow in F:
+                if negative.get():
+                    fnow = -fnow
                 torque.append(fnow*self.gear_radius.get())
                 amps.append(torque[-1]/self.motor_constant.get())
                 volts.append(amps[-1]/self.amp_constant.get())
@@ -377,8 +386,17 @@ class SimulationInterface:
             data_dict["sim_amps"] = amps
             data_dict["sim_volts"] = volts
             data_dict["v_desired"] = v_desired
-            
-            error = list(np.array(data_dict[error_dropdown1.get()])[0][int(range_min_entry.get()):int(range_max_entry.get())] - np.array(data_dict[error_dropdown2.get()]))
+            error = []
+            act = list(np.array(data_dict[error_dropdown1.get()]))[0][int(range_min_entry.get()):int(range_max_entry.get())]
+            theory = np.array(data_dict[error_dropdown2.get()])
+            for j in range(len(act)):
+                res = act[j] / theory[j]
+                if res > 5:
+                    error.append(5)
+                elif res < -5:
+                    error.append(-5)
+                else:
+                    error.append(res)
             data_dict["error"] = error
             
             print("done1")
