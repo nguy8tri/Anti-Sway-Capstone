@@ -48,6 +48,15 @@ static MyRio_Aio x_potentiometer;
 static MyRio_Aio y_potentiometer;
 
 
+/* Potentiometer Saturation Bounds */
+
+
+// Lower Angle Saturation Limit
+#define ANG_LIM_LO -18.0
+// Upper Angle Saturation Limit
+#define ANG_LIM_HI 18.0
+
+
 /* Encoders and Encoder Constants */
 
 
@@ -70,6 +79,15 @@ static bool holding_pos_set;
 static Velocities holding_vel;
 // Encoder Holding for position
 static Positions holding_pos;
+// Encoder Error Mask
+static const Encoder_StatusMask enc_st_mask =
+    (Encoder_StError |
+    Encoder_StUnsignedOverflowError |
+    Encoder_StSignedOverflowError);
+
+
+/* Encoder Interpretation Macros */
+
 
 // Number of counts in one revolution
 // TODO(nguy8tri): Find this quantity
@@ -93,46 +111,8 @@ static Positions holding_pos;
     (value) / (BTI_S * ENC_CNT_REV) * M_PER_REV
 
 
+/* Encoder Limits */
 
-/* Motors and Motor Constants */
-
-
-// X Motor Voltage Channel
-MyRio_Aio x_motor;
-// Y Motor Voltage Channel
-MyRio_Aio y_motor;
-
-
-/* Reference Velocity Definitions */
-
-
-// The unit velocity stop corresponding
-// to a keypad touch (m/s)
-#define UNIT_VEL 0.2
-
-/**
- * Holds booleans indicating which
- * buttons (1 through 9) are being pressed
-*/
-typedef bool Keymap[9];
-
-/* Keypad Definitions and Variables */
-// Number of Channels
-#define CHANNELS 16
-// Keypad Length
-#define LCD_KEYPAD_LEN 4
-// Keyboard channels
-static MyRio_Dio channel[CHANNELS];
-// Keyboard lock
-static pthread_mutex_t keyboard;
-// Our keymap
-static Keymap keymap;
-// Thread for Keymap Thread
-static pthread_t keymap_thread;
-// Thread Resource for Keymap Thread
-static ThreadResource keymap_resource;
-
-/* XY (Encoder) Bounds */
 
 // Lower X Limit
 #define X_LIM_LO 0.0
@@ -146,24 +126,69 @@ static ThreadResource keymap_resource;
 #define VEL_LIM_ABS 1.0
 
 
-/* Potentiometer Saturation Bounds */
+/* Motors and Motor Constants */
 
 
-// Lower Angle Saturation Limit
-#define ANG_LIM_LO -15.0
-// Upper Angle Saturation Limit
-#define ANG_LIM_HI 15.0
+// X Motor Voltage Channel
+MyRio_Aio x_motor;
+// Y Motor Voltage Channel
+MyRio_Aio y_motor;
 
 
-/* Error Handling */
-static int error;
+
+/* Timer Declaration */
+
 
 MyRio_IrqTimer timer;
 
 
-/* Static Helper Functions */
+/* Keyboard Definitions and Variables */
 
-static inline void wait();
+
+// Number of Channels
+#define CHANNELS 16
+// Keypad Length
+#define LCD_KEYPAD_LEN 4
+// Keyboard channels
+static MyRio_Dio channel[CHANNELS];
+// Keyboard lock
+static pthread_mutex_t keyboard;
+
+
+/* Keymap Thread Data Structures */
+
+
+/**
+ * Holds booleans indicating which
+ * buttons (1 through 9) are being pressed
+*/
+typedef bool Keymap[9];
+
+
+/* Reference Velocity/Keymap Thread Variables */
+
+
+// Our keymap
+static Keymap keymap;
+// Thread for Keymap Thread
+static pthread_t keymap_thread;
+// Thread Resource for Keymap Thread
+static ThreadResource keymap_resource;
+
+
+/* Reference Velocity/Keymap Macros */
+
+
+// The unit velocity stop corresponding
+// to a keypad touch (m/s)
+#define UNIT_VEL 0.2
+
+
+// Local Error Flag
+static int error;
+
+
+/* Keymap Thread Function */
 
 
 /**
@@ -179,6 +204,10 @@ static inline void wait();
  * excluding 0, that are pressed
 */
 static inline void *KeymapThread(void *resource);
+
+
+/* Limit Functions */
+
 
 /**
  * Handles Error Processing from Position/Velocity
@@ -204,6 +233,17 @@ static inline int HandleEncoderError(Positions *curr_pos,
  * @return 0 upon no error, ESTRN otherwise
 */
 static inline int HandlePotentiometerError(Angles *curr_ang);
+
+
+/* Secret Override of getkey() for thread-safety */
+
+
+/**
+ * Waits for approximate 5 ms
+ * 
+ * @post About 5 ms have passed
+*/
+static inline void wait();
 
 
 /* Setup/Shutdown Functions */
@@ -291,10 +331,19 @@ int IOShutdown() {
 }
 
 
+/* Reset Functions */
+
+
+void Reset() {
+    reset = true;
+}
+
+
 /* Sensor Functions */
 
+
 int GetReferenceVelocityCommand(Velocities *result) {
-    // Setup discrete velocity comands,
+    // Setup discrete velocity commands,
     // -1, 0, and 1
     int8_t x_vel = 0;
     int8_t y_vel = 0;
@@ -306,7 +355,7 @@ int GetReferenceVelocityCommand(Velocities *result) {
         return EXIT_SUCCESS;
     }
 
-    if (keymap[0] || keymap[1] || keymap[3]) y_vel++;
+    if (keymap[0] || keymap[1] || keymap[2]) y_vel++;
     if (keymap[2] || keymap[5] || keymap[8]) x_vel++;
     if (keymap[6] || keymap[7] || keymap[8]) y_vel--;
     if (keymap[0] || keymap[3] || keymap[6]) x_vel--;
@@ -473,19 +522,17 @@ bool PressedDelete() {
 }
 
 
-/* Static Helper Function */
+/* Keymap Thread Function */
 
 
 static inline void *KeymapThread(void *resource) {
     ThreadResource *thread_resource = (ThreadResource *) resource;
     uint8_t i, j;
 
-    printf("Begin KeymapThread\n");
-
     while (thread_resource->irq_thread_rdy) {
-    	pthread_mutex_lock(&keyboard);
+        pthread_mutex_lock(&keyboard);
         for (i = 0; i < LCD_KEYPAD_LEN - 1; i++) {
-            for (j = 0; j < LCD_KEYPAD_LEN - 1; j++) {
+            for (j = 0; j < LCD_KEYPAD_LEN; j++) {
                 Dio_WriteBit(channel + j, i == j ? NiFpga_False : NiFpga_True);
             }
             for (j = LCD_KEYPAD_LEN; j < 2 * LCD_KEYPAD_LEN - 1; j++) {
@@ -498,6 +545,9 @@ static inline void *KeymapThread(void *resource) {
 
     EXIT_THREAD();
 }
+
+
+/* Limit Functions */
 
 
 static inline int HandleEncoderError(Positions *curr_pos,
@@ -515,6 +565,11 @@ static inline int HandleEncoderError(Positions *curr_pos,
         fabsf(curr_vel->y_vel) > VEL_LIM_ABS) {
         u_error = EVTYE;
     }
+    // Now, check if there is an encoder error
+    if (Encoder_Status(&x_encoder) & enc_st_mask ||
+        Encoder_Status(&y_encoder) & enc_st_mask) {
+        u_error = EENCR;
+    }
     // Output Error
     if (u_error) {
         SetXVoltage(0.0);
@@ -525,64 +580,59 @@ static inline int HandleEncoderError(Positions *curr_pos,
 
 static inline int HandlePotentiometerError(Angles *curr_ang) {
     u_error = EXIT_SUCCESS;
-    // if (curr_ang->x_angle < ANG_LIM_LO || curr_ang->x_angle > ANG_LIM_HI ||
-    //     curr_ang->y_angle < ANG_LIM_HI || curr_ang->y_angle > ANG_LIM_HI) {
-    //     u_error = ESTRN;
-    // }
-    // if (u_error) {
-    //     SetXVoltage(0.0);
-    //     SetYVoltage(0.0);
-    // }
+    if (curr_ang->x_angle < ANG_LIM_LO || curr_ang->x_angle > ANG_LIM_HI ||
+        curr_ang->y_angle < ANG_LIM_HI || curr_ang->y_angle > ANG_LIM_HI) {
+        u_error = ESTRN;
+    }
+    if (u_error) {
+        SetXVoltage(0.0);
+        SetYVoltage(0.0);
+    }
     return u_error;
 }
 
-/* Reset Functions */
 
-void Reset() {
-    reset = true;
-}
+/* Secret Override of getkey() function for thread-safety */
+
 
 static inline void wait() {
-	uint32_t i;
+    uint32_t i;
 // Wait Constant
 #define WAIT_CONST 417000
 
-	i = 0;
-	while(i++ < WAIT_CONST) {}
+    i = 0;
+    while (i++ < WAIT_CONST) {}
 
-	return;
+    return;
 #undef WAIT_CONST
 }
 
-
-
 char getkey() {
-	uint8_t i,j;
+    uint8_t i, j;
 
-	// Keypad characters
-	static char keypad[LCD_KEYPAD_LEN][LCD_KEYPAD_LEN] = {{'1', '2', '3', UP},
-														  {'4', '5', '6', DN},
-														  {'7', '8', '9', ENT},
-														  {'0', '.', '-', DEL}};
-	// The lock locks/unlocks every while loop iteration to allow other methods to more truely run simultaneously
-	// This requires we lock when the while loop begins, and unlock when it ends!
-	pthread_mutex_lock(&keyboard);
-	while(NiFpga_True) {
-
-		for(i = 0; i < LCD_KEYPAD_LEN; i++) {
-			for(j = 0; j < LCD_KEYPAD_LEN; j++) {
-				Dio_WriteBit(channel + j, i == j ? NiFpga_False : NiFpga_True);
-			}
-			for(j = LCD_KEYPAD_LEN; j < 2 * LCD_KEYPAD_LEN; j++) {
-				if(!Dio_ReadBit(channel + j)) {
-					while(!Dio_ReadBit(channel + j)) {}
-					pthread_mutex_unlock(&keyboard);
-					return keypad[j - LCD_KEYPAD_LEN][i];
-				}
-			}
-			wait();
-		}
-	}
-	pthread_mutex_unlock(&keyboard);
-	return '\0';
+    // Keypad characters
+    static char keypad[LCD_KEYPAD_LEN][LCD_KEYPAD_LEN] = {{'1', '2', '3', UP},
+                                                          {'4', '5', '6', DN},
+                                                          {'7', '8', '9', ENT},
+                                                          {'0', '.', '-', DEL}};
+    // Locking style allows for getkey() to take precedence
+    // over all other keyboard commands
+    pthread_mutex_lock(&keyboard);
+    while (NiFpga_True) {
+        for (i = 0; i < LCD_KEYPAD_LEN; i++) {
+            for (j = 0; j < LCD_KEYPAD_LEN; j++) {
+                Dio_WriteBit(channel + j, i == j ? NiFpga_False : NiFpga_True);
+            }
+            for (j = LCD_KEYPAD_LEN; j < 2 * LCD_KEYPAD_LEN; j++) {
+                if (!Dio_ReadBit(channel + j)) {
+                    while (!Dio_ReadBit(channel + j)) {}
+                    pthread_mutex_unlock(&keyboard);
+                    return keypad[j - LCD_KEYPAD_LEN][i];
+                }
+            }
+            wait();
+        }
+    }
+    pthread_mutex_unlock(&keyboard);
+    return '\0';
 }

@@ -124,12 +124,8 @@ static int error;
 
 
 int SystemExec() {
-    VERIFY(error, StartState());
-
-    state = MENU;
-
     while (state != END) {
-        states[state]();
+        VERIFY(error, states[state]());
     }
 
     return states[state]();
@@ -201,15 +197,15 @@ static int MenuState() {
             state = ERROR;
             return EXIT_FAILURE;
     }
-
+    // Reset Last Recorded Encoder Values (velocity is now <0, 0> m/s)
     Reset();
     return EXIT_SUCCESS;
 }
 
 static int ErrorState() {
     // TODO(nguy8tri): Determine the error that happened and print it
-	SetXVoltage(0.0);
-	SetYVoltage(0.0);
+    SetXVoltage(0.0);
+    SetYVoltage(0.0);
     if (u_error == ENKWN) {
         printf_lcd("\fAn unknown error has occurred. Exiting Program...\n");
         state = END;
@@ -237,6 +233,10 @@ static int ErrorState() {
     } else if (u_error == ESTRN) {
         printf_lcd("\fThe system has saturated unexpectedly."
                    "Exiting Program\n");
+        state = END;
+        return EXIT_FAILURE;
+    } else if (u_error == EENCR) {
+        printf_lcd("\fThe encoders have failed. Exiting Program\n");
         state = END;
         return EXIT_FAILURE;
     }

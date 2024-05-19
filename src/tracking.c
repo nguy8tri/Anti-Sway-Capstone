@@ -39,6 +39,7 @@ typedef struct {
 
 /* Control-Loop Variables */
 
+
 // Reference Angle (rad)
 #define NOMINAL_REFERENCE_ANGLE 0.0
 // The Control Scheme for the X Motor
@@ -60,7 +61,7 @@ static TrackingControlScheme y_control;
 #define B_t (8 * m_p / T_s)
 
 
-/* Error Code */
+// Local Error Flag
 static int error;
 
 
@@ -75,7 +76,7 @@ static char *data_file_name = "tracking.mat";
 #define DATA_LEN 12
 // The data names
 static char *data_names[DATA_LEN] = {"id", "t",
-									 "angle_x", "angle_y",
+                                     "angle_x", "angle_y",
                                      "trolley_pos_x", "trolley_pos_y",
                                      "trolley_vel_x", "trolley_vel_y",
                                      "inner_x", "voltage_x",
@@ -147,7 +148,7 @@ static inline int TrackingControlLaw(Angle angle_ref,
 
 int TrackingFork() {
     if (file == -1) {
-    	printf("Trying to open datafile\n");
+        printf("Trying to open datafile\n");
         file = OpenDataFile(data_file_name, data_names, DATA_LEN);
         printf("Opened\n");
     }
@@ -178,20 +179,20 @@ static void *TrackingModeThread(void *resource) {
 
         if (irq_assert) {
             // Do the loop for both motors
-        	data_buff = data;
+            data_buff = data;
 
             // Get the inputs
             if (GetReferenceAngleCommand(&angle_ref)) {
-            	EXIT_THREAD();
+                EXIT_THREAD();
             }
             if (GetAngle(&angle_input)) {
-            	EXIT_THREAD();
+                EXIT_THREAD();
             }
             if (GetTrolleyPosition(&trolley_pos)) {
-            	EXIT_THREAD();
+                EXIT_THREAD();
             }
             if (GetTrolleyVelocity(&trolley_vel)) {
-            	EXIT_THREAD();
+                EXIT_THREAD();
             }
 
 
@@ -201,7 +202,7 @@ static void *TrackingModeThread(void *resource) {
             *data_buff++ = angle_input.x_angle;
             *data_buff++ = angle_input.y_angle;
             *data_buff++ = trolley_pos.x_pos;
-            *data_buff ++ = trolley_pos.y_pos;
+            *data_buff++ = trolley_pos.y_pos;
             *data_buff++ = trolley_vel.x_vel;
             *data_buff++ = trolley_vel.y_vel;
 
@@ -211,14 +212,14 @@ static void *TrackingModeThread(void *resource) {
                                    trolley_vel.x_vel,
                                    &x_control,
                                    SetXVoltage)) {
-            	EXIT_THREAD();
+                EXIT_THREAD();
             }
             if (TrackingControlLaw(angle_ref.y_angle,
                                    angle_input.y_angle,
                                    trolley_vel.y_vel,
                                    &y_control,
                                    SetYVoltage)) {
-            	EXIT_THREAD();
+                EXIT_THREAD();
             }
 
             // Send data into file

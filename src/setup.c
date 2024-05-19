@@ -12,9 +12,15 @@
 
 #include "setup.h"
 
+
+// Local error flag
 static int error;
 
-// Declare the universal error code
+
+/* Declaration of universal error code */
+
+
+// Universal error code (extern)
 int u_error;
 
 int Setup() {

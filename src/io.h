@@ -9,12 +9,6 @@
 #include "TimerIRQ.h"
 
 
-/* Reset Feature */
-// Reset Flag for GetTrolleyPosition
-// and GetVelocityPosition
-void Reset();
-
-
 /* Input/Output Data Types */
 
 typedef float Angle;
@@ -103,7 +97,22 @@ int IOSetup();
 int IOShutdown();
 
 
+/* Reset Feature */
+
+
+/**
+ * Resets GetTrolleyPosition and
+ * GetTrolleyVelocity by setting the
+ * velocity to zero
+ * 
+ * @post The next time GetTrolleyVelocity
+ * is called, both velocities are zero
+*/
+void Reset();
+
+
 /* Sensor Functions */
+
 
 /**
  * Obtains the user command (for anti-sway)

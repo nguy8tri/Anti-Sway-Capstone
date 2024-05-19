@@ -22,6 +22,8 @@ extern int u_error;
 #define EVTYE -3
 // Unexpected Saturation Error
 #define ESTRN -4
+// Encoder Error
+#define EENCR -5
 
 
 #endif  // ERROR_H_

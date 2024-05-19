@@ -17,6 +17,7 @@
 
 #include "idle.h"
 
+
 /* Thread Number & Resources */
 
 
@@ -24,13 +25,11 @@
 pthread_t idle_thread;
 // Thread Resources (Shared Resources)
 ThreadResource resource;
-
-
-/* Error Code */
+// Local Error Code
 static int error;
 
 
-/* Thread Functions */
+/* Thread Function */
 
 
 /**

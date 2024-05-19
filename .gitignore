@@ -15,3 +15,9 @@ T1
 *.mat
 build
 C Support for myRIO
+# Ignore Latex Build Files
+*.aux
+*.log
+*.out
+*.synctex.gz
+*.toc

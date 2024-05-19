@@ -23,6 +23,9 @@
 #define DEFAULT_RESIZE_FACTOR 2
 
 
+/* Internal DataFile Representation */
+
+
 /**
  * Represents a Data File
 */
@@ -36,7 +39,7 @@ typedef struct {
 } DataFile_t;
 
 
-/* Internal File Tracking Variables*/
+/* Internal File Tracking Variables */
 
 
 // The data files this module is handling
@@ -47,7 +50,8 @@ static int num_files = 0;
 static int capacity_files = 0;
 
 
-/* Internal Helper Functions */
+/* Static Helper Functions */
+
 
 /**
  * Deallocates the entire module

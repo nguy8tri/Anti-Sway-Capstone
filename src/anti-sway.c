@@ -42,6 +42,7 @@ ThreadResource anti_sway_resource;
 typedef struct {
     // Outer feedback
     Proportional outer_feedback;
+    // Inner PI Control
     Proportional inner_prop;
     Integrator inner_int;
 } AntiSwayControlScheme;
@@ -74,7 +75,8 @@ static char *data_file_name = "anti-sway.mat";
 // The number of entries
 #define DATA_LEN 14
 // The data names
-static char *data_names[DATA_LEN] = {"id", "t", "vel_ref_x", "vel_ref_y",
+static char *data_names[DATA_LEN] = {"id", "t",
+                                     "vel_ref_x", "vel_ref_y",
                                      "angle_x", "angle_y",
                                      "trolley_vel_x", "trolley_vel_y",
                                      "vel_err_x", "voltage_x", "int_out_x",
@@ -183,13 +185,13 @@ static void *AntiSwayModeThread(void *resource) {
             // Do the loop for both motors
             // Get the inputs
             if (GetReferenceVelocityCommand(&reference_vel)) {
-            	EXIT_THREAD();
+                EXIT_THREAD();
             }
             if (GetAngle(&input)) {
-            	EXIT_THREAD();
+                EXIT_THREAD();
             }
             if (GetTrolleyVelocity(&trolley_vel)) {
-            	EXIT_THREAD();
+                EXIT_THREAD();
             }
             // Record Data
             *data_buff++ = id;
@@ -206,14 +208,14 @@ static void *AntiSwayModeThread(void *resource) {
                                    trolley_vel.x_vel,
                                    &x_control,
                                    SetXVoltage)) {
-            	EXIT_THREAD();
+                EXIT_THREAD();
             }
             if (AntiSwayControlLaw(reference_vel.y_vel,
                                    input.y_angle,
                                    trolley_vel.y_vel,
                                    &y_control,
                                    SetYVoltage)) {
-            	EXIT_THREAD();
+                EXIT_THREAD();
             }
             // Send data into file
             RecordData(file, data, DATA_LEN);
