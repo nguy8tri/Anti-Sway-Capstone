@@ -13,6 +13,7 @@
 #include "DIO.h"
 #include "T1.h"
 #include "conC_Encoder_initialize.h"
+#include "discrete-lib.h"
 
 #include "error.h"
 #include "thread-lib.h"
@@ -52,9 +53,9 @@ static MyRio_Aio y_potentiometer;
 
 
 // Lower Angle Saturation Limit
-#define ANG_LIM_LO -18.0
+#define ANG_LIM_LO NEG_INF
 // Upper Angle Saturation Limit
-#define ANG_LIM_HI 18.0
+#define ANG_LIM_HI POS_INF
 
 
 /* Encoders and Encoder Constants */
@@ -81,9 +82,7 @@ static Velocities holding_vel;
 static Positions holding_pos;
 // Encoder Error Mask
 static const Encoder_StatusMask enc_st_mask =
-    (Encoder_StError |
-    Encoder_StUnsignedOverflowError |
-    Encoder_StSignedOverflowError);
+    (Encoder_StError);
 
 
 /* Encoder Interpretation Macros */
@@ -119,11 +118,11 @@ static const Encoder_StatusMask enc_st_mask =
 // Lower Y Limit
 #define Y_LIM_LO 0.0
 // Higher X Limit
-#define X_LIM_HI 0.3
+#define X_LIM_HI 0.35
 // Higher Y Limit
-#define Y_LIM_HI 0.3
+#define Y_LIM_HI 0.35
 // Absolute Velocity Limit
-#define VEL_LIM_ABS 1.0
+#define VEL_LIM_ABS 100.0
 
 
 /* Motors and Motor Constants */
@@ -493,7 +492,7 @@ int SetXVoltage(Voltage voltage) {
 }
 
 int SetYVoltage(Voltage voltage) {
-    Aio_Write(&y_motor, -voltage);
+    Aio_Write(&y_motor, voltage);
     return EXIT_SUCCESS;
 }
 
@@ -566,28 +565,44 @@ static inline int HandleEncoderError(Positions *curr_pos,
         u_error = EVTYE;
     }
     // Now, check if there is an encoder error
-    if (Encoder_Status(&x_encoder) & enc_st_mask ||
-        Encoder_Status(&y_encoder) & enc_st_mask) {
-        u_error = EENCR;
+    if (Encoder_Status(&x_encoder) & enc_st_mask) {
+
+    		// u_error = EENCR;
+    		// conC_Encoder_initialize(myrio_session, &x_encoder, X_CONNECTOR_ID);
+
+    		printf("Attempting to Reset X Encoder\n");
+    		Encoder_Configure(&x_encoder, Encoder_Error | Encoder_Enable | Encoder_SignalMode,
+    							Encoder_ClearError | Encoder_Enabled | Encoder_QuadPhase);
+    }
+    if (Encoder_Status(&y_encoder) & enc_st_mask) {
+
+        	// u_error = EENCR;
+        	// conC_Encoder_initialize(myrio_session, &y_encoder, Y_CONNECTOR_ID);
+        	printf("Attempting to Reset Y Encoder\n");
+        	Encoder_Configure(&y_encoder, Encoder_Error | Encoder_Enable | Encoder_SignalMode,
+        	    							Encoder_ClearError | Encoder_Enabled | Encoder_QuadPhase);
     }
     // Output Error
     if (u_error) {
         SetXVoltage(0.0);
         SetYVoltage(0.0);
     }
+/*    if (!x_enc_works) SetXVoltage(0.0);
+    if (!y_enc_works) SetYVoltage(0.0);*/
+
     return u_error;
 }
 
 static inline int HandlePotentiometerError(Angles *curr_ang) {
     u_error = EXIT_SUCCESS;
-    if (curr_ang->x_angle < ANG_LIM_LO || curr_ang->x_angle > ANG_LIM_HI ||
+/*    if (curr_ang->x_angle < ANG_LIM_LO || curr_ang->x_angle > ANG_LIM_HI ||
         curr_ang->y_angle < ANG_LIM_HI || curr_ang->y_angle > ANG_LIM_HI) {
         u_error = ESTRN;
-    }
-    if (u_error) {
+    }*/
+/*    if (u_error) {
         SetXVoltage(0.0);
         SetYVoltage(0.0);
-    }
+    }*/
     return u_error;
 }
 

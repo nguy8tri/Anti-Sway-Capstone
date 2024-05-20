@@ -124,8 +124,12 @@ static int error;
 
 
 int SystemExec() {
+    VERIFY(error, StartState());
+
+    state = MENU;
+
     while (state != END) {
-        VERIFY(error, states[state]());
+        states[state]();
     }
 
     return states[state]();
@@ -197,7 +201,7 @@ static int MenuState() {
             state = ERROR;
             return EXIT_FAILURE;
     }
-    // Reset Last Recorded Encoder Values (velocity is now <0, 0> m/s)
+
     Reset();
     return EXIT_SUCCESS;
 }
@@ -211,11 +215,13 @@ static int ErrorState() {
         state = END;
         Shutdown();
         return EXIT_FAILURE;
-    } else if (u_error == EOTBD || u_error == EVTYE) {
+    } else if (u_error == EOTBD || u_error == EVTYE || u_error == EENCR) {
         if (u_error == EOTBD) {
             printf_lcd("\fError: Positional Limit Exceeded");
         } else if (u_error == EVTYE) {
             printf_lcd("\fError: Velocity Limit Exceeded..");
+        } else {
+        	printf_lcd("\fError: An encoder(s) has failed..");
         }
         printf_lcd("Press:\n"
                    "1) Continue\n"
@@ -233,10 +239,6 @@ static int ErrorState() {
     } else if (u_error == ESTRN) {
         printf_lcd("\fThe system has saturated unexpectedly."
                    "Exiting Program\n");
-        state = END;
-        return EXIT_FAILURE;
-    } else if (u_error == EENCR) {
-        printf_lcd("\fThe encoders have failed. Exiting Program\n");
         state = END;
         return EXIT_FAILURE;
     }
