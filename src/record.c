@@ -156,6 +156,17 @@ int RecordData(FileID_t file, double data[], int data_length) {
     return EXIT_SUCCESS;
 }
 
+int RecordValue(FileID_t file, char *value_name, double value) {
+    DataFile_t *f = &(files[file]);
+    matfile_addmatrix(f->file,
+                      value_name,
+                      &value,
+                      1,
+                      1,
+                      0);
+    return EXIT_SUCCESS;
+}
+
 int SaveDataFiles() {
     DataFile_t *file;
     int err = EXIT_SUCCESS;

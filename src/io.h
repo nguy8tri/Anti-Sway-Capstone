@@ -246,4 +246,20 @@ int SetYVoltage(Voltage voltage);
 */
 bool PressedDelete();
 
+/**
+ * Enables Keyboard Control for Anti-Sway (concurrently)
+ * 
+ * @post If its already running, does nothing
+ * 
+ * @return 0 upon success, negative if error
+*/
+int KeyboardControlFork();
+
+/**
+ * Stops Keyboard Control for Anti-Sway (concurrent process)
+ * 
+ * @return 0 upon success, negative if error
+*/
+int KeyboardControlJoin();
+
 #endif  // IO_H_

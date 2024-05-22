@@ -5,6 +5,7 @@
 #include <pthread.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include <math.h>
 
 #include "setup.h"
 #include "io.h"
@@ -153,11 +154,18 @@ static inline int AntiSwayControlLaw(Velocity vel_ref,
 
 
 int AntiSwayFork() {
-    if (file == -1) {
-        file = OpenDataFile(data_file_name, data_names, DATA_LEN);
-    }
     SetupScheme(&x_control, K_pt, K_it, m_dt + m_p);
     SetupScheme(&y_control, K_pt, K_it, m_st + m_p);
+    if (file == -1) {
+        file = OpenDataFile(data_file_name, data_names, DATA_LEN);
+        RecordValue(file, "MKp_x", x_control.inner_prop);
+        RecordValue(file, "MKi_x", x_control.inner_int.gain * 2 / BTI_S);
+        RecordValue(file, "K_x", x_control.outer_feedback);
+        RecordValue(file, "MKp_y", y_control.inner_prop);
+        RecordValue(file, "MKi_y", y_control.inner_int.gain * 2 / BTI_S);
+        RecordValue(file, "K_y", y_control.outer_feedback);
+    }
+    KeyboardControlFork();
     REGISTER_TIMER(anti_sway_resource);
     START_THREAD(anti_sway_thread, AntiSwayModeThread, anti_sway_resource);
     return EXIT_SUCCESS;
@@ -166,6 +174,7 @@ int AntiSwayFork() {
 int AntiSwayJoin() {
     STOP_THREAD(anti_sway_thread, anti_sway_resource);
     UNREGISTER_TIMER(anti_sway_resource);
+    KeyboardControlJoin();
     id++;
     t = 0.0;
     return EXIT_SUCCESS;
@@ -256,7 +265,7 @@ static inline void SetupScheme(AntiSwayControlScheme *scheme,
                                Proportional K_p,
                                Proportional K_i,
                                Proportional m) {
-    scheme->outer_feedback = l * g;
+    scheme->outer_feedback = 2 * sqrt(l * g);
     scheme->inner_prop = m * K_p;
     IntegratorInit(K_i * m, BTI_S, &(scheme->inner_int));
 }

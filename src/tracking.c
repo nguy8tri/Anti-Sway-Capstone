@@ -147,13 +147,16 @@ static inline int TrackingControlLaw(Angle angle_ref,
 
 
 int TrackingFork() {
-    if (file == -1) {
-        printf("Trying to open datafile\n");
-        file = OpenDataFile(data_file_name, data_names, DATA_LEN);
-        printf("Opened\n");
-    }
     SetupScheme(&x_control, -3295.3175, 1, 155.36);
     SetupScheme(&y_control, -1040.0, 1, 53.2);
+    if (file == -1) {
+        file = OpenDataFile(data_file_name, data_names, DATA_LEN);
+        RecordValue(file, "K_x", x_control.combined_constants);
+        RecordValue(file, "B_x", x_control.damping);
+        RecordValue(file, "K_y", y_control.combined_constants);
+        RecordValue(file, "B_y", y_control.damping);
+    }
+
     REGISTER_TIMER(resource);
     START_THREAD(tracking_thread, TrackingModeThread, resource);
     return EXIT_SUCCESS;

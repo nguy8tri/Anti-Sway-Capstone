@@ -20,13 +20,24 @@ FileID_t OpenDataFile(char *name, char **entry_names, int num_entries);
 /**
  * Records data for each entry
  * 
- * @param name file the FileID_t to record upon
+ * @param file The FileID_t to record upon
  * @param data The array of data to record (in order of the entries)
  * @param data_length The length of the data array
  * 
- * @param 0 iff success, negative upon failure
+ * @return 0 iff success, negative upon failure
 */
 int RecordData(FileID_t file, double data[], int data_length);
+
+/**
+ * Records one-time data
+ * 
+ * @param file The FileID_t to record upon
+ * @param value_name The name of the value
+ * @param value The value to record
+ * 
+ * @return 0 iff success, negative upon failure
+*/
+int RecordValue(FileID_t file, char *value_name, double value);
 
 /**
  * Records all data into actual files, and closes all files

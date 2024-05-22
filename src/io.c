@@ -52,10 +52,10 @@ static MyRio_Aio y_potentiometer;
 /* Potentiometer Saturation Bounds */
 
 
-// Lower Angle Saturation Limit
-#define ANG_LIM_LO NEG_INF
-// Upper Angle Saturation Limit
-#define ANG_LIM_HI POS_INF
+// Lower Potentiometer Voltage Saturation Limit (V)
+#define POT_V_LIM_LO -20.0
+// Upper Potentiometer Voltage Saturation Limit (V)
+#define POT_V_LIM_HI 20.0
 
 
 /* Encoders and Encoder Constants */
@@ -122,7 +122,7 @@ static const Encoder_StatusMask enc_st_mask =
 // Higher Y Limit
 #define Y_LIM_HI 0.35
 // Absolute Velocity Limit
-#define VEL_LIM_ABS 100.0
+#define VEL_LIM_ABS 1.0
 
 
 /* Motors and Motor Constants */
@@ -180,7 +180,7 @@ static ThreadResource keymap_resource;
 
 // The unit velocity stop corresponding
 // to a keypad touch (m/s)
-#define UNIT_VEL 0.2
+#define UNIT_VEL 0.6
 
 
 // Local Error Flag
@@ -262,24 +262,22 @@ int IOSetup() {
     Aio_InitCI0(&y_potentiometer);
 
     // Setup Motor Channels
-       Aio_InitCO0(&x_motor);
-       Aio_InitCO1(&y_motor);
+    Aio_InitCO0(&x_motor);
+    Aio_InitCO1(&y_motor);
 
-       // Setup Keyboard
-       uint8_t i;
-       for (i = 0; i < CHANNELS; i++) {
-           channel[i].dir = DIOB_70DIR;
-           channel[i].out = DIOB_70OUT;
-           channel[i].in = DIOB_70IN;
-           channel[i].bit = i;
-       }
-       VERIFY(error, pthread_mutex_init(&keyboard, NULL));
-       memset(keymap, false, sizeof(Keymap));
+    // Setup Keyboard Channels & Resources
+    uint8_t i;
+    for (i = 0; i < CHANNELS; i++) {
+        channel[i].dir = DIOB_70DIR;
+        channel[i].out = DIOB_70OUT;
+        channel[i].in = DIOB_70IN;
+        channel[i].bit = i;
+    }
+    VERIFY(error, pthread_mutex_init(&keyboard, NULL));
+    memset(keymap, false, sizeof(Keymap));
 
-       printf_lcd("Calibration Finished\n");
-
-       // Setup Reset flag
-       reset = true;
+    // Setup Reset flag
+    reset = true;
 
     // Calibration Message
     printf_lcd("\fPlease stablize for calibration.\n"
@@ -299,8 +297,7 @@ int IOSetup() {
     potentiometer_v_x_intercept = Aio_Read(&x_potentiometer);
     potentiometer_v_y_intercept = Aio_Read(&y_potentiometer);
 
-    // Begin Keyboard Thread
-    START_THREAD(keymap_thread, KeymapThread, keymap_resource);
+    printf_lcd("Calibration Finished\n");
 
     return EXIT_SUCCESS;
 }
@@ -319,9 +316,6 @@ int IOShutdown() {
     // Disassociate with Motor
     memset(&x_motor, 0, sizeof(MyRio_Aio));
     memset(&y_motor, 0, sizeof(MyRio_Aio));
-
-    // Destroy Keymap Thread
-    STOP_THREAD(keymap_thread, keymap_resource);
 
     // Destroy Keyboard Lock
     VERIFY(error, pthread_mutex_destroy(&keyboard));
@@ -411,13 +405,11 @@ int GetTrolleyPosition(Positions *result) {
     result->y_pos
         = ENC_2_POS((double) (next_enc_state[1] - first_enc_state[1]));
 
-    if (!holding_vel_set) {
-        holding_vel.x_vel
-            = ENC_2_VEL((double) (next_enc_state[0] - prev_enc_state[0]));
-        holding_vel.y_vel
-            = ENC_2_VEL((double) (next_enc_state[1] - prev_enc_state[1]));
-        holding_vel_set = true;
-    }
+	holding_vel.x_vel
+		= ENC_2_VEL((double) (next_enc_state[0] - prev_enc_state[0]));
+	holding_vel.y_vel
+		= ENC_2_VEL((double) (next_enc_state[1] - prev_enc_state[1]));
+	holding_vel_set = true;
 
     prev_enc_state[0] = next_enc_state[0];
     prev_enc_state[1] = next_enc_state[1];
@@ -455,13 +447,11 @@ int GetTrolleyVelocity(Velocities *result) {
     result->x_vel = ENC_2_VEL((double) (next_enc_state[0] - prev_enc_state[0]));
     result->y_vel = ENC_2_VEL((double) (next_enc_state[1] - prev_enc_state[1]));
 
-    if (!holding_pos_set) {
-        holding_pos.x_pos
-            = ENC_2_POS((double) (next_enc_state[0] - first_enc_state[0]));
-        holding_pos.y_pos
-            = ENC_2_POS((double) (next_enc_state[1] - first_enc_state[1]));
-        holding_pos_set = true;
-    }
+	holding_pos.x_pos
+		= ENC_2_POS((double) (next_enc_state[0] - first_enc_state[0]));
+	holding_pos.y_pos
+		= ENC_2_POS((double) (next_enc_state[1] - first_enc_state[1]));
+	holding_pos_set = true;
 
     prev_enc_state[0] = next_enc_state[0];
     prev_enc_state[1] = next_enc_state[1];
@@ -518,6 +508,18 @@ bool PressedDelete() {
     return false;
 #undef DEL_ROW
 #undef DEL_COL
+}
+
+int KeyboardControlFork() {
+    // Begin Keyboard Thread
+    START_THREAD(keymap_thread, KeymapThread, keymap_resource);
+    return EXIT_FAILURE;
+}
+
+int KeyboardControlJoin() {
+    // Destroy Keymap Thread
+    STOP_THREAD(keymap_thread, keymap_resource);
+    return EXIT_SUCCESS;
 }
 
 
@@ -587,22 +589,24 @@ static inline int HandleEncoderError(Positions *curr_pos,
         SetXVoltage(0.0);
         SetYVoltage(0.0);
     }
-/*    if (!x_enc_works) SetXVoltage(0.0);
-    if (!y_enc_works) SetYVoltage(0.0);*/
 
     return u_error;
 }
 
 static inline int HandlePotentiometerError(Angles *curr_ang) {
     u_error = EXIT_SUCCESS;
-/*    if (curr_ang->x_angle < ANG_LIM_LO || curr_ang->x_angle > ANG_LIM_HI ||
-        curr_ang->y_angle < ANG_LIM_HI || curr_ang->y_angle > ANG_LIM_HI) {
+    Voltage x_voltage = curr_ang->x_angle / POTENTIOMETER_SLOPE +
+        potentiometer_v_x_intercept;
+    Voltage y_voltage = curr_ang->y_angle / POTENTIOMETER_SLOPE +
+        potentiometer_v_y_intercept;
+    if (x_voltage < POT_V_LIM_LO || x_voltage > POT_V_LIM_HI ||
+        y_voltage < POT_V_LIM_LO || y_voltage > POT_V_LIM_HI) {
         u_error = ESTRN;
-    }*/
-/*    if (u_error) {
+    }
+    if (u_error) {
         SetXVoltage(0.0);
         SetYVoltage(0.0);
-    }*/
+    }
     return u_error;
 }
 

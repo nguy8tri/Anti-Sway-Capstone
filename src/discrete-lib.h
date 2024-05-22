@@ -6,9 +6,25 @@
 
 #include <float.h>
 
-/* Non-saturation constants */
+/* Saturation Macros */
+
+
+// Positive Infinity
 #define POS_INF DBL_MAX
+// Negative Infinity
 #define NEG_INF (-DBL_MAX)
+
+/**
+ * Saturates a value
+ * 
+ * @param val The value to saturate
+ * @param lo The lower limit
+ * @param hi The upper limit
+ * 
+ * @return val iif lo <= val <= hi,
+ * lo iff lo > val, or hi iff val > hi
+*/
+#define SATURATE(val, lo, hi) val < lo ? lo : (val > hi ? hi : val)
 
 
 /* Discrete-Time Data Structures */
@@ -35,7 +51,7 @@ typedef struct {
 /**
  * A proportional constant
 */
-typedef float Proportional;
+typedef double Proportional;
 
 /**
  * A struct representing an integrator

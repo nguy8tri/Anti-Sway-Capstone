@@ -94,6 +94,7 @@ In particular, it is not a reiteration of every single software function ever de
 \section{Sensor/Actuator Specifications}
 \subsection{Angle Sensing: Potentiometers}
 \subsubsection{Iterations on Angle Sensing}
+\subsubsection{Calibration Method and Results}
 \subsection{Position Sensing: Encoders}
 \subsection{Force Actuation: Motor}
 \subsection{Velocity Actuation: Keypad}
@@ -226,7 +227,8 @@ Implementing \texttt{system} becomes very straightforward from inspecting Figure
     \centering
     \begin{tikzpicture}
 
-        \node[rectangle, draw, minimum width=3.5cm, minimum height=8cm, fill=green!10] at (0, -3.5) {};
+        \node[rectangle, draw, minimum width=3.5cm, minimum height=1cm, fill=green!13] at (0, 0) {};
+        \node[rectangle, draw, minimum width=3.5cm, minimum height=7cm, fill=green!7] at (0, -4) {};
         \node at (-2.45, -7.35) {\texttt{system}};
         \node[terminator] at (0, 0) (SystemExec) {\texttt{SystemExec}};
         \node[terminator] at (0, -1) (StartState) {\texttt{StartState}};
@@ -337,6 +339,80 @@ Thus, any State Function can set the variable \texttt{state} using the \texttt{e
 \newpage
 
 \subsection{Sensor/Actuator Interfacing: \texttt{io}} \label{subsection-io}
+This module is quite complex, although its intention is simple. It is a decorator module over Sensor/Actuator accessor/mutator functions. There are a few reasons for this:
+\begin{itemize}
+    \item Ability to convert raw outputs from sensor functions, which are usually in non-usable formats (wrong units).
+    \item Ability to monitor raw inputs into actuator functions, which alone can result in system/physical malfunction.
+    \item Decorator functions provide ease of access and readability to both kinds of devices by reducing the amount of lines written (code reuse).
+\end{itemize}
+For each sensors/actuators, a variable of some data type defined by the MyRio I/O interfaces must be employed. Through its lifetime, that data type must have some way to:
+\begin{enumerate}
+    \item Initialized (Once)
+    \item Use
+    \item Delete (Once)
+\end{enumerate}
+\begin{tcolorbox}[colback=yellow!10, colframe=green!20!black!70, title=C-Style Usage]
+    This is a very common design pattern used in C libraries that offer an interface to some data type. More explicitly, the above three functions usually come in the form:
+    \begin{lstlisting}
+        // Allocate/Initialize var (of type varType) with some parameters
+        int AllocVar(..., varType *var);
+        
+        // Use var with some parameters
+        int UseVar(varType *var, ...);
+        
+        // Free/Delete var (usually without parameters)
+        int FreeVar(varType *var);
+    \end{lstlisting}
+    It resembles object oriented programing with memory managment, but obviously since C isn't object-oriented, it must externally offer functions that do the above 3 on a pointer to the variable of concern. What's more is that this style allows the user to fully control the allocation of the variable. This is important because you'll see this \underline{everywhere}, including in our code.
+\end{tcolorbox}
+Since this is true for all the sensors/actuator we use, you'll find these functions that do such things being used in obvious places. Below is the dependency diagram for the \texttt{io} module, which wraps this functionality:
+\begin{figure}[H]
+    \begin{tikzpicture}
+        \node[rectangle, draw, minimum width=5.5cm, minimum height=11cm, fill=red!10] at (0, -5) {};
+        \node[rectangle, draw, minimum width=5.5cm, minimum height=2cm, fill=red!5] at (0, -11.5) {};
+        \node[terminator] at (0, 0) (IOSetup) {\texttt{IOSetup}};
+        \node[terminator] at (0, -1) (IOShutdown) {\texttt{IOShutdown}};
+        \node[terminator] at (0, -2) (Reset) {\texttt{Reset}};
+        \node[terminator] at (0, -3) (GetReferenceVelocityCommand) {\texttt{GetReferenceVelocityCommand}};
+        \node[terminator] at (0, -4) (GetReferenceAngleCommand) {\texttt{GetReferenceAngleCommand}};
+        \node[terminator] at (0, -5) (GetAngle) {\texttt{GetAngle}};
+        \node[terminator] at (0, -6) (GetTrolleyPosition) {\texttt{GetTrolleyPosition}};
+        \node[terminator] at (0, -7) (GetTrolleyVelocity) {\texttt{GetTrolleyVelocity}};
+        \node[terminator] at (0, -8) (SetXVoltage) {\texttt{SetXVoltage}};
+        \node[terminator] at (0, -9) (SetYVoltage) {\texttt{SetYVoltage}};
+        \node[terminator] at (0, -10) (PressedDelete) {\texttt{PressedDelete}};
+        \node[terminator] at (0, -11) (HandleEncoderError) {\texttt{HandleEncoderError}};
+        \node[terminator] at (0, -12) (HandlePotentiometerError) {\texttt{HandlePotentiometerError}};
+
+        
+        
+        \node[terminator] at (7, -0.5) (pthread_mutex_init) {\texttt{pthread\_mutex\_init}};
+        \node[terminator] at (7, -1.5) (pthread_mutex_destroy) {\texttt{pthread\_mutex\_destroy}};
+        \node[terminator] at (7, -2.5) (memset) {\texttt{memset}};
+
+        \node[terminator] at (7, -3.5) (printf_lcd) {\texttt{printf\_lcd}};
+        \node[terminator] at (7, -4.5) (Aio_InitC) {\texttt{Aio\_InitC??}};
+        \node[terminator] at (7, -5.5) (conC_Encoder_initialize) {\texttt{conC\_Encoder\_initialize}};
+        \node[terminator] at (7, -6.5) (Encoder_Counter) {\texttt{Encoder\_Counter}};
+        \node[terminator] at (7, -7.5) (Encoder_Status) {\texttt{Encoder\_Status}}; 
+        \node[terminator] at (7, -8.5) (Aio_Read) {\texttt{Aio\_Read}};
+        \node[terminator] at (7, -9.5) (Aio_Write) {\texttt{Aio\_Write}};
+        \node[terminator] at (7, -10.5) (Dio_Read) {\texttt{Dio\_Read}};
+        \node[terminator] at (7, -11.5) (Dio_Write) {\texttt{Dio\_Write}};
+
+        \draw[->] (pthread_mutex_init) -- (3.5, -0.5) -- (3.5, 0) -- (IOSetup);
+        \draw[->] (pthread_mutex_destroy) -- (4, -1.5) -- (4, -1) -- (IOShutdown);
+        \draw[-] (memset) -- (4, -2.5) -- (4, -1.5);
+        \draw[-] (printf_lcd) -- (3.5, -3.5) -- (3.5, -0.5);
+        \draw[-] (Aio_InitC) -- (3.5, -4.5) -- (3.5, -3.5);
+        \draw[-] (conC_Encoder_initialize) -- (3.5, -5.5) -- (3.5, -4.5);
+        \draw[-] (Encoder_Counter) -- (3.5, -6.5) -- (3.5, -5.5);
+        \draw[->] (Encoder_Counter) -- (3.15, -6.5) -- (3.15, -6) -- (GetTrolleyPosition);
+        \draw[->] (3.15, -6.5) -- (3.15, -7) -- (GetTrolleyVelocity);
+        
+    \end{tikzpicture}
+\end{figure}
+\subsubsection{Position \& Velocity Sensing}
 \subsubsection{Smart Limits: Kinematic Limits}
 \subsubsection{Keyboard: Multithreaded Resource Managament}
 \subsection{Discrete Control: \texttt{discrete-lib}}

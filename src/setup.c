@@ -9,6 +9,7 @@
 #include "record.h"
 #include "io.h"
 #include "error.h"
+#include "enc_detect.h"
 
 #include "setup.h"
 
@@ -27,11 +28,13 @@ int Setup() {
     u_error = 0;
     if (MyRio_IsNotSuccess(MyRio_Open())) return EXIT_FAILURE;
     VERIFY(error, IOSetup());
+    // VERIFY(error, EncoderFork());
     return EXIT_SUCCESS;
 }
 
 int Shutdown() {
     VERIFY(error, IOShutdown());
     VERIFY(error, SaveDataFiles());
+    // VERIFY(error, EncoderJoin());
     return MyRio_Close();
 }
