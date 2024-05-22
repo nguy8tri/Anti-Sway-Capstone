@@ -73,7 +73,8 @@ extern MyRio_IrqTimer timer;
 */
 #define FORCE_TO_VOLTAGE(force) \
     (force) * R / (K_a * K_m)
-
+#define VOLTAGE_TO_FORCE(voltage) \
+	(voltage) * (K_a * K_m) / R
 
 /* Setup/Shutdown Functions */
 

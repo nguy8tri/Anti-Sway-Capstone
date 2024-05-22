@@ -165,6 +165,8 @@ int TrackingFork() {
 int TrackingJoin() {
     STOP_THREAD(tracking_thread, resource);
     UNREGISTER_TIMER(resource);
+    SetXVoltage(0.0);
+    SetYVoltage(0.0);
     id++;
     return EXIT_SUCCESS;
 }

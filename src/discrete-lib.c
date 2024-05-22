@@ -5,6 +5,9 @@
 
 #include "discrete-lib.h"
 
+// Saturates a value (val) given a low (lo) and high (hi) value
+#define SATURATE(val, lo, hi) val < lo ? lo : (val > hi ? hi : val)
+
 
 /* Cascade Helper Function */
 

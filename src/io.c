@@ -180,7 +180,7 @@ static ThreadResource keymap_resource;
 
 // The unit velocity stop corresponding
 // to a keypad touch (m/s)
-#define UNIT_VEL 0.6
+#define UNIT_VEL 0.15
 
 
 // Local Error Flag

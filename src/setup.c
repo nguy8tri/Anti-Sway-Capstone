@@ -9,7 +9,6 @@
 #include "record.h"
 #include "io.h"
 #include "error.h"
-#include "enc_detect.h"
 
 #include "setup.h"
 

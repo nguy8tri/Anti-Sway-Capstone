@@ -29,10 +29,13 @@ ThreadResource anti_sway_resource;
 
 
 // The proportional constant for inner-loop
-#define K_pt 10.0
+static double K_ptx = 37.433;
 // The integral constant for inner-loop control
-#define K_it 3.0
-
+static double K_itx = 19.66;
+// The proportional constant for inner-loop
+static double K_pty = 36.150;
+// The integral constant for inner-loop control
+static double K_ity = 21.0;
 
 /* Control Loop Scheme */
 
@@ -74,14 +77,14 @@ static FileID_t file = -1;
 // The file Name
 static char *data_file_name = "anti-sway.mat";
 // The number of entries
-#define DATA_LEN 14
+#define DATA_LEN 20
 // The data names
 static char *data_names[DATA_LEN] = {"id", "t",
                                      "vel_ref_x", "vel_ref_y",
                                      "angle_x", "angle_y",
                                      "trolley_vel_x", "trolley_vel_y",
-                                     "vel_err_x", "voltage_x", "int_out_x",
-                                     "vel_err_y", "voltage_y", "int_out_y"};
+                                     "vel_err_x", "voltage_x", "int_out_x", "Kp_x'", "Ki_x'", "loss_x",
+                                     "vel_err_y", "voltage_y", "int_out_y", "Kp_y'", "Ki_y'", "loss_y"};
 // Buffer for data
 static double data[DATA_LEN];
 // Pointer to next data point to insert into buffer
@@ -154,16 +157,17 @@ static inline int AntiSwayControlLaw(Velocity vel_ref,
 
 
 int AntiSwayFork() {
-    SetupScheme(&x_control, K_pt, K_it, m_dt + m_p);
-    SetupScheme(&y_control, K_pt, K_it, m_st + m_p);
+    SetupScheme(&x_control, K_ptx, K_itx, m_dt + m_p);
+    SetupScheme(&y_control, K_pty, K_ity, m_st + m_p);
     if (file == -1) {
         file = OpenDataFile(data_file_name, data_names, DATA_LEN);
-        RecordValue(file, "MKp_x", x_control.inner_prop);
-        RecordValue(file, "MKi_x", x_control.inner_int.gain * 2 / BTI_S);
-        RecordValue(file, "K_x", x_control.outer_feedback);
-        RecordValue(file, "MKp_y", y_control.inner_prop);
-        RecordValue(file, "MKi_y", y_control.inner_int.gain * 2 / BTI_S);
-        RecordValue(file, "K_y", y_control.outer_feedback);
+
+		RecordValue(file, "MKp_x", x_control.inner_prop);
+		RecordValue(file, "MKi_x", x_control.inner_int.gain * 2 / BTI_S);
+		RecordValue(file, "K_x", x_control.outer_feedback);
+		RecordValue(file, "MKp_y", y_control.inner_prop);
+		RecordValue(file, "MKi_y", y_control.inner_int.gain * 2 / BTI_S);
+		RecordValue(file, "K_y", y_control.outer_feedback);
     }
     KeyboardControlFork();
     REGISTER_TIMER(anti_sway_resource);
@@ -175,6 +179,16 @@ int AntiSwayJoin() {
     STOP_THREAD(anti_sway_thread, anti_sway_resource);
     UNREGISTER_TIMER(anti_sway_resource);
     KeyboardControlJoin();
+    SetXVoltage(0.0);
+    SetYVoltage(0.0);
+    // Update default gains
+	K_ptx = x_control.inner_prop / (m_dt + m_p);
+	K_itx = x_control.inner_int.gain * 2 / BTI_S / (m_dt + m_p);
+	K_itx = K_itx < 0.0 ? 40.0 : K_itx;
+	K_pty = y_control.inner_prop / (m_st + m_p);
+	K_ity = y_control.inner_int.gain * 2 / BTI_S / (m_st + m_p);
+	K_ity = K_ity < 0.0 ? 40.0 : K_ity;
+	printf("%.3f, %.3f, %.3f, %.3f\n", K_ptx, K_itx, K_pty, K_ity);
     id++;
     t = 0.0;
     return EXIT_SUCCESS;
@@ -243,11 +257,17 @@ static inline int AntiSwayControlLaw(Velocity vel_ref,
                                      Velocity vel_input,
                                      AntiSwayControlScheme *scheme,
                                      int (* SetVoltage)(Voltage voltage)) {
+	static double lr = 1000;
+	static double prev_vel[2] = {0.0, 0.0};
+	static double prev_V[2] = {0.0, 0.0};
+	static int i = 0;
     double outer_output = vel_ref + scheme->outer_feedback * angle_input;
 
-    *data_buff++ = outer_output - vel_input;
+    double vel_err =  outer_output - vel_input;
+    *data_buff++ = vel_err;
 
-    Voltage final_output = PID(FORCE_TO_VOLTAGE(outer_output - vel_input),
+
+    Voltage final_output = PID(FORCE_TO_VOLTAGE(vel_err),
                                &(scheme->inner_prop),
                                &(scheme->inner_int),
                                NULL,
@@ -258,6 +278,26 @@ static inline int AntiSwayControlLaw(Velocity vel_ref,
     VERIFY(error, SetVoltage(final_output));
     *data_buff++ = final_output;
     *data_buff++ = scheme->inner_int.prev_output;
+
+    // Apply Gradient Descent
+    double dvdV =  (vel_input - prev_vel[i]) / (VOLTAGE_TO_FORCE(final_output - prev_V[i]));
+    if (fabs(final_output - prev_V[i]) < 0.001) {
+    	dvdV = 0.0;
+    }
+	double d_KpX = lr * vel_err * vel_err * dvdV;
+	double d_KiX = (lr * vel_err * (VOLTAGE_TO_FORCE(scheme->inner_int.prev_output) / (scheme->inner_int.gain * 2 / BTI_S)) * dvdV) * BTI_S / 2;
+
+	scheme->inner_prop += d_KpX;
+	scheme->inner_int.gain += d_KiX;
+
+	prev_vel[i] = vel_input;
+	prev_V[i] = final_output;
+
+	*data_buff++ = scheme->inner_prop;
+	*data_buff++ = scheme->inner_int.gain * 2 / BTI_S;
+	*data_buff++ = vel_err * vel_err;
+
+    if (++i == 2) i = 0;
     return EXIT_SUCCESS;
 }
 
