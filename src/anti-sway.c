@@ -29,13 +29,13 @@ ThreadResource anti_sway_resource;
 
 
 // The proportional constant for inner-loop
-static double K_ptx = 37.433;
+static double K_ptx = 54.109;
 // The integral constant for inner-loop control
-static double K_itx = 19.66;
+static double K_itx = 30.891;
 // The proportional constant for inner-loop
-static double K_pty = 36.150;
+static double K_pty = 52.706;
 // The integral constant for inner-loop control
-static double K_ity = 21.0;
+static double K_ity = 28.235;
 
 /* Control Loop Scheme */
 
@@ -93,6 +93,27 @@ static double *data_buff = data;
 static int id = 1;
 // timestamp
 static double t = 0.0;
+
+
+/* Gradient Descent Variables */
+// #define TUNING
+#ifdef TUNING
+static double dKp[2];
+static double dKi[2];
+
+#define ZERO_GRAD() \
+	dKp[0] = 0.0; \
+	dKp[1] = 0.0; \
+	dKi[0] = 0.0; \
+	dKi[1] = 0.0;
+
+#define LR 10
+static double prev_int[2][550];
+static int prev_int_i = 0;
+static bool int_res_first_time = true;
+static double prev_Kp[2];
+static double prev_Ki[2];
+#endif
 
 
 /* Scheme Setup Functions */
@@ -169,6 +190,9 @@ int AntiSwayFork() {
 		RecordValue(file, "MKi_y", y_control.inner_int.gain * 2 / BTI_S);
 		RecordValue(file, "K_y", y_control.outer_feedback);
     }
+#ifdef TUNING
+    ZERO_GRAD();
+#endif
     KeyboardControlFork();
     REGISTER_TIMER(anti_sway_resource);
     START_THREAD(anti_sway_thread, AntiSwayModeThread, anti_sway_resource);
@@ -182,13 +206,22 @@ int AntiSwayJoin() {
     SetXVoltage(0.0);
     SetYVoltage(0.0);
     // Update default gains
-	K_ptx = x_control.inner_prop / (m_dt + m_p);
-	K_itx = x_control.inner_int.gain * 2 / BTI_S / (m_dt + m_p);
+#ifdef TUNING
+	K_ptx += LR * dKp[0] / (m_dt + m_p);
+	K_itx += LR * dKi[0]/ (m_dt + m_p);
 	K_itx = K_itx < 0.0 ? 40.0 : K_itx;
-	K_pty = y_control.inner_prop / (m_st + m_p);
-	K_ity = y_control.inner_int.gain * 2 / BTI_S / (m_st + m_p);
+	K_pty += LR *  dKp[1] / (m_st + m_p);
+	K_ity += LR * dKi[1] / (m_st + m_p);
 	K_ity = K_ity < 0.0 ? 40.0 : K_ity;
-	printf("%.3f, %.3f, %.3f, %.3f\n", K_ptx, K_itx, K_pty, K_ity);
+	printf("Gradients: %.3f, %.3f, %.3f, %.3f\n", dKp[0], dKi[0], dKp[0], dKp[1]);
+	printf("New gains: %.3f, %.3f, %.3f, %.3f\n", K_ptx, K_itx, K_pty, K_ity);
+    prev_int_i = 0;
+    int_res_first_time = false;
+    prev_Kp[0] = K_ptx;
+    prev_Kp[1] = K_pty;
+    prev_Ki[0] = K_itx;
+    prev_Ki[1] = K_ity;
+#endif
     id++;
     t = 0.0;
     return EXIT_SUCCESS;
@@ -207,9 +240,14 @@ static void *AntiSwayModeThread(void *resource) {
         if (irq_assert) {
             // Do the loop for both motors
             // Get the inputs
+#ifdef TUNING
+            reference_vel.x_vel = 0.15;
+            reference_vel.y_vel= 0.15;
+#else
             if (GetReferenceVelocityCommand(&reference_vel)) {
                 EXIT_THREAD();
             }
+#endif
             if (GetAngle(&input)) {
                 EXIT_THREAD();
             }
@@ -245,6 +283,13 @@ static void *AntiSwayModeThread(void *resource) {
             data_buff = data;
 
             Irq_Acknowledge(irq_assert);
+#ifdef TUNING
+            if (++prev_int_i == 550) {
+            	printf("Exiting Thread\n");
+                EXIT_THREAD();
+
+            }
+#endif
         }
     }
 
@@ -257,9 +302,6 @@ static inline int AntiSwayControlLaw(Velocity vel_ref,
                                      Velocity vel_input,
                                      AntiSwayControlScheme *scheme,
                                      int (* SetVoltage)(Voltage voltage)) {
-	static double lr = 1000;
-	static double prev_vel[2] = {0.0, 0.0};
-	static double prev_V[2] = {0.0, 0.0};
 	static int i = 0;
     double outer_output = vel_ref + scheme->outer_feedback * angle_input;
 
@@ -279,19 +321,38 @@ static inline int AntiSwayControlLaw(Velocity vel_ref,
     *data_buff++ = final_output;
     *data_buff++ = scheme->inner_int.prev_output;
 
-    // Apply Gradient Descent
+#ifdef TUNING
+    static double prev_vel[2] = {0.0, 0.0};
+	static double prev_V[2] = {0.0, 0.0};
+    // "Back Propagation"
+    double Ki = (scheme->inner_int.gain * 2 / BTI_S);
+    double int_res = VOLTAGE_TO_FORCE(scheme->inner_int.prev_output) / Ki;
+
+    double dIdKp = 0.0;
+    double dIdKi = 0.0;
+    if (!int_res_first_time) {
+        dIdKp = (int_res - prev_int[i][prev_int_i]) / (scheme->inner_prop - prev_Kp[i]);
+        dIdKi = (int_res - prev_int[i][prev_int_i]) / (Ki - prev_Ki[i]);
+    }
+    if (fabs(scheme->inner_prop - prev_Kp[i]) < 0.001) {
+        dIdKp = 0.0;
+    }
+    if (fabs(Ki - prev_Ki[i]) < 0.001) {
+        dIdKi = 0.0;
+    }
     double dvdV =  (vel_input - prev_vel[i]) / (VOLTAGE_TO_FORCE(final_output - prev_V[i]));
+    // We don't want NAN here
     if (fabs(final_output - prev_V[i]) < 0.001) {
     	dvdV = 0.0;
     }
-	double d_KpX = lr * vel_err * vel_err * dvdV;
-	double d_KiX = (lr * vel_err * (VOLTAGE_TO_FORCE(scheme->inner_int.prev_output) / (scheme->inner_int.gain * 2 / BTI_S)) * dvdV) * BTI_S / 2;
-
-	scheme->inner_prop += d_KpX;
-	scheme->inner_int.gain += d_KiX;
+	dKp[i] -= vel_err *  dvdV * (vel_err + Ki * dIdKp) / (1 + scheme->inner_prop * dvdV);
+	// Use V_T_F here because the Integrator "thinks" its outputting a force, not a voltage
+	dKi[i] -=  vel_err * dvdV * (int_res + Ki * dIdKi)  / (1 + scheme->inner_prop * dvdV);
 
 	prev_vel[i] = vel_input;
 	prev_V[i] = final_output;
+    prev_int[i][prev_int_i] = int_res;
+#endif
 
 	*data_buff++ = scheme->inner_prop;
 	*data_buff++ = scheme->inner_int.gain * 2 / BTI_S;
