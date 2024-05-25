@@ -241,7 +241,7 @@ int AntiSwayJoin() {
     dKp[0] /= total_pts[0];
     dKi[0] /= total_pts[0];
     dKp[1] /= total_pts[1];
-    dKi[0] /= total_pts[1];
+    dKi[1] /= total_pts[1];
 
     // Step (Restoring normalized gains)
 	K_ptx -= LR_X * dKp[0] / (m_dt + m_p);
