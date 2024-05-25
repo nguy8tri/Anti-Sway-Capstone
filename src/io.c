@@ -493,14 +493,14 @@ int SetYVoltage(Voltage voltage) {
 bool PressedDelete() {
 #define DEL_ROW 7
 #define DEL_COL 3
-    pthread_mutex_lock(&keyboard);
+	pthread_mutex_lock(&keyboard);
     uint8_t j;
     for (j = 0; j < LCD_KEYPAD_LEN; j++) {
         Dio_WriteBit(channel + j, j == DEL_COL ? NiFpga_False : NiFpga_True);
     }
 
     if (!Dio_ReadBit(channel + DEL_ROW)) {
-        pthread_mutex_unlock(&keyboard);
+    	pthread_mutex_unlock(&keyboard);
         return true;
     }
 
@@ -543,7 +543,6 @@ static inline void *KeymapThread(void *resource) {
         }
         pthread_mutex_unlock(&keyboard);
     }
-
     EXIT_THREAD();
 }
 

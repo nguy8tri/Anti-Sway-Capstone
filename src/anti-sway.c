@@ -29,13 +29,13 @@ ThreadResource anti_sway_resource;
 
 
 // The proportional constant for inner-loop
-static double K_ptx = 54.109;
+static double K_ptx = 40.109;
 // The integral constant for inner-loop control
-static double K_itx = 30.891;
+static double K_itx = 20.891;
 // The proportional constant for inner-loop
-static double K_pty = 52.706;
+static double K_pty = 40.706;
 // The integral constant for inner-loop control
-static double K_ity = 28.235;
+static double K_ity = 20.235;
 
 /* Control Loop Scheme */
 
@@ -98,17 +98,26 @@ static double t = 0.0;
 /* Gradient Descent Variables */
 #define TUNING
 #ifdef TUNING
+static FileID_t tuning_file = -1;
+static char *tuning_file_name = "anti-sway-tuning.mat";
+#define TUNING_DATA_LEN 10
+static char *tuning_data_names[TUNING_DATA_LEN] = {"count_x", "count_y"
+                                                   "dKp_x", "dKi_x", "dKp_y", "dKi_y",
+												   "Kp_x", "Ki_x", "Kp_y", "Ki_y"};
 static double dKp[2];
 static double dKi[2];
+static int total_pts[2];
 
 #define ZERO_GRAD() \
 	dKp[0] = 0.0; \
 	dKp[1] = 0.0; \
 	dKi[0] = 0.0; \
-	dKi[1] = 0.0;
+	dKi[1] = 0.0; \
+    total_pts[0] = 0; \
+    total_pts[1] = 0;
 
-#define LR_X 75
-#define LR_Y 25
+#define LR_X 250
+#define LR_Y 250
 static double prev_int_Kp[2][550];
 static double prev_int_Ki[2][550];
 static int prev_int_i = 0;
@@ -194,8 +203,19 @@ int AntiSwayFork() {
 		RecordValue(file, "K_y", y_control.outer_feedback);
     }
 #ifdef TUNING
+    if (tuning_file == -1) {
+    	tuning_file = OpenDataFile(tuning_file_name, tuning_data_names, TUNING_DATA_LEN);
+
+    	RecordValue(tuning_file, "lr_x", LR_X);
+    	RecordValue(tuning_file, "lr_y", LR_Y);
+    	RecordValue(tuning_file, "Kpi_x", K_ptx);
+    	RecordValue(tuning_file, "Kii_x", K_itx);
+    	RecordValue(tuning_file, "Kpi_y", K_pty);
+    	RecordValue(tuning_file, "Kii_y", K_ity);
+    }
     // Literally, set all gradients to zero
     ZERO_GRAD();
+
 #endif
     KeyboardControlFork();
     REGISTER_TIMER(anti_sway_resource);
@@ -211,26 +231,35 @@ int AntiSwayJoin() {
     SetYVoltage(0.0);
 #ifdef TUNING
 
-    // Step
+    // Update Previous Gains to Current Gains
+    prev_Kp[0] = K_ptx;
+    prev_Kp[1] = K_pty;
+    prev_Ki[0] = K_itx;
+    prev_Ki[1] = K_ity;
 
+    // Normalize all Gradients
+    dKp[0] /= total_pts[0];
+    dKi[0] /= total_pts[0];
+    dKp[1] /= total_pts[1];
+    dKi[0] /= total_pts[1];
+
+    // Step (Restoring normalized gains)
 	K_ptx -= LR_X * dKp[0] / (m_dt + m_p);
 	K_itx -= LR_X * dKi[0]/ (m_dt + m_p);
 	K_itx = K_itx < 0.0 ? 40.0 : K_itx;
 	K_pty -= LR_Y *  dKp[1] / (m_st + m_p);
 	K_ity -= LR_Y * dKi[1] / (m_st + m_p);
 	K_ity = K_ity < 0.0 ? 40.0 : K_ity;
-	printf("Gradients: (dKp_x: %.3f), (dKi_x: %.3f), (dKp_y: %.3f), (dKi_y: %.3f)\n", dKp[0], dKi[0], dKp[0], dKp[1]);
-	printf("New gains: (Kp_x: %.3f), (Ki_x: %.3f), (Kp_y: %.3f), (Ki_y: %.3f)\n", K_ptx, K_itx, K_pty, K_ity);
+	printf("Gradients: (dKp_x: %.3e), (dKi_x: %.3e), (dKp_y: %.3e), (dKi_y: %.3e)\n", dKp[0], dKi[0], dKp[1], dKi[1]);
+	printf("New gains: (Kp_x: %.3e), (Ki_x: %.3e), (Kp_y: %.3e), (Ki_y: %.3e)\n", K_ptx, K_itx, K_pty, K_ity);
+	double data[] = {total_pts[0], total_pts[1], dKp[0], dKi[0], dKp[1], dKi[1], K_ptx, K_itx, K_pty, K_ity};
+	RecordData(tuning_file, data, TUNING_DATA_LEN);
     prev_int_i = 0;
     if (id == 1) {
         int_Kp_first = false;
     } else if (id == 2) {
         int_Ki_first = false;
     }
-    prev_Kp[0] = K_ptx;
-    prev_Kp[1] = K_pty;
-    prev_Ki[0] = K_itx;
-    prev_Ki[1] = K_ity;
 #endif
     id++;
     t = 0.0;
@@ -252,7 +281,7 @@ static void *AntiSwayModeThread(void *resource) {
             // Get the inputs
 #ifdef TUNING
             reference_vel.x_vel = 0.15;
-            reference_vel.y_vel= 0.15;
+            reference_vel.y_vel = 0.15;
 #else
             if (GetReferenceVelocityCommand(&reference_vel)) {
                 EXIT_THREAD();
@@ -295,9 +324,8 @@ static void *AntiSwayModeThread(void *resource) {
             Irq_Acknowledge(irq_assert);
 #ifdef TUNING
             if (++prev_int_i == 550) {
-            	printf("Exiting Thread\n");
+                printf("Exiting Thread\n");
                 EXIT_THREAD();
-
             }
 #endif
         }
@@ -312,12 +340,10 @@ static inline int AntiSwayControlLaw(Velocity vel_ref,
                                      Velocity vel_input,
                                      AntiSwayControlScheme *scheme,
                                      int (* SetVoltage)(Voltage voltage)) {
-	static int i = 0;
     double outer_output = vel_ref + scheme->outer_feedback * angle_input;
 
     double vel_err =  outer_output - vel_input;
     *data_buff++ = vel_err;
-
 
     Voltage final_output = PID(FORCE_TO_VOLTAGE(vel_err),
                                &(scheme->inner_prop),
@@ -332,88 +358,96 @@ static inline int AntiSwayControlLaw(Velocity vel_ref,
     *data_buff++ = scheme->inner_int.prev_output;
 
 #ifdef TUNING
-#define TOLERANCE 1e-9
+    static int i = 0;
 
     // Back Propagation
 
     // Previous values within the same training set
     static double prev_vel[2] = {0.0, 0.0};
-	static double prev_V[2] = {0.0, 0.0};
+    static double prev_V[2] = {0.0, 0.0};
     static double prev_ref[2] = {0.0, 0.0};
-    
 
     double Ki = (scheme->inner_int.gain * 2 / BTI_S);
     double int_res = VOLTAGE_TO_FORCE(scheme->inner_int.prev_output) / Ki;
 
-    // Unit Derivatives
+    // Unit Derivatives (Manual Derivatives)
 
-    // d (integral of error) / d Kp
-    double dIdKp = 0.0;
-    // d (integral of error) / d Ki
-    double dIdKi = 0.0;
-    if (!int_Kp_first && id % 2 == 1) {
-        dIdKp = 0.5 * (int_res - prev_int[i][prev_int_i]) / (scheme->inner_prop - prev_Kp[i]);
-        if (fabs(scheme->inner_prop - prev_Kp[i]) < TOLERANCE) {
-            dIdKp = 0.0;
+    // Throw away the first data point
+    if (prev_int_i != 0) {
+        // d (integral of error) / d Kp
+        double dIdKp = 0.0;
+        if (!int_Kp_first && id % 2 == 1) {
+            dIdKp = 0.5 * (int_res - prev_int_Kp[i][prev_int_i]) / (scheme->inner_prop - prev_Kp[i]);
+            if (isnan(dIdKp) || isinf(dIdKp)) {
+                error = 1;
+            }
         }
-    }
-    if (!int_Ki_first && id % 2 == 0) {
-        dIdKi = 0.5 * (int_res - prev_int[i][prev_int_i]) / (Ki - prev_Ki[i]);
-        if (fabs(Ki - prev_Ki[i]) < TOLERANCE) {
-            dIdKi = 0.0;
+        // d (integral of error) / d Ki
+        double dIdKi = 0.0;
+        if (!int_Ki_first && id % 2 == 0) {
+            dIdKi = 0.5 * (int_res - prev_int_Ki[i][prev_int_i]) / (Ki - prev_Ki[i]);
+            if (isnan(dIdKi) || isinf(dIdKi)) {
+                error = 1;
+            }
         }
-    }
-    // d (reference) / d input
-    double drdy = (vel_ref - prev_ref[i]) / (vel_input - prev_vel[i]);
-        if (fabs(scheme->inner_prop - prev_Kp[i]) < TOLERANCE) {
-    if (fabs(vel_input - prev_vel[i]) < TOLERANCE) {
-        drdy = 0.0;
-    }
-    double dydr = 1 / drdy;
-    if (fabs(drdy) < TOLERANCE) {
-        dydr = 0.0;
-    }
+        // d (reference) / d input
+        double drdy = (outer_output - prev_ref[i]) / (vel_input - prev_vel[i]);
+        if (isnan(drdy) || isinf(drdy)) {
+            error = 1;
+        }
+        double dydr = (vel_input - prev_vel[i]) /  (outer_output - prev_ref[i]);
+        if (isnan(dydr) || isinf(dydr)) {
+            error = 1;
+        }
 
-    // First four derivatives of each gradient
+        // printf("%d: r: %.3f, r_p: %.3f, y: %.3f, y_p: %.3f\n", i, outer_output, prev_ref[i], vel_input, prev_vel[i]);
 
-    // d (Loss) / d (input)
-    double dLdy = 2 * vel_err * (drdy - 1);
-    // d (input) / d (force output)
-    double dydu =  (vel_input - prev_vel[i]) / (VOLTAGE_TO_FORCE(final_output - prev_V[i]));
-    if (fabs(final_output - prev_V[i]) < TOLERANCE) {
-    	dvdV = 0.0;
-    }
-    // d (Loss) / d (reference)
-    double dLdr = 2 * vel_err * (1 - dydr);
-    // d (reference) / d (force output)
-    double drdu = (vel_ref - prev_ref[i]) / (VOLTAGE_TO_FORCE(final_output - prev_V[i]));
-    if (fabs(final_output - prev_V[i]) < TOLERANCE) {
-        drdu = 0.0;
-    }
+        // First four derivatives of each gradient
 
-    // Accumulate Gradients
-    if (id % 2 == 1) {
-	    dKp[i] += (dLdy * dydu + dLdr * drdu) * (vel_err + Ki * dIdKp) / (1 - (drdy - 1) * scheme->inner_prop * dydu);
-    } else {
-	    dKi[i] += (dLdy * dydu + dLdr * drdu) * (int_res + Ki * dIdKi) / (1 - (drdy - 1) * scheme->inner_prop * dydu);
+        // d (Loss) / d (input) (Expression)
+        double dLdy = 2 * vel_err * (drdy - 1);
+        // d (input) / d (force output)
+        double dydu =  (vel_input - prev_vel[i]) / (VOLTAGE_TO_FORCE(final_output - prev_V[i]));
+        if (isnan(dydu) || isinf(dydu)) {
+            error = 1;
+        }
+        // d (Loss) / d (reference) (Expression)
+        double dLdr = 2 * vel_err * (1 - dydr);
+        // d (reference) / d (force output)
+        double drdu = (outer_output - prev_ref[i]) / (VOLTAGE_TO_FORCE(final_output - prev_V[i]));
+        if (isnan(drdu) || isinf(drdu)) {
+            error = 1;
+        }
+
+        if (!error) {
+            // Accumulate Gradients
+            if (id % 2 == 1) {
+                dKp[i] += (dLdy * dydu + dLdr * drdu) * (vel_err + Ki * dIdKp) / (1 - ((drdy - 1) * dydu + (1-dydr) * drdu) * scheme->inner_prop);
+            } else {
+                dKi[i] += (dLdy * dydu + dLdr * drdu) * (int_res + Ki * dIdKi) / (1 - ((drdy - 1) * dydu + (1-dydr) * drdu) * scheme->inner_prop);
+            }
+            total_pts[i]++;
+        }
     }
 
     // Reset Previous Values
 	prev_vel[i] = vel_input;
 	prev_V[i] = final_output;
-    prev_ref[i] = vel_ref;
+    prev_ref[i] = outer_output;
     if (id % 2 == 1) {
         prev_int_Kp[i][prev_int_i] = int_res;
     } else {
         prev_int_Ki[i][prev_int_i] = int_res;
     }
+    error = 0;
+    // Advance Pointer
+    if (++i == 2) i = 0;
 #endif
 
 	*data_buff++ = scheme->inner_prop;
 	*data_buff++ = scheme->inner_int.gain * 2 / BTI_S;
 	*data_buff++ = vel_err * vel_err;
 
-    if (++i == 2) i = 0;
     return EXIT_SUCCESS;
 }
 
