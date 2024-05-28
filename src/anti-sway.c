@@ -240,6 +240,12 @@ int AntiSwayJoin() {
     prev_Ki[0] = K_itx;
     prev_Ki[1] = K_ity;
 
+    // Normalize all Gradients
+    dKp[0] /= total_pts[0];
+    dKi[0] /= total_pts[0];
+    dKp[1] /= total_pts[1];
+    dKi[1] /= total_pts[1];
+
     // Step (Restoring normalized gains)
 	K_ptx -= LR_X * dKp[0] / (m_dt + m_p);
 	K_itx -= LR_X * dKi[0]/ (m_dt + m_p);
