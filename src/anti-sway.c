@@ -29,13 +29,13 @@ ThreadResource anti_sway_resource;
 
 
 // The proportional constant for inner-loop
-static double K_ptx = 40.109;
+static double K_ptx = 51.55550206284189;
 // The integral constant for inner-loop control
-static double K_itx = 20.891;
+static double K_itx = 33.28586146285062;
 // The proportional constant for inner-loop
-static double K_pty = 40.706;
+static double K_pty = 0.8*55.65965893434064;
 // The integral constant for inner-loop control
-static double K_ity = 20.235;
+static double K_ity = 0.8*31.59324977878787;
 
 /* Control Loop Scheme */
 
@@ -96,12 +96,12 @@ static double t = 0.0;
 
 
 /* Gradient Descent Variables */
-#define TUNING
+// #define TUNING
 #ifdef TUNING
 static FileID_t tuning_file = -1;
 static char *tuning_file_name = "anti-sway-tuning.mat";
 #define TUNING_DATA_LEN 10
-static char *tuning_data_names[TUNING_DATA_LEN] = {"count_x", "count_y"
+static char *tuning_data_names[TUNING_DATA_LEN] = {"count_x", "count_y",
                                                    "dKp_x", "dKi_x", "dKp_y", "dKi_y",
 												   "Kp_x", "Ki_x", "Kp_y", "Ki_y"};
 static double dKp[2];
@@ -195,11 +195,14 @@ int AntiSwayFork() {
     if (file == -1) {
         file = OpenDataFile(data_file_name, data_names, DATA_LEN);
 
-		RecordValue(file, "MKp_x", x_control.inner_prop);
-		RecordValue(file, "MKi_x", x_control.inner_int.gain * 2 / BTI_S);
+        RecordValue(file, "M_x", m_dt);
+        RecordValue(file, "M_y", m_st);
+        RecordValue(file, "M_p", m_p);
+		RecordValue(file, "Kp_x", x_control.inner_prop / (m_dt + m_p));
+		RecordValue(file, "Ki_x", x_control.inner_int.gain * 2 / BTI_S / (m_dt + m_p));
 		RecordValue(file, "K_x", x_control.outer_feedback);
-		RecordValue(file, "MKp_y", y_control.inner_prop);
-		RecordValue(file, "MKi_y", y_control.inner_int.gain * 2 / BTI_S);
+		RecordValue(file, "Kp_y", y_control.inner_prop / (m_st + m_p));
+		RecordValue(file, "Ki_y", y_control.inner_int.gain * 2 / BTI_S / (m_st + m_p));
 		RecordValue(file, "K_y", y_control.outer_feedback);
     }
 #ifdef TUNING
@@ -237,12 +240,6 @@ int AntiSwayJoin() {
     prev_Ki[0] = K_itx;
     prev_Ki[1] = K_ity;
 
-    // Normalize all Gradients
-    dKp[0] /= total_pts[0];
-    dKi[0] /= total_pts[0];
-    dKp[1] /= total_pts[1];
-    dKi[0] /= total_pts[1];
-
     // Step (Restoring normalized gains)
 	K_ptx -= LR_X * dKp[0] / (m_dt + m_p);
 	K_itx -= LR_X * dKi[0]/ (m_dt + m_p);
@@ -250,7 +247,15 @@ int AntiSwayJoin() {
 	K_pty -= LR_Y *  dKp[1] / (m_st + m_p);
 	K_ity -= LR_Y * dKi[1] / (m_st + m_p);
 	K_ity = K_ity < 0.0 ? 40.0 : K_ity;
+
+	// Normalize all Gradients (for data only)
+	dKp[0] /= total_pts[0];
+	dKi[0] /= total_pts[0];
+	dKp[1] /= total_pts[1];
+	dKi[0] /= total_pts[1];
+
 	printf("Gradients: (dKp_x: %.3e), (dKi_x: %.3e), (dKp_y: %.3e), (dKi_y: %.3e)\n", dKp[0], dKi[0], dKp[1], dKi[1]);
+	printf("Normalization: (dKp_x: %d), (dKi_x: %d), (dKp_y: %d), (dKi_y: %d)\n", total_pts[0], total_pts[0], total_pts[1], total_pts[1]);
 	printf("New gains: (Kp_x: %.3e), (Ki_x: %.3e), (Kp_y: %.3e), (Ki_y: %.3e)\n", K_ptx, K_itx, K_pty, K_ity);
 	double data[] = {total_pts[0], total_pts[1], dKp[0], dKi[0], dKp[1], dKi[1], K_ptx, K_itx, K_pty, K_ity};
 	RecordData(tuning_file, data, TUNING_DATA_LEN);
@@ -377,7 +382,7 @@ static inline int AntiSwayControlLaw(Velocity vel_ref,
         // d (integral of error) / d Kp
         double dIdKp = 0.0;
         if (!int_Kp_first && id % 2 == 1) {
-            dIdKp = 0.5 * (int_res - prev_int_Kp[i][prev_int_i]) / (scheme->inner_prop - prev_Kp[i]);
+            dIdKp = (int_res - prev_int_Kp[i][prev_int_i]) / (scheme->inner_prop - prev_Kp[i]);
             if (isnan(dIdKp) || isinf(dIdKp)) {
                 error = 1;
             }
@@ -385,7 +390,7 @@ static inline int AntiSwayControlLaw(Velocity vel_ref,
         // d (integral of error) / d Ki
         double dIdKi = 0.0;
         if (!int_Ki_first && id % 2 == 0) {
-            dIdKi = 0.5 * (int_res - prev_int_Ki[i][prev_int_i]) / (Ki - prev_Ki[i]);
+            dIdKi = (int_res - prev_int_Ki[i][prev_int_i]) / (Ki - prev_Ki[i]);
             if (isnan(dIdKi) || isinf(dIdKi)) {
                 error = 1;
             }
