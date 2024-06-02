@@ -9,3 +9,15 @@
 *.xml
 *.iml
 *.png
+# Ignore T1 library and .vscode library
+T1
+.vscode
+*.mat
+build
+C Support for myRIO
+# Ignore Latex Build Files
+*.aux
+*.log
+*.out
+*.synctex.gz
+*.toc
