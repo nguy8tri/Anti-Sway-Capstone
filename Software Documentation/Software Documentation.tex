@@ -3,6 +3,7 @@
 
 \usepackage{float}
 \usepackage{amsmath}
+\usepackage{amssymb}
 \usepackage{multicol}
 \usepackage{listings}
 \usepackage{tikz}
@@ -16,6 +17,10 @@
 \tikzstyle{data}=[trapezium, draw, text centered, trapezium left angle=60, trapezium right angle=120, minimum height=2em]
 \tikzstyle{connector} = [draw, -latex']
 \tikzstyle{curve} = [draw]
+
+\tikzstyle{block} = [draw, rectangle, 
+    minimum height=3em, minimum width=3em]
+\tikzstyle{sum} = [draw, circle, node distance=1cm]
 
 \usepackage{enumitem}
 \usepackage{tcolorbox}
@@ -436,6 +441,59 @@ Since this is true for all the sensors/actuator we use, you'll find these functi
 \subsection{Encoder Connections}
 \subsection{Better Data Acquisition}
 \subsection{Gradient Descent: Controller Tuning}
+$$\mathbb{L}(\bold{r}, \bold{y})=||\bold{r}-\bold{y}||_2^2=\sum_{t=0}^{T}{\left(r(t)-y(t)\right)^2}$$
+$$\mathbb{L}(\bold{e})=||\bold{e}||_2^2=\sum_{t=0}^{T}{e(t)^2}$$
+
+$$\bold{K}=
+\begin{bmatrix}
+    K_i \\
+    K_p \\
+    K_d
+\end{bmatrix}$$
+$$\nabla_{\bold{K}}\mathbb{L}=\left(\nabla_{\bold{y}}\mathbb{L}\nabla_{\bold{u}}{y}+\nabla_{\bold{r}}{\mathbb{L}}\nabla_\bold{u}{\bold{r}}\right)\nabla_{\bold{K}}u$$
+$$\nabla_\bold{K}{\mathbb{L}}=\sum_{t=0}^{T}{\left(2e(t)\frac{\left(\frac{\partial r}{\partial y}-1\right)\frac{\partial y}{\partial u}+\left(1-\frac{\partial y}{\partial r}\right)\frac{\partial r}{\partial u}}{1-K_p\left(\left(\frac{\partial r}{\partial y}-1\right)\frac{\partial y}{\partial u}+\left(1-\frac{\partial y}{\partial r}\right)\frac{\partial r}{\partial u}\right)}
+\begin{bmatrix}
+    \int{e(t)d\tau}+\frac{\partial}{\partial K_i}\left(K_d\frac{\partial e}{\partial t}+K_i\int{ed\tau}\right) \\
+    e(t)+\frac{\partial}{\partial K_p}\left(K_d\frac{\partial e}{\partial t}+K_i\int{ed\tau}\right) \\
+    \frac{\partial e}{\partial t}+\frac{\partial}{\partial K_d}\left(K_d\frac{\partial e}{\partial t}+K_i\int{ed\tau}\right)
+\end{bmatrix}\right)}$$
+$$\nabla_\bold{K}{\mathbb{L}}=\sum_{t=0}^{T}{\left(2e(t)\left(\left(\frac{\partial e}{\partial u}\right)^{-1}-K_p\right)^{-1}
+\begin{bmatrix}
+    \int{e(t)d\tau}+\frac{\partial}{\partial K_i}\left(K_d\frac{\partial e}{\partial t}+K_i\int{e(t)d\tau}\right) \\
+    e(t)+\frac{\partial}{\partial K_p}\left(K_d\frac{\partial e}{\partial t}+K_i\int{e(t)d\tau}\right) \\
+    \frac{\partial e}{\partial t}+\frac{\partial}{\partial K_d}\left(K_d\frac{\partial e}{\partial t}+K_i\int{e(t)d\tau}\right)
+\end{bmatrix}\right)}$$
+
+
+
+$$\bold{K}_{n+1} \leftarrow \bold{K}_{n} - \eta \nabla_{\bold{K}}{\mathbb{L}}$$
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+        \node[sum, name=feedback_sum] {};
+        \node[block, name=int] at (2.5, 1.5) {$\frac{K_i}{s}$};
+        \node[block, name=prop] at (2.5, 0) {$K_p$};
+        \node[block, name=diff] at (2.5, -1.5) {$K_ds$};
+        \node[sum, name=pid] at (4.2, 0) {};
+
+        \node[block, minimum width=5em, minimum height=3.5em, name=plant] at (6.5, 0) {Plant};
+
+        \draw[->] (-1, 0) -- node [above, pos=0.9] {\tiny $+$} (feedback_sum);
+        \draw[->] (feedback_sum) -- (prop);
+        \draw[->] (1, 0) |- (int);
+        \draw[->] (1, 0) |- (diff);
+        \draw[->] (prop) -- node [above, pos=0.9] {\tiny $+$} (pid);
+        \draw[->] (int) -| node [right, pos=0.95] {\tiny $+$} (pid);
+        \draw[->] (diff) -| node [right, pos=0.95] {\tiny $+$} (pid);
+        \draw[->] (pid) -- (plant);
+        \draw[->] (plant) -| (8, -2.5) -| node [left, pos=0.97] {\tiny $-$} (feedback_sum);
+
+        \node[above] at (-0.6, 0) {$r$};
+        \node[right] at (0, -0.5) {$y$};
+        \node[above] at (0.55, 0) {$e$};
+        \node[above] at (5, 0) {$u$};
+    \end{tikzpicture}
+\end{figure}
 
 \newpage
 

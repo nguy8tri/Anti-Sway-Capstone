@@ -11,9 +11,112 @@ M_y = 0.664
 M_x = 2.092
 F_2_V = 0.0062 / (0.41 * 0.11)
 
+# for the file regimen-ex1
+statistics = '''Gradients: (dKp_x: -1.666e-02), (dKi_x: 0.000e+00), (dKp_y: -8.935e-03), (dKi_y: 0.000e+00)
+New gains: (Kp_x: 4.157e+01), (Ki_x: 2.089e+01), (Kp_y: 4.227e+01), (Ki_y: 2.023e+01)
+Exiting Thread
+Gradients: (dKp_x: 0.000e+00), (dKi_x: -1.612e-02), (dKp_y: 0.000e+00), (dKi_y: -8.739e-03)
+New gains: (Kp_x: 4.157e+01), (Ki_x: 2.230e+01), (Kp_y: 4.227e+01), (Ki_y: 2.176e+01)
+Exiting Thread
+Gradients: (dKp_x: -1.119e-02), (dKi_x: 0.000e+00), (dKp_y: -7.369e-03), (dKi_y: 0.000e+00)
+New gains: (Kp_x: 4.255e+01), (Ki_x: 2.230e+01), (Kp_y: 4.356e+01), (Ki_y: 2.176e+01)
+Exiting Thread
+Gradients: (dKp_x: 0.000e+00), (dKi_x: -1.350e-02), (dKp_y: 0.000e+00), (dKi_y: -6.471e-03)
+New gains: (Kp_x: 4.255e+01), (Ki_x: 2.348e+01), (Kp_y: 4.356e+01), (Ki_y: 2.290e+01)
+Exiting Thread
+Gradients: (dKp_x: -1.084e-02), (dKi_x: 0.000e+00), (dKp_y: -6.942e-03), (dKi_y: 0.000e+00)
+New gains: (Kp_x: 4.349e+01), (Ki_x: 2.348e+01), (Kp_y: 4.477e+01), (Ki_y: 2.290e+01)
+Exiting Thread
+Gradients: (dKp_x: 0.000e+00), (dKi_x: -5.181e-03), (dKp_y: 0.000e+00), (dKi_y: -6.513e-03)
+New gains: (Kp_x: 4.349e+01), (Ki_x: 2.394e+01), (Kp_y: 4.477e+01), (Ki_y: 2.404e+01)
+Exiting Thread
+Gradients: (dKp_x: -1.126e-02), (dKi_x: 0.000e+00), (dKp_y: -6.258e-03), (dKi_y: 0.000e+00)
+New gains: (Kp_x: 4.448e+01), (Ki_x: 2.394e+01), (Kp_y: 4.587e+01), (Ki_y: 2.404e+01)
+Exiting Thread
+Gradients: (dKp_x: 0.000e+00), (dKi_x: -1.145e-02), (dKp_y: 0.000e+00), (dKi_y: -5.398e-03)
+New gains: (Kp_x: 4.448e+01), (Ki_x: 2.494e+01), (Kp_y: 4.587e+01), (Ki_y: 2.498e+01)
+Exiting Thread
+Gradients: (dKp_x: -1.171e-02), (dKi_x: 0.000e+00), (dKp_y: -5.780e-03), (dKi_y: 0.000e+00)
+New gains: (Kp_x: 4.550e+01), (Ki_x: 2.494e+01), (Kp_y: 4.688e+01), (Ki_y: 2.498e+01)
+Exiting Thread
+Gradients: (dKp_x: 0.000e+00), (dKi_x: -1.066e-02), (dKp_y: 0.000e+00), (dKi_y: -6.052e-03)
+New gains: (Kp_x: 4.550e+01), (Ki_x: 2.587e+01), (Kp_y: 4.688e+01), (Ki_y: 2.604e+01)
+Exiting Thread
+Gradients: (dKp_x: -1.013e-02), (dKi_x: 0.000e+00), (dKp_y: -5.415e-03), (dKi_y: 0.000e+00)
+New gains: (Kp_x: 4.639e+01), (Ki_x: 2.587e+01), (Kp_y: 4.783e+01), (Ki_y: 2.604e+01)
+Exiting Thread
+Gradients: (dKp_x: 0.000e+00), (dKi_x: -9.464e-03), (dKp_y: 0.000e+00), (dKi_y: -4.622e-03)
+New gains: (Kp_x: 4.639e+01), (Ki_x: 2.670e+01), (Kp_y: 4.783e+01), (Ki_y: 2.685e+01)
+Exiting Thread
+Gradients: (dKp_x: -9.190e-03), (dKi_x: 0.000e+00), (dKp_y: -5.488e-03), (dKi_y: 0.000e+00)
+New gains: (Kp_x: 4.720e+01), (Ki_x: 2.670e+01), (Kp_y: 4.879e+01), (Ki_y: 2.685e+01)
+Exiting Thread
+Gradients: (dKp_x: 0.000e+00), (dKi_x: -9.146e-03), (dKp_y: 0.000e+00), (dKi_y: -5.074e-03)
+New gains: (Kp_x: 4.720e+01), (Ki_x: 2.750e+01), (Kp_y: 4.879e+01), (Ki_y: 2.773e+01)
+Exiting Thread
+Gradients: (dKp_x: -7.955e-03), (dKi_x: 0.000e+00), (dKp_y: -5.040e-03), (dKi_y: 0.000e+00)
+New gains: (Kp_x: 4.789e+01), (Ki_x: 2.750e+01), (Kp_y: 4.967e+01), (Ki_y: 2.773e+01)
+Exiting Thread
+Gradients: (dKp_x: 0.000e+00), (dKi_x: -8.755e-03), (dKp_y: 0.000e+00), (dKi_y: -4.570e-03)
+New gains: (Kp_x: 4.789e+01), (Ki_x: 2.827e+01), (Kp_y: 4.967e+01), (Ki_y: 2.853e+01)
+Exiting Thread
+Gradients: (dKp_x: -7.454e-03), (dKi_x: 0.000e+00), (dKp_y: -5.107e-03), (dKi_y: 0.000e+00)
+New gains: (Kp_x: 4.854e+01), (Ki_x: 2.827e+01), (Kp_y: 5.056e+01), (Ki_y: 2.853e+01)
+Exiting Thread
+Gradients: (dKp_x: 0.000e+00), (dKi_x: -8.926e-03), (dKp_y: 0.000e+00), (dKi_y: -4.164e-03)
+New gains: (Kp_x: 4.854e+01), (Ki_x: 2.905e+01), (Kp_y: 5.056e+01), (Ki_y: 2.926e+01)
+Exiting Thread
+Gradients: (dKp_x: -7.429e-03), (dKi_x: 0.000e+00), (dKp_y: -1.202e-02), (dKi_y: 0.000e+00)
+New gains: (Kp_x: 4.919e+01), (Ki_x: 2.905e+01), (Kp_y: 5.266e+01), (Ki_y: 2.926e+01)
+Exiting Thread
+Gradients: (dKp_x: 0.000e+00), (dKi_x: -8.935e-03), (dKp_y: 0.000e+00), (dKi_y: -4.065e-03)
+New gains: (Kp_x: 4.919e+01), (Ki_x: 2.983e+01), (Kp_y: 5.266e+01), (Ki_y: 2.997e+01)
+Exiting Thread
+Gradients: (dKp_x: -6.371e-03), (dKi_x: 0.000e+00), (dKp_y: -5.228e-03), (dKi_y: 0.000e+00)
+New gains: (Kp_x: 4.975e+01), (Ki_x: 2.983e+01), (Kp_y: 5.358e+01), (Ki_y: 2.997e+01)
+Exiting Thread
+Gradients: (dKp_x: 0.000e+00), (dKi_x: -7.594e-03), (dKp_y: 0.000e+00), (dKi_y: -4.162e-03)
+New gains: (Kp_x: 4.975e+01), (Ki_x: 3.049e+01), (Kp_y: 5.358e+01), (Ki_y: 3.070e+01)
+Exiting Thread
+Gradients: (dKp_x: -6.961e-03), (dKi_x: 0.000e+00), (dKp_y: -4.795e-03), (dKi_y: 0.000e+00)
+New gains: (Kp_x: 5.036e+01), (Ki_x: 3.049e+01), (Kp_y: 5.442e+01), (Ki_y: 3.070e+01)
+Exiting Thread
+Gradients: (dKp_x: 0.000e+00), (dKi_x: -7.691e-03), (dKp_y: 0.000e+00), (dKi_y: -3.338e-03)
+New gains: (Kp_x: 5.036e+01), (Ki_x: 3.117e+01), (Kp_y: 5.442e+01), (Ki_y: 3.129e+01)
+Exiting Thread
+Gradients: (dKp_x: -5.743e-03), (dKi_x: 0.000e+00), (dKp_y: -8.553e-03), (dKi_y: 0.000e+00)
+New gains: (Kp_x: 5.086e+01), (Ki_x: 3.117e+01), (Kp_y: 5.591e+01), (Ki_y: 3.129e+01)
+Exiting Thread
+Gradients: (dKp_x: 0.000e+00), (dKi_x: -8.090e-03), (dKp_y: 0.000e+00), (dKi_y: -3.372e-03)
+New gains: (Kp_x: 5.086e+01), (Ki_x: 3.187e+01), (Kp_y: 5.591e+01), (Ki_y: 3.188e+01)
+Exiting Thread
+Gradients: (dKp_x: -7.081e-03), (dKi_x: 0.000e+00), (dKp_y: -6.660e-03), (dKi_y: 0.000e+00)
+New gains: (Kp_x: 5.148e+01), (Ki_x: 3.187e+01), (Kp_y: 5.708e+01), (Ki_y: 3.188e+01)
+Exiting Thread
+Gradients: (dKp_x: 0.000e+00), (dKi_x: -7.370e-03), (dKp_y: 0.000e+00), (dKi_y: -2.907e-03)
+New gains: (Kp_x: 5.148e+01), (Ki_x: 3.252e+01), (Kp_y: 5.708e+01), (Ki_y: 3.238e+01)
+Exiting Thread
+Gradients: (dKp_x: -6.191e-03), (dKi_x: 0.000e+00), (dKp_y: -2.386e-02), (dKi_y: 0.000e+00)
+New gains: (Kp_x: 5.202e+01), (Ki_x: 3.252e+01), (Kp_y: 6.125e+01), (Ki_y: 3.238e+01)
+Exiting Thread
+Gradients: (dKp_x: 0.000e+00), (dKi_x: -6.851e-03), (dKp_y: 0.000e+00), (dKi_y: -2.569e-03)
+New gains: (Kp_x: 5.202e+01), (Ki_x: 3.312e+01), (Kp_y: 6.125e+01), (Ki_y: 3.283e+01)'''
+
 def get_entry(data, name):
     entry = np.array(data[name])
     return entry.flatten() if np.size(entry) != 1 else entry.flatten()[0]
+
+def find(data, point):
+    L = -1
+    H = len(data)
+
+    while L + 1 != H:
+        mid = (L + H) // 2
+        if data[mid] <= point:
+            L = mid
+        else:
+            H = mid
+    return L
 
 def get_theoretical_model(M, M_u, K, B, l_perp) -> Tuple[ct.TransferFunction, ct.TransferFunction]:
     g = 9.81
@@ -265,7 +368,7 @@ def pos_vel_comparison():
     plt.show()
 
 def anti_sway_diagnostic():
-    data = scipy.io.loadmat("../anti-sway.mat")
+    data = scipy.io.loadmat("../full-regimen-2.mat")
 
     id = get_entry(data, "id")
     r = np.argwhere(id == 1).flatten()
@@ -348,7 +451,7 @@ def anti_sway_diagnostic():
     print(max(vel_ref_x), max(vel_ref_y), max(trolley_vel_x), max(trolley_vel_y))
 
 def auto_tune_diagnostic():
-    data = scipy.io.loadmat("../regimen-3.mat")
+    data = scipy.io.loadmat("../Training/anti-sway.mat")
 
     hi = len(get_entry(data, "t"))
     id = get_entry(data, "id")
@@ -363,13 +466,14 @@ def auto_tune_diagnostic():
     vel_ref_y_ = vel_ref_y + K_y * angle_y
     trolley_vel_x = get_entry(data, "trolley_vel_x")[:hi]
     trolley_vel_y = get_entry(data, "trolley_vel_y")[:hi]
-    loss_x = get_entry(data, "loss_x")[:hi]
-    loss_y = get_entry(data, "loss_y")[:hi]
+    loss_x = (vel_ref_x_ - trolley_vel_x) ** 2
+    loss_y = (vel_ref_y_ - trolley_vel_y) ** 2
 
     total_losses_x = np.zeros(int(id[-1]))
     total_losses_y = np.zeros(int(id[-1]))
     total_pts_x = np.zeros(int(id[-1]))
     total_pts_y = np.zeros(int(id[-1]))
+
 
     for i, (l_x, l_y) in zip(id, zip(loss_x, loss_y)):
         i = int(i) - 1
@@ -378,27 +482,71 @@ def auto_tune_diagnostic():
         total_pts_x[i] += 1
         total_pts_y[i] += 1
 
-    total_losses_x = total_losses_x / total_pts_x
-    total_losses_y = total_losses_y / total_pts_y
+
+    # total_losses_x = total_losses_x / total_pts_x
+    # total_losses_y = total_losses_y / total_pts_y
 
     plt.figure()
-    plt.title("Loss per Epoch")
-    plt.plot(total_losses_x, label="X Loss")
-    plt.plot(total_losses_y, label="Y Loss")
+    plt.suptitle("Losses per Epoch")
+    # plt.subplot(2, 1, 1)
+    plt.ylabel("Loss ([m/s]^2)")
+    plt.plot([i for i in range(1, len(total_losses_x) + 1)], total_losses_x, label="X Loss")
+    plt.plot(33, total_losses_x[32], '.', label="Chosen")
+    plt.xlabel("Time (s)")
+    plt.legend()
+    # plt.subplot(2, 1, 2)
+    # plt.ylabel("Loss ([m/s]^2)")
+    # plt.xlabel("Epochs")
+    # plt.plot(total_losses_y, label="Y Loss")
     plt.show()
 
+    r = np.argwhere((id == 1) | \
+                    (id == 5) | \
+                    (id == 10) | \
+                    (id == 13) | \
+                    (id == 17) | \
+                    (id == 20) | \
+                    (id == 25) | \
+                    (id == 32))
+
+    ids = [1, 8, 15, 24, 33]
+    plt.figure(figsize=(14, 6))
+    plt.suptitle("Training Regimen: Velocity Step Responses (Selected Epochs)")
+    for i, j in enumerate(ids):
+        ax = plt.subplot(1, len(ids), i + 1)
+        if i == 0:
+            plt.ylabel("Velocity (m/s)")
+        plt.xlabel("Time (s)")
+        if i != 0:
+            ax.get_yaxis().set_visible(False)
+        ax.set_ylim(0, 0.20)
+        q = np.argwhere(id == j)
+        if j == 33:
+            plt.title(f"Epoch {j} (Chosen)")
+        else:
+            plt.title(f"Epoch {j}")
+        plt.plot(t[:550], vel_ref_x[q], '--', label="Reference")
+        plt.plot(t[:550], vel_ref_x_[q], label="Anti-Sway\nReference")
+        plt.plot(t[:550], trolley_vel_x[q], label="Response")
+        if i == 0:
+            plt.legend(loc="lower right")
+    plt.show()
+
+    print(get_entry(data, "Kp_x'")[np.argwhere(id == 33)][0] / (M_x + M_u))
+    print(get_entry(data, "Ki_x'")[np.argwhere(id == 33)][0] / (M_x + M_u))
     plt.figure()
     plt.suptitle("Velocity Step Responses")
-    plt.subplot(2, 1, 1)
+    # plt.subplot(2, 1, 1)
     plt.ylabel("X Velocity (m/s)")
+    plt.xlabel("Time (s)")
     plt.plot(vel_ref_x, label="Reference")
-    plt.plot(vel_ref_x_, label="Mod")
+    plt.plot(vel_ref_x_, label="Reference")
     plt.plot(trolley_vel_x, label="Response")
     plt.legend()
     plt.subplot(2, 1, 2)
     plt.ylabel("Y Velocity (m/s)")
     plt.xlabel("Time (s)")
-    plt.plot(angle_y, label="Angle")
+    # plt.plot(angle_y, label="Angle")
     plt.plot(vel_ref_y, label="Reference")
     plt.plot(vel_ref_y_, label="Mod")
     plt.plot(trolley_vel_y, label="Response")
@@ -419,6 +567,332 @@ def auto_tune_diagnostic():
     plt.legend()
     plt.show()
 
+    print(id[3000])
+    print(Kp_x[3000] / (M_x + M_u))
+    print(Ki_x[3000] / (M_x + M_u))
+
+    training_data = scipy.io.loadmat("../Training/anti-sway-tuning.mat")
+
+
+
+    dKp_x = get_entry(training_data, "dKp_x")
+    dKi_x = get_entry(training_data, "dKi_x")
+    dKp_y = get_entry(training_data, "dKp_y")
+    dKi_y = get_entry(training_data, "dKi_y")
+    Kp_x = get_entry(training_data, "Kp_x")
+    Ki_x = get_entry(training_data, "Ki_x")
+    Kp_y = get_entry(training_data, "Kp_y")
+    Ki_y = get_entry(training_data, "Ki_y")
+
+    # Normalization
+    count_x = get_entry(training_data, "count_x")
+    count_y = get_entry(training_data, "count_y")
+
+    # Correction to Erroneous normalization (remove if no longer the case)
+    dKi_x = dKi_x * count_y
+    dKi_y = dKi_y / count_y
+
+    odd = [i for i in range(0, len(dKp_x), 2)]
+    even = [i for i in range(1, len(dKp_x), 2)]
+
+    plt.figure()
+    plt.title("Gradients v. Epochs (Normalized)")
+    plt.ylabel("Gradient")
+    plt.xlabel("Epochs")
+    plt.plot(dKp_x[odd], label="Kp_x")
+    plt.plot(dKi_x[even], label="Ki_x")
+    plt.plot(dKp_y[odd], label="Kp_y")
+    plt.plot(dKi_y[even], label="Ki_y")
+    plt.legend()
+    plt.show()
+
+    dKp_x = dKp_x * count_x
+    dKi_x = dKi_x * count_x
+    dKp_y = dKp_y * count_y
+    dKi_y = dKi_y * count_y
+
+    plt.figure()
+    plt.title("Gradients v. Epochs (Non-Normalized)")
+    plt.ylabel("Gradient (Negative)")
+    plt.xlabel("Epochs")
+    plt.plot(-dKp_x[odd], label="Kₚ")
+    plt.plot(-dKi_x[even], label="Kᵢ")
+    # plt.plot(dKp_y[odd], label="Kp_y")
+    # plt.plot(dKi_y[even], label="Ki_y")
+    plt.legend()
+    plt.show()
+
+    plt.figure()
+    plt.title("Parameters v. Epochs")
+    plt.ylabel("Parameters")
+    plt.xlabel("Epochs")
+    plt.plot(Kp_x[odd], label="Kₚ")
+    plt.plot(Ki_x[even], label="Kᵢ")
+    plt.axvline(15, color='red', label="Chosen Parameters")
+    plt.plot(15, Kp_x[31], 'x', color='red')
+    plt.plot(15, Ki_x[31], 'x', color='red')
+    # plt.plot(Kp_y[odd], label="Kp_y")
+    # plt.plot(Ki_y[even], label="Ki_y")
+    plt.legend()
+    plt.show()
+
+    print(Kp_x[31], Ki_x[31], Kp_y[25], Ki_y[25])
+
+def auto_tune_gradient():
+    data = scipy.io.loadmat("../full-regimen-2.mat")
+    params = scipy.io.loadmat("../anti-sway-tuning-2.mat")
+
+    id = get_entry(data, "id")
+    i_prev = 23
+    i = 24
+    r_prev = np.argwhere(id == i_prev)
+    r = np.argwhere(id == i)
+    int_prev = get_entry(data, "int_out_y")[r_prev]
+    int_n = get_entry(data, "int_out_y")[r]
+    trolley_vel_y = get_entry(data, "trolley_vel_y")[r]
+    loss_y = get_entry(data, "loss_y")[r]
+    Kp_y = get_entry(params, "Ki_x")[i - 1]
+    print(data.key())
+    plt.figure()
+    plt.plot()
+    plt.plot(trolley_vel_y)
+    plt.show()
+def get_antisway_model():
+    pass
+
+def anti_sway_experiment():
+    data_x = scipy.io.loadmat("../regimen-6X.mat")
+    data_y = scipy.io.loadmat("../regimen-5.mat")
+
+    id_x = get_entry(data_x, "id")
+    r_x = np.argwhere(id_x == 10)
+    t_x = get_entry(data_x, "t")[r_x]
+    t_x = t_x - t_x[0]
+    ref_x = get_entry(data_x, "vel_ref_x")[r_x]
+    act_x = get_entry(data_x, "trolley_vel_x")[r_x]
+    Kp_x = get_entry(data_x, "Kp_x'")[r_x][0]
+    Ki_x = get_entry(data_x, "Ki_x'")[r_x][0]
+    K_x = get_entry(data_x, "K_x")
+
+    id_y = get_entry(data_y, "id")
+    r_y = np.argwhere(id_y == 11)
+    t_y = get_entry(data_y, "t")[r_y]
+    t_y = t_y - t_y[0]
+    ref_y = get_entry(data_y, "vel_ref_y")[r_y]
+    act_y = get_entry(data_y, "trolley_vel_y")[r_y]
+    Kp_y = get_entry(data_y, "Kp_y'")[r_y][0]
+    Ki_y = get_entry(data_y, "Ki_y'")[r_y][0]
+    K_y = get_entry(data_y, "K_y")
+
+    plt.figure(figsize=(7, 5))
+    plt.suptitle("Velocity Step Responses")
+
+    plt.subplot(2, 1, 1)
+    plt.ylabel("X Velocity (m/s)")
+    plt.plot(t_x, ref_x, label="Reference")
+    plt.plot(t_x, act_x, label="Actual")
+    plt.legend()
+
+    plt.subplot(2, 1, 2)
+    plt.ylabel("Y Velocity (m/s)")
+    plt.xlabel("Time (s)")
+    plt.plot(t_y, ref_y, label="Reference")
+    plt.plot(t_y, act_y, label="Actual")
+    plt.legend()
+
+    plt.show()
+
+def tracking_experiment_slow():
+    # Obtain data
+    data = scipy.io.loadmat("../tracking-slow2.mat")
+
+    # Extract X and Y Data
+    id = get_entry(data, "id")
+    t = get_entry(data, "t")
+    x_data = np.argwhere(id == 1)
+    y_data = np.argwhere(id == id[-1])
+
+    print(data.keys())
+    t_x = t[x_data]
+    t_y = t[y_data]
+
+    s_x = get_entry(data, "trolley_pos_x")[x_data]
+    s_y = get_entry(data, "trolley_pos_y")[y_data]
+    v_x = get_entry(data, "trolley_vel_x")[x_data]
+    v_y = get_entry(data, "trolley_vel_y")[y_data]
+    ang_x = get_entry(data, "angle_x")[x_data]
+    ang_y = get_entry(data, "angle_y")[y_data]
+    u_x = s_x + 0.47 * np.sin(ang_x)
+    u_y = s_y + 0.47 * np.sin(ang_y)
+
+
+    plt.figure()
+    plt.title("Diagnostic (Confirm that velocity is constant")
+    plt.xlabel("Time (s)")
+    plt.ylabel("Velocity (m/s)")
+    plt.plot(t_x, v_x, label="X")
+    plt.plot(t_y, v_y, label="Y")
+    plt.axvline(x=2.85)
+    plt.axvline(x=4.245)
+    plt.axvline(x=4.8)
+    plt.axvline(x=6.79)
+    plt.axvline(x=7.45)
+    plt.axvline(x=8)
+    plt.legend()
+    plt.show()
+
+    t_1x = find(t_x, 2.85)
+    t_2x = find(t_x, 4.245)
+    t_3x = find(t_x, 4.8)
+
+    v_1x = v_x[t_1x]
+    v_2x = v_x[t_2x]
+    v_3x = v_x[t_2x:t_3x]
+    v_3x = np.sum(v_3x) / len(v_3x)
+
+    t_1y = find(t_y, 6.69)
+    t_2y = find(t_y, 7.45)
+    t_3y = find(t_y, 8)
+
+    v_1y = v_y[t_1y]
+    v_2y = v_y[t_2y]
+    v_3y = v_y[t_2y:t_3y]
+    v_3y = np.sum(v_3y) / len(v_3y)
+
+    # Generate Steps and Actual Velocities
+
+    t_ref_x = (t_x[t_1x:t_3x] - t_x[t_1x]).flatten()
+    v_ref_x = np.append(np.linspace(v_1x, v_2x, t_2x - t_1x),
+              np.array([v_3x] * (t_3x - t_2x)))
+    print(np.shape(t_ref_x), np.shape(v_ref_x))
+    s_ref_x = scipy.integrate.cumulative_trapezoid(v_ref_x, t_ref_x, initial=0)
+    print(np.shape(s_ref_x))
+    v_act_x = v_x[t_1x:t_3x]
+    s_act_x = s_x[t_1x:t_3x]
+
+    t_ref_y = (t_y[t_1y:t_3y] - t_y[t_1y]).flatten()
+    v_ref_y = np.append(np.linspace(v_1y, v_2y, t_2y - t_1y),
+              np.array([v_3y] * (t_3y - t_2y)))
+    s_ref_y = scipy.integrate.cumulative_trapezoid(v_ref_y, t_ref_y, initial=0)
+    v_act_y = v_y[t_1y:t_3y]
+    s_act_y = s_x[t_1y:t_3y]
+
+    # Get Theoretical Model
+    K_x = get_entry(data, "K_x")
+    K_y = get_entry(data, "K_y")
+    B_x = get_entry(data, "B_x")
+    B_y = get_entry(data, "B_y")
+
+    # Theoretical model
+    l_perp = 0.47
+    M_u = 0.765
+    M_y = 0.664
+    M_x = 2.092
+
+    ang_model_x, pos_model_x = get_theoretical_model(M_x, M_u, K_x, B_x, l_perp)
+    ang_model_y, pos_model_y = get_theoretical_model(M_y, M_u, K_y, B_y, l_perp)
+
+    ang_res_x, pos_res_x = (ct.forced_response(ang_model_x, t_ref_x, s_ref_x),
+                            ct.forced_response(pos_model_x, t_ref_x, s_ref_x))
+    ang_res_y, pos_res_y = (ct.forced_response(ang_model_y, t_ref_y, s_ref_y),
+                            ct.forced_response(pos_model_y, t_ref_y, s_ref_y))
+
+    plt.figure()
+    plt.suptitle("Position")
+    plt.subplot(2, 1, 1)
+    plt.ylabel("X Position (m)")
+    plt.plot(t_ref_x, u_x[t_1x:t_3x], label="Reference")
+    plt.plot(t_ref_x, pos_res_x.y[0] + s_x[t_1x], label="Theoretical")
+    plt.plot(t_ref_x, s_x[t_1x:t_3x], label="Actual")
+    plt.legend()
+    plt.subplot(2, 1, 2)
+    plt.ylabel("Y Position (m)")
+    plt.xlabel("Time(s)")
+    plt.plot(t_ref_y, u_y[t_1y:t_3y], label="Reference")
+    plt.plot(t_ref_y, pos_res_y.y[0] + s_y[t_1y], label="Theoretical")
+    plt.plot(t_ref_y, s_y[t_1y:t_3y], label="Actual")
+    plt.legend()
+    plt.show()
+
+    plt.figure()
+    plt.suptitle("Angle")
+    plt.subplot(2, 1, 1)
+    plt.ylabel("X Angle (deg)")
+    plt.plot(t_ref_x, np.rad2deg(ang_res_x.y[0] + ang_x[t_1x]), label="Theoretical")
+    plt.plot(t_ref_x, np.rad2deg(ang_x[t_1x:t_3x]), label="Actual")
+    plt.legend()
+    plt.subplot(2, 1, 2)
+    plt.ylabel("Y Angle (deg)")
+    plt.xlabel("Time(s)")
+    plt.plot(t_ref_y, np.rad2deg(ang_res_y.y[0] + ang_y[t_1y]), label="Theoretical")
+    plt.plot(t_ref_y, np.rad2deg(ang_y[t_1y:t_3y]), label="Actual")
+    plt.legend()
+    plt.show()
+
+    plt.figure()
+    plt.suptitle("Position Error")
+    plt.subplot(2, 1, 1)
+    plt.ylabel("X Position (m)")
+    plt.plot(t_ref_x, (u_x[t_1x:t_3x]).flatten() - (pos_res_x.y[0] + s_x[t_1x]).flatten(), label="R-T")
+    plt.plot(t_ref_x, (u_x[t_1x:t_3x]).flatten() - s_x[t_1x:t_3x].flatten(), label="R-A")
+    plt.plot(t_ref_x, (pos_res_x.y[0] + s_x[t_1x]).flatten() - s_x[t_1x:t_3x].flatten(), label="A-T")
+    plt.legend()
+    plt.subplot(2, 1, 2)
+    plt.ylabel("Y Position (m)")
+    plt.xlabel("Time(s)")
+    plt.plot(t_ref_y, (u_y[t_1y:t_3y]).flatten() - (pos_res_y.y[0] + s_y[t_1y]).flatten(), label="R-T")
+    plt.plot(t_ref_y, (u_y[t_1y:t_3y]).flatten() - s_y[t_1y:t_3y].flatten(), label="R-A")
+    plt.plot(t_ref_y, (pos_res_y.y[0] + s_y[t_1y]).flatten() - s_y[t_1y:t_3y].flatten(), label="A-T")
+    plt.legend()
+    plt.show()
+
+    plt.figure()
+    plt.suptitle("Angle Error")
+    plt.subplot(2, 1, 1)
+    plt.ylabel("X Angle (deg)")
+    plt.plot(t_ref_x, np.rad2deg(ang_res_x.y[0] + ang_x[t_1x]).flatten() - np.rad2deg(ang_x[t_1x:t_3x]).flatten(), label="Actual")
+    plt.legend()
+    plt.subplot(2, 1, 2)
+    plt.ylabel("Y Angle (deg)")
+    plt.xlabel("Time(s)")
+    plt.plot(t_ref_y, (np.rad2deg(ang_res_y.y[0] + ang_y[t_1y])).flatten() - np.rad2deg(ang_y[t_1y:t_3y]).flatten(), label="Actual")
+    plt.legend()
+    plt.show()
+
+    data = scipy.io.loadmat("../tracking-exp1.mat")
+
+    t_x = get_entry(data, "t")
+    t_y = t_x
+    s_x = get_entry(data, "trolley_pos_x")
+    s_y = get_entry(data, "trolley_pos_y")
+    u_x = s_x + 0.47 * np.sin(get_entry(data, "angle_x"))
+    u_y = s_y + 0.47 * np.sin(get_entry(data, "angle_y"))
+
+    plt.figure()
+    plt.suptitle("Controller Performance (Positional Comparison)")
+    plt.subplot(2, 1, 1)
+    plt.ylabel("X Position (m)")
+    plt.plot(t_x, u_x, label="User Position")
+    plt.plot(t_x, s_x, label="Trolley")
+    plt.legend()
+    plt.subplot(2, 1, 2)
+    plt.ylabel("Y Position (m)")
+    plt.xlabel("Time(s)")
+    plt.plot(t_y, u_y, label="User Position")
+    plt.plot(t_y, s_y, label="Trolley")
+    plt.legend()
+    plt.show()
+
+    plt.figure()
+    plt.suptitle("Controller Performance (Positional Disparity)")
+    plt.subplot(2, 1, 1)
+    plt.ylabel("X Positional Error (m)")
+    plt.plot(t_x, (s_x - u_x))
+    plt.subplot(2, 1, 2)
+    plt.ylabel("Y Positional Error (m)")
+    plt.xlabel("Time (s)")
+    plt.plot(t_y, (s_y - u_y))
+    plt.show()
 
 if __name__ == "__main__":
-    tracking_experiment_1()
+    auto_tune_diagnostic()

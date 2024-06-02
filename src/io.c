@@ -180,7 +180,7 @@ static ThreadResource keymap_resource;
 
 // The unit velocity stop corresponding
 // to a keypad touch (m/s)
-#define UNIT_VEL 0.4
+#define UNIT_VEL 0.15
 
 
 // Local Error Flag
@@ -348,10 +348,10 @@ int GetReferenceVelocityCommand(Velocities *result) {
         return EXIT_SUCCESS;
     }
 
-    if (keymap[0] || keymap[1] || keymap[2]) y_vel++;
-    if (keymap[2] || keymap[5] || keymap[8]) x_vel++;
-    if (keymap[6] || keymap[7] || keymap[8]) y_vel--;
-    if (keymap[0] || keymap[3] || keymap[6]) x_vel--;
+    if (keymap[0] || keymap[1] || keymap[2]) x_vel--;
+    if (keymap[2] || keymap[5] || keymap[8]) y_vel--;
+    if (keymap[6] || keymap[7] || keymap[8]) x_vel++;
+    if (keymap[0] || keymap[3] || keymap[6]) y_vel++;
 
     result->x_vel = x_vel * UNIT_VEL;
     result->y_vel = y_vel * UNIT_VEL;
