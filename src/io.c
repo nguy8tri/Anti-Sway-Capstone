@@ -30,66 +30,69 @@
 #include "io.h"
 
 /* Reset Variable */
+
+
+/// Reset Variable for measuring velocity
 static bool reset;
 
 
 /* Connector ID Convention */
 
-// X Motor Encoder Connector ID (on Connector C)
+/// X Motor Encoder Connector ID (on Connector C)
 #define X_CONNECTOR_ID 0
-// Y Motor Encoder Connector ID (on Connector C)
+/// Y Motor Encoder Connector ID (on Connector C)
 #define Y_CONNECTOR_ID 1
 
 
 /* Potentiometers */
 
-// Best-Fit Potentiometer Slope (rad/V)
-// TODO(nguy8tri): Find this quantity
+/// Best-Fit Potentiometer Slope (rad/V)
+/// TODO(nguy8tri): Find this quantity
 #define POTENTIOMETER_SLOPE -2.11 * PI / 180.0
-// Calibrated Voltage Intercept (x-intercept)
-// for X Potentiometer
+/// Calibrated Voltage Intercept (x-intercept)
+/// for X Potentiometer
 static float potentiometer_v_x_intercept;
-// Calibrated Voltage Intercept (x-intercept)
-// for Y Potentiometer
+/// Calibrated Voltage Intercept (x-intercept)
+/// for Y Potentiometer
 static float potentiometer_v_y_intercept;
-// X Potentiometer
+/// X Potentiometer
 static MyRio_Aio x_potentiometer;
-// Y Potentiometer
+/// Y Potentiometer
 static MyRio_Aio y_potentiometer;
 
 
 /* Potentiometer Saturation Bounds */
 
 
-// Lower Potentiometer Voltage Saturation Limit (V)
+/// Lower Potentiometer Voltage Saturation Limit (V)
 #define POT_V_LIM_LO -20.0
-// Upper Potentiometer Voltage Saturation Limit (V)
+/// Upper Potentiometer Voltage Saturation Limit (V)
 #define POT_V_LIM_HI 20.0
 
 
 /* Encoders and Encoder Constants */
 
 
-// X Motor Encoder
+/// X Motor Encoder
 static MyRio_Encoder x_encoder;
-// Y Motor Encoder
+/// Y Motor Encoder
 static MyRio_Encoder y_encoder;
-// First Encoder state for both the
-// X and Y Encoders
+/// First Encoder state for both the
+/// X and Y Encoders
 static int32_t first_enc_state[2];
-// Previous Encoder state (from the last time
-// either GetTrolleyPosition or GetTrolleyVelocity
-// is caled), for both the X and Y Encoders
+/// Previous Encoder state (from the last time
+/// either GetTrolleyPosition or GetTrolleyVelocity
+/// is caled), for both the X and Y Encoders
 static int32_t prev_enc_state[2];
-// Indicator if the holding for velocity is set
+/// Indicator if the holding for velocity is set
 static bool holding_vel_set;
-// Indicator if the holding for position is set
+/// Indicator if the holding for position is set
 static bool holding_pos_set;
-// Encoder Holding for velocity
+/// Encoder Holding for velocity
 static Velocities holding_vel;
-// Encoder Holding for position
+/// Encoder Holding for position
 static Positions holding_pos;
-// Encoder Error Mask
+/// Encoder Error Mask
 static const Encoder_StatusMask enc_st_mask =
     (Encoder_StError);
 
@@ -97,11 +100,11 @@ static const Encoder_StatusMask enc_st_mask =
 /* Encoder Interpretation Macros */
 
 
-// Number of counts in one revolution
-// TODO(nguy8tri): Find this quantity
+/// Number of counts in one revolution
+/// TODO(nguy8tri): Find this quantity
 #define ENC_CNT_REV 2000.0
-// Meters per revolution
-// Diameter of upper pulley (12 mm) * PI
+/// Meters per revolution
+/// Diameter of upper pulley (12 mm) * PI
 #define M_PER_REV 0.01267 * PI
 /**
  * Converts a BDI quantity to meters
@@ -113,7 +116,7 @@ static const Encoder_StatusMask enc_st_mask =
 /**
  * Converts a BDI/BTI quantity to meters per second
  * 
- * @param The value to convert
+ * @param value The value to convert
 */
 #define ENC_2_VEL(value) \
     (value) / (BTI_S * ENC_CNT_REV) * M_PER_REV
@@ -122,44 +125,44 @@ static const Encoder_StatusMask enc_st_mask =
 /* Encoder Limits */
 
 
-// Lower X Limit
+/// Lower X Limit
 #define X_LIM_LO 0.0
-// Lower Y Limit
+/// Lower Y Limit
 #define Y_LIM_LO 0.0
-// Higher X Limit
+/// Higher X Limit
 #define X_LIM_HI 0.35
-// Higher Y Limit
+/// Higher Y Limit
 #define Y_LIM_HI 0.35
-// Absolute Velocity Limit
+/// Absolute Velocity Limit
 #define VEL_LIM_ABS 1.0
 
 
 /* Motors and Motor Constants */
 
 
-// X Motor Voltage Channel
+/// X Motor Voltage Channel
 MyRio_Aio x_motor;
-// Y Motor Voltage Channel
+/// Y Motor Voltage Channel
 MyRio_Aio y_motor;
 
 
 
 /* Timer Declaration */
 
-
+/// Universal Timer
 MyRio_IrqTimer timer;
 
 
 /* Keyboard Definitions and Variables */
 
 
-// Number of Channels
+/// Number of Channels
 #define CHANNELS 16
-// Keypad Length
+/// Keypad Length
 #define LCD_KEYPAD_LEN 4
-// Keyboard channels
+/// Keyboard channels
 static MyRio_Dio channel[CHANNELS];
-// Keyboard lock
+/// Keyboard lock
 static pthread_mutex_t keyboard;
 
 
@@ -176,23 +179,23 @@ typedef bool Keymap[9];
 /* Reference Velocity/Keymap Thread Variables */
 
 
-// Our keymap
+/// Our keymap
 static Keymap keymap;
-// Thread for Keymap Thread
+/// Thread for Keymap Thread
 static pthread_t keymap_thread;
-// Thread Resource for Keymap Thread
+/// Thread Resource for Keymap Thread
 static ThreadResource keymap_resource;
 
 
 /* Reference Velocity/Keymap Macros */
 
 
-// The unit velocity stop corresponding
-// to a keypad touch (m/s)
+/// The unit velocity stop corresponding
+/// to a keypad touch (m/s)
 #define UNIT_VEL 0.15
 
 
-// Local Error Flag
+/// Local Error Flag
 static int error;
 
 
@@ -202,9 +205,6 @@ static int error;
 /**
  * Obtains the numerical buttons pressed
  * (1 through 9)
- * 
- * @param keymap The thread resource to signal
- * this thread when to stop
  * 
  * @return NULL
  * 
@@ -258,23 +258,23 @@ static inline void wait();
 
 
 int IOSetup() {
-    // Setup Timer
+    /// Setup Timer
     timer.timerWrite = IRQTIMERWRITE;
     timer.timerSet = IRQTIMERSETTIME;
 
-    // Setup Encoders Channels
+    /// Setup Encoders Channels
     conC_Encoder_initialize(myrio_session, &x_encoder, X_CONNECTOR_ID);
     conC_Encoder_initialize(myrio_session, &y_encoder, Y_CONNECTOR_ID);
 
-    // Setup Potentiometer Voltage Channels (are swapped)
+    /// Setup Potentiometer Voltage Channels (are swapped)
     Aio_InitCI1(&x_potentiometer);
     Aio_InitCI0(&y_potentiometer);
 
-    // Setup Motor Channels
+    /// Setup Motor Channels
     Aio_InitCO0(&x_motor);
     Aio_InitCO1(&y_motor);
 
-    // Setup Keyboard Channels & Resources
+    /// Setup Keyboard Channels & Resources
     uint8_t i;
     for (i = 0; i < CHANNELS; i++) {
         channel[i].dir = DIOB_70DIR;
@@ -285,24 +285,24 @@ int IOSetup() {
     VERIFY(error, pthread_mutex_init(&keyboard, NULL));
     memset(keymap, false, sizeof(Keymap));
 
-    // Setup Reset flag
+    /// Setup Reset flag
     reset = true;
 
-    // Calibration Message
+    /// Calibration Message
     printf_lcd("\fPlease stablize for calibration.\n"
                "Press ENTR when ready.");
     while (getkey() != ENT) {}
     printf_lcd("\fCalibrating...\n");
 
-    // Set Reference Positions
+    /// Set Reference Positions
     first_enc_state[0] = Encoder_Counter(&x_encoder);
     first_enc_state[1] = Encoder_Counter(&y_encoder);
 
-    // Setup the holding
+    /// Setup the holding
     holding_vel_set = false;
     holding_pos_set = false;
 
-    // Calibrate voltage intercepts for potentiometer
+    /// Calibrate voltage intercepts for potentiometer
     potentiometer_v_x_intercept = Aio_Read(&x_potentiometer);
     potentiometer_v_y_intercept = Aio_Read(&y_potentiometer);
 
@@ -312,21 +312,21 @@ int IOSetup() {
 }
 
 int IOShutdown() {
-    // Dissasociate with Encoders
+    /// Dissasociate with Encoders
     memset(&x_encoder, 0, sizeof(MyRio_Encoder));
     memset(&y_encoder, 0, sizeof(MyRio_Encoder));
 
-    // Dissasociate with Potentiometers
+    /// Dissasociate with Potentiometers
     memset(&x_potentiometer, 0, sizeof(MyRio_Aio));
     memset(&y_potentiometer, 0, sizeof(MyRio_Aio));
     potentiometer_v_x_intercept = 0.0;
     potentiometer_v_y_intercept = 0.0;
 
-    // Disassociate with Motor
+    /// Disassociate with Motor
     memset(&x_motor, 0, sizeof(MyRio_Aio));
     memset(&y_motor, 0, sizeof(MyRio_Aio));
 
-    // Destroy Keyboard Lock
+    /// Destroy Keyboard Lock
     VERIFY(error, pthread_mutex_destroy(&keyboard));
 
     return EXIT_SUCCESS;
@@ -345,8 +345,8 @@ void Reset() {
 
 
 int GetReferenceVelocityCommand(Velocities *result) {
-    // Setup discrete velocity commands,
-    // -1, 0, and 1
+    /// Setup discrete velocity commands,
+    /// -1, 0, and 1
     int8_t x_vel = 0;
     int8_t y_vel = 0;
 
@@ -500,8 +500,8 @@ int SetYVoltage(Voltage voltage) {
 
 
 bool PressedDelete() {
-#define DEL_ROW 7
-#define DEL_COL 3
+#define DEL_ROW 7  ///< The Delete Key's Row
+#define DEL_COL 3  ///< The Delete Key's Column
 	pthread_mutex_lock(&keyboard);
     uint8_t j;
     for (j = 0; j < LCD_KEYPAD_LEN; j++) {
@@ -520,13 +520,13 @@ bool PressedDelete() {
 }
 
 int KeyboardControlFork() {
-    // Begin Keyboard Thread
+    /// Begin Keyboard Thread
     START_THREAD(keymap_thread, KeymapThread, keymap_resource);
     return EXIT_FAILURE;
 }
 
 int KeyboardControlJoin() {
-    // Destroy Keymap Thread
+    /// Destroy Keymap Thread
     STOP_THREAD(keymap_thread, keymap_resource);
     return EXIT_SUCCESS;
 }
@@ -561,7 +561,7 @@ static inline void *KeymapThread(void *resource) {
 
 static inline int HandleEncoderError(Positions *curr_pos,
                                       Velocities *curr_vel) {
-    // Check Positional Limits first
+    /// Check Positional Limits first
     u_error = EXIT_SUCCESS;
     if ((curr_pos->x_pos > X_LIM_HI && curr_vel->x_vel > 0.0) ||
         (curr_pos->x_pos < X_LIM_LO && curr_vel->x_vel < 0.0) ||
@@ -569,16 +569,16 @@ static inline int HandleEncoderError(Positions *curr_pos,
         (curr_pos->y_pos < Y_LIM_LO && curr_vel->y_vel < 0.0)) {
             u_error = EOTBD;
     }
-    // Now, check velocity limits
+    /// Now, check velocity limits
     if (fabsf(curr_vel->x_vel) > VEL_LIM_ABS ||
         fabsf(curr_vel->y_vel) > VEL_LIM_ABS) {
         u_error = EVTYE;
     }
-    // Now, check if there is an encoder error
+    /// Now, check if there is an encoder error
     if (Encoder_Status(&x_encoder) & enc_st_mask) {
 
-    		// u_error = EENCR;
-    		// conC_Encoder_initialize(myrio_session, &x_encoder, X_CONNECTOR_ID);
+    		/// u_error = EENCR;
+    		/// conC_Encoder_initialize(myrio_session, &x_encoder, X_CONNECTOR_ID);
 
     		printf("Attempting to Reset X Encoder\n");
     		Encoder_Configure(&x_encoder, Encoder_Error | Encoder_Enable | Encoder_SignalMode,
@@ -586,13 +586,13 @@ static inline int HandleEncoderError(Positions *curr_pos,
     }
     if (Encoder_Status(&y_encoder) & enc_st_mask) {
 
-        	// u_error = EENCR;
-        	// conC_Encoder_initialize(myrio_session, &y_encoder, Y_CONNECTOR_ID);
+        	/// u_error = EENCR;
+        	/// conC_Encoder_initialize(myrio_session, &y_encoder, Y_CONNECTOR_ID);
         	printf("Attempting to Reset Y Encoder\n");
         	Encoder_Configure(&y_encoder, Encoder_Error | Encoder_Enable | Encoder_SignalMode,
         	    							Encoder_ClearError | Encoder_Enabled | Encoder_QuadPhase);
     }
-    // Output Error
+    /// Output Error
     if (u_error) {
         SetXVoltage(0.0);
         SetYVoltage(0.0);
@@ -624,7 +624,7 @@ static inline int HandlePotentiometerError(Angles *curr_ang) {
 
 static inline void wait() {
     uint32_t i;
-// Wait Constant
+/// Wait Constant
 #define WAIT_CONST 417000
 
     i = 0;
@@ -637,13 +637,13 @@ static inline void wait() {
 char getkey() {
     uint8_t i, j;
 
-    // Keypad characters
+    /// Keypad characters
     static char keypad[LCD_KEYPAD_LEN][LCD_KEYPAD_LEN] = {{'1', '2', '3', UP},
                                                           {'4', '5', '6', DN},
                                                           {'7', '8', '9', ENT},
                                                           {'0', '.', '-', DEL}};
-    // Locking style allows for getkey() to take precedence
-    // over all other keyboard commands
+    /// Locking style allows for getkey() to take precedence
+    /// over all other keyboard commands
     pthread_mutex_lock(&keyboard);
     while (NiFpga_True) {
         for (i = 0; i < LCD_KEYPAD_LEN; i++) {

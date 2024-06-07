@@ -1,6 +1,7 @@
 var searchData=
 [
-  ['enc_5f2_5fpos_0',['ENC_2_POS',['../io_8c.html#a69f1d6fb79304fa6eecef75fe558d486',1,'io.c']]],
-  ['enc_5f2_5fvel_1',['ENC_2_VEL',['../io_8c.html#a492059ce1225838aa3401dd22486d0f4',1,'io.c']]],
-  ['exit_5fthread_2',['EXIT_THREAD',['../thread-lib_8h.html#aa9e9f7c7d6b9a52c5b8835ff43504033',1,'thread-lib.h']]]
+  ['data_5flen_0',['DATA_LEN',['../anti-sway_8c.html#af02e45f15080b8ec9dd7b286157617ff',1,'DATA_LEN:&#160;anti-sway.c'],['../tracking_8c.html#af02e45f15080b8ec9dd7b286157617ff',1,'DATA_LEN:&#160;tracking.c']]],
+  ['default_5fnum_5ffiles_1',['DEFAULT_NUM_FILES',['../record_8c.html#a3f981fdcd55b00f4dfc0fad4c73dac88',1,'record.c']]],
+  ['default_5fnum_5fvals_2',['DEFAULT_NUM_VALS',['../record_8c.html#ac19a3d94c88e8f4b3d47950665ae786e',1,'record.c']]],
+  ['default_5fresize_5ffactor_3',['DEFAULT_RESIZE_FACTOR',['../record_8c.html#a63408dd543a00313a6dfdbf55d0fff66',1,'record.c']]]
 ];

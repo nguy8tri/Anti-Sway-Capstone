@@ -1,5 +1,5 @@
 \doxysection{io.\+h}
-\hypertarget{io_8h_source}{}\label{io_8h_source}\index{src/io.h@{src/io.h}}
+\hypertarget{io_8h_source}{}\label{io_8h_source}\index{C:/Users/tring/PycharmProjects/Capstone-\/Stuff/src/io.h@{C:/Users/tring/PycharmProjects/Capstone-\/Stuff/src/io.h}}
 \mbox{\hyperlink{io_8h}{Go to the documentation of this file.}}
 \begin{DoxyCode}{0}
 \DoxyCodeLine{00001\ }
@@ -13,101 +13,91 @@
 \DoxyCodeLine{00020\ }
 \DoxyCodeLine{00021\ \textcolor{comment}{/*\ Input/Output\ Data\ Types\ */}}
 \DoxyCodeLine{00022\ }
-\DoxyCodeLine{00023\ \textcolor{comment}{//\ Alias\ for\ an\ Angle}}
-\DoxyCodeLine{00024\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{float}\ Angle;}
-\DoxyCodeLine{00025\ \textcolor{comment}{//\ Alias\ for\ a\ Position}}
-\DoxyCodeLine{00026\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{float}\ Position;}
-\DoxyCodeLine{00027\ \textcolor{comment}{//\ Alias\ for\ Velocity}}
-\DoxyCodeLine{00028\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{float}\ Velocity;}
-\DoxyCodeLine{00029\ \textcolor{comment}{//\ Alias\ for\ Voltage}}
-\DoxyCodeLine{00030\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{float}\ Voltage;}
+\DoxyCodeLine{00024\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{io_8h_ae149c304d2490d5120c530e2c9fdee4c}{Angle}};}
+\DoxyCodeLine{00026\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{io_8h_a56fac1137951484b5ad04db4d6d1e53c}{Position}};}
+\DoxyCodeLine{00028\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{io_8h_ab015b8f073ee615009ddacac0c05f30c}{Velocity}};}
+\DoxyCodeLine{00030\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{io_8h_a5d747de9f4b7109a3d8682f7d29186ca}{Voltage}};}
 \DoxyCodeLine{00031\ }
 \DoxyCodeLine{00032\ }
 \DoxyCodeLine{00039\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
-\DoxyCodeLine{00041\ \ \ \ \ Angle\ \mbox{\hyperlink{struct_angles_ad1b9f2ec1d1b3ce38fe28c8ca6f1aa8b}{x\_angle}};}
-\DoxyCodeLine{00043\ \ \ \ \ Angle\ \mbox{\hyperlink{struct_angles_a1edfed3314837604f30be3dbc5cdff6b}{y\_angle}};}
+\DoxyCodeLine{00041\ \ \ \ \ \mbox{\hyperlink{io_8h_ae149c304d2490d5120c530e2c9fdee4c}{Angle}}\ \mbox{\hyperlink{struct_angles_ad1b9f2ec1d1b3ce38fe28c8ca6f1aa8b}{x\_angle}};}
+\DoxyCodeLine{00043\ \ \ \ \ \mbox{\hyperlink{io_8h_ae149c304d2490d5120c530e2c9fdee4c}{Angle}}\ \mbox{\hyperlink{struct_angles_a1edfed3314837604f30be3dbc5cdff6b}{y\_angle}};}
 \DoxyCodeLine{00044\ \}\ \mbox{\hyperlink{struct_angles}{Angles}};}
 \DoxyCodeLine{00045\ }
 \DoxyCodeLine{00052\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
-\DoxyCodeLine{00054\ \ \ \ \ Position\ \mbox{\hyperlink{struct_positions_a58bd01dd4c528d52bb6babfbc72290ac}{x\_pos}};}
-\DoxyCodeLine{00056\ \ \ \ \ Position\ \mbox{\hyperlink{struct_positions_a6050d2b8c91fabde57c03ff03d3dcc16}{y\_pos}};}
+\DoxyCodeLine{00054\ \ \ \ \ \mbox{\hyperlink{io_8h_a56fac1137951484b5ad04db4d6d1e53c}{Position}}\ \mbox{\hyperlink{struct_positions_a58bd01dd4c528d52bb6babfbc72290ac}{x\_pos}};}
+\DoxyCodeLine{00056\ \ \ \ \ \mbox{\hyperlink{io_8h_a56fac1137951484b5ad04db4d6d1e53c}{Position}}\ \mbox{\hyperlink{struct_positions_a6050d2b8c91fabde57c03ff03d3dcc16}{y\_pos}};}
 \DoxyCodeLine{00057\ \}\ \mbox{\hyperlink{struct_positions}{Positions}};}
 \DoxyCodeLine{00058\ }
 \DoxyCodeLine{00065\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
-\DoxyCodeLine{00067\ \ \ \ \ Velocity\ \mbox{\hyperlink{struct_velocities_a2df4ab610f9a75f9086062a4f5defb46}{x\_vel}};}
-\DoxyCodeLine{00069\ \ \ \ \ Velocity\ \mbox{\hyperlink{struct_velocities_a3175a0c21c0e1a3a09666201e9ead54e}{y\_vel}};}
+\DoxyCodeLine{00067\ \ \ \ \ \mbox{\hyperlink{io_8h_ab015b8f073ee615009ddacac0c05f30c}{Velocity}}\ \mbox{\hyperlink{struct_velocities_a2df4ab610f9a75f9086062a4f5defb46}{x\_vel}};}
+\DoxyCodeLine{00069\ \ \ \ \ \mbox{\hyperlink{io_8h_ab015b8f073ee615009ddacac0c05f30c}{Velocity}}\ \mbox{\hyperlink{struct_velocities_a3175a0c21c0e1a3a09666201e9ead54e}{y\_vel}};}
 \DoxyCodeLine{00070\ \}\ \mbox{\hyperlink{struct_velocities}{Velocities}};}
 \DoxyCodeLine{00071\ }
 \DoxyCodeLine{00072\ \textcolor{comment}{/*\ Sensor\ Variables\ */}}
-\DoxyCodeLine{00073\ \textcolor{comment}{//\ The\ Timer}}
-\DoxyCodeLine{00074\ \textcolor{keyword}{extern}\ MyRio\_IrqTimer\ timer;}
+\DoxyCodeLine{00074\ \textcolor{keyword}{extern}\ MyRio\_IrqTimer\ \mbox{\hyperlink{io_8h_a9f1418121fc86d07cde0d1f423806266}{timer}};}
 \DoxyCodeLine{00075\ }
 \DoxyCodeLine{00076\ \textcolor{comment}{/*\ Actuator\ Limits\ */}}
-\DoxyCodeLine{00077\ \textcolor{comment}{//\ Motor\ Voltage\ High\ Limit\ (V)}}
 \DoxyCodeLine{00078\ \textcolor{preprocessor}{\#define\ MOTOR\_V\_LIM\_H\ 10.000}}
-\DoxyCodeLine{00079\ \textcolor{comment}{//\ Motor\ Voltage\ Low\ Limit\ (V)}}
 \DoxyCodeLine{00080\ \textcolor{preprocessor}{\#define\ MOTOR\_V\_LIM\_L\ -\/10.000}}
 \DoxyCodeLine{00081\ }
 \DoxyCodeLine{00082\ \textcolor{comment}{/*\ Physical\ Parameters\ */}}
-\DoxyCodeLine{00083\ \textcolor{comment}{//\ Pulley\ Radius\ (m)}}
 \DoxyCodeLine{00084\ \textcolor{preprocessor}{\#define\ R\ 0.0062}}
-\DoxyCodeLine{00085\ \textcolor{comment}{//\ Current\ Constant\ (A/V)}}
 \DoxyCodeLine{00086\ \textcolor{preprocessor}{\#define\ K\_a\ 0.41}}
-\DoxyCodeLine{00087\ \textcolor{comment}{//\ Motor\ Constant\ (Nm/A)}}
 \DoxyCodeLine{00088\ \textcolor{preprocessor}{\#define\ K\_m\ 0.11}}
 \DoxyCodeLine{00099\ \textcolor{preprocessor}{\#define\ FORCE\_TO\_VOLTAGE(force)\ \(\backslash\)}}
 \DoxyCodeLine{00100\ \textcolor{preprocessor}{\ \ \ \ (force)\ *\ R\ /\ (K\_a\ *\ K\_m)}}
-\DoxyCodeLine{00101\ \textcolor{preprocessor}{\#define\ VOLTAGE\_TO\_FORCE(voltage)\ \(\backslash\)}}
-\DoxyCodeLine{00102\ \textcolor{preprocessor}{\ \ \ \ (voltage)\ *\ (K\_a\ *\ K\_m)\ /\ R}}
-\DoxyCodeLine{00103\ }
-\DoxyCodeLine{00104\ \textcolor{comment}{/*\ Setup/Shutdown\ Functions\ */}}
-\DoxyCodeLine{00105\ }
-\DoxyCodeLine{00106\ }
-\DoxyCodeLine{00114\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{io_8h_a7b088d617c531995213dd9440eaf4b27}{IOSetup}}();}
+\DoxyCodeLine{00110\ \textcolor{preprocessor}{\#define\ VOLTAGE\_TO\_FORCE(voltage)\ \(\backslash\)}}
+\DoxyCodeLine{00111\ \textcolor{preprocessor}{\ \ \ \ (voltage)\ *\ (K\_a\ *\ K\_m)\ /\ R}}
+\DoxyCodeLine{00112\ }
+\DoxyCodeLine{00113\ \textcolor{comment}{/*\ Setup/Shutdown\ Functions\ */}}
+\DoxyCodeLine{00114\ }
 \DoxyCodeLine{00115\ }
-\DoxyCodeLine{00123\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{io_8h_a77ff867027690d0264ec77033686b105}{IOShutdown}}();}
+\DoxyCodeLine{00123\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{io_8h_a7b088d617c531995213dd9440eaf4b27}{IOSetup}}();}
 \DoxyCodeLine{00124\ }
-\DoxyCodeLine{00125\ }
-\DoxyCodeLine{00126\ \textcolor{comment}{/*\ Reset\ Feature\ */}}
-\DoxyCodeLine{00127\ }
-\DoxyCodeLine{00128\ }
-\DoxyCodeLine{00137\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{io_8h_a372de693ad40b3f42839c8ec6ac845f4}{Reset}}();}
-\DoxyCodeLine{00138\ }
-\DoxyCodeLine{00139\ }
-\DoxyCodeLine{00140\ \textcolor{comment}{/*\ Sensor\ Functions\ */}}
-\DoxyCodeLine{00141\ }
-\DoxyCodeLine{00142\ }
-\DoxyCodeLine{00154\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{io_8h_a99abade59aec0f9a5238fcc47e788852}{GetReferenceVelocityCommand}}(\mbox{\hyperlink{struct_velocities}{Velocities}}\ *result);}
-\DoxyCodeLine{00155\ }
-\DoxyCodeLine{00167\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{io_8h_a82eebee08f3a434bbc7e4793163c2c15}{GetReferenceAngleCommand}}(\mbox{\hyperlink{struct_angles}{Angles}}\ *result);}
-\DoxyCodeLine{00168\ }
-\DoxyCodeLine{00181\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{io_8h_a6464ecd89623f2f77f41894d032fcaef}{GetAngle}}(\mbox{\hyperlink{struct_angles}{Angles}}\ *result);}
-\DoxyCodeLine{00182\ }
-\DoxyCodeLine{00197\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{io_8h_ae63c00627326f08d2a4622a84d1e747a}{GetTrolleyPosition}}(\mbox{\hyperlink{struct_positions}{Positions}}\ *result);}
-\DoxyCodeLine{00198\ }
-\DoxyCodeLine{00213\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{io_8h_a02c2b9ef38ab4815a63510c93971e904}{GetTrolleyVelocity}}(\mbox{\hyperlink{struct_velocities}{Velocities}}\ *result);}
-\DoxyCodeLine{00214\ }
-\DoxyCodeLine{00229\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{io_8h_adcb3dcf93416a844bdbfe3a11c81881a}{GetUserPosition}}(\mbox{\hyperlink{struct_angles}{Angles}}\ *angle,\ \mbox{\hyperlink{struct_positions}{Positions}}\ *pos,\ \mbox{\hyperlink{struct_positions}{Positions}}\ *result);}
-\DoxyCodeLine{00230\ }
-\DoxyCodeLine{00245\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{io_8h_ab31e062d140eefdddbfdd5de1dc6f595}{GetUserVelocity}}(\mbox{\hyperlink{struct_angles}{Angles}}\ *angle,\ \mbox{\hyperlink{struct_velocities}{Velocities}}\ *vel,\ \mbox{\hyperlink{struct_velocities}{Velocities}}\ *result);}
-\DoxyCodeLine{00246\ }
-\DoxyCodeLine{00247\ }
-\DoxyCodeLine{00248\ \textcolor{comment}{/*\ Actuator\ Functions\ */}}
-\DoxyCodeLine{00249\ }
-\DoxyCodeLine{00250\ }
-\DoxyCodeLine{00257\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{io_8h_a2a45f6fcd9f479d915d4e8cb8e618bc0}{SetXVoltage}}(Voltage\ voltage);}
+\DoxyCodeLine{00132\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{io_8h_a77ff867027690d0264ec77033686b105}{IOShutdown}}();}
+\DoxyCodeLine{00133\ }
+\DoxyCodeLine{00134\ }
+\DoxyCodeLine{00135\ \textcolor{comment}{/*\ Reset\ Feature\ */}}
+\DoxyCodeLine{00136\ }
+\DoxyCodeLine{00137\ }
+\DoxyCodeLine{00146\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{io_8h_a372de693ad40b3f42839c8ec6ac845f4}{Reset}}();}
+\DoxyCodeLine{00147\ }
+\DoxyCodeLine{00148\ }
+\DoxyCodeLine{00149\ \textcolor{comment}{/*\ Sensor\ Functions\ */}}
+\DoxyCodeLine{00150\ }
+\DoxyCodeLine{00151\ }
+\DoxyCodeLine{00163\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{io_8h_a99abade59aec0f9a5238fcc47e788852}{GetReferenceVelocityCommand}}(\mbox{\hyperlink{struct_velocities}{Velocities}}\ *result);}
+\DoxyCodeLine{00164\ }
+\DoxyCodeLine{00176\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{io_8h_a82eebee08f3a434bbc7e4793163c2c15}{GetReferenceAngleCommand}}(\mbox{\hyperlink{struct_angles}{Angles}}\ *result);}
+\DoxyCodeLine{00177\ }
+\DoxyCodeLine{00190\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{io_8h_a6464ecd89623f2f77f41894d032fcaef}{GetAngle}}(\mbox{\hyperlink{struct_angles}{Angles}}\ *result);}
+\DoxyCodeLine{00191\ }
+\DoxyCodeLine{00206\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{io_8h_ae63c00627326f08d2a4622a84d1e747a}{GetTrolleyPosition}}(\mbox{\hyperlink{struct_positions}{Positions}}\ *result);}
+\DoxyCodeLine{00207\ }
+\DoxyCodeLine{00222\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{io_8h_a02c2b9ef38ab4815a63510c93971e904}{GetTrolleyVelocity}}(\mbox{\hyperlink{struct_velocities}{Velocities}}\ *result);}
+\DoxyCodeLine{00223\ }
+\DoxyCodeLine{00238\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{io_8h_adcb3dcf93416a844bdbfe3a11c81881a}{GetUserPosition}}(\mbox{\hyperlink{struct_angles}{Angles}}\ *angle,\ \mbox{\hyperlink{struct_positions}{Positions}}\ *pos,\ \mbox{\hyperlink{struct_positions}{Positions}}\ *result);}
+\DoxyCodeLine{00239\ }
+\DoxyCodeLine{00254\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{io_8h_ab31e062d140eefdddbfdd5de1dc6f595}{GetUserVelocity}}(\mbox{\hyperlink{struct_angles}{Angles}}\ *angle,\ \mbox{\hyperlink{struct_velocities}{Velocities}}\ *vel,\ \mbox{\hyperlink{struct_velocities}{Velocities}}\ *result);}
+\DoxyCodeLine{00255\ }
+\DoxyCodeLine{00256\ }
+\DoxyCodeLine{00257\ \textcolor{comment}{/*\ Actuator\ Functions\ */}}
 \DoxyCodeLine{00258\ }
-\DoxyCodeLine{00265\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{io_8h_a4418209a1dac1a4333d5edbb84120cfa}{SetYVoltage}}(Voltage\ voltage);}
-\DoxyCodeLine{00266\ }
+\DoxyCodeLine{00259\ }
+\DoxyCodeLine{00266\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{io_8h_a2a45f6fcd9f479d915d4e8cb8e618bc0}{SetXVoltage}}(\mbox{\hyperlink{io_8h_a5d747de9f4b7109a3d8682f7d29186ca}{Voltage}}\ voltage);}
 \DoxyCodeLine{00267\ }
-\DoxyCodeLine{00268\ \textcolor{comment}{/*\ Keyboard\ Functions\ */}}
-\DoxyCodeLine{00269\ }
-\DoxyCodeLine{00277\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{io_8h_a78356349ecab59eb0251d1f05b16c38b}{PressedDelete}}();}
+\DoxyCodeLine{00274\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{io_8h_a4418209a1dac1a4333d5edbb84120cfa}{SetYVoltage}}(\mbox{\hyperlink{io_8h_a5d747de9f4b7109a3d8682f7d29186ca}{Voltage}}\ voltage);}
+\DoxyCodeLine{00275\ }
+\DoxyCodeLine{00276\ }
+\DoxyCodeLine{00277\ \textcolor{comment}{/*\ Keyboard\ Functions\ */}}
 \DoxyCodeLine{00278\ }
-\DoxyCodeLine{00286\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{io_8h_aab3c612e787d3b07cbce09a8bc496aa0}{KeyboardControlFork}}();}
+\DoxyCodeLine{00286\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{io_8h_a78356349ecab59eb0251d1f05b16c38b}{PressedDelete}}();}
 \DoxyCodeLine{00287\ }
-\DoxyCodeLine{00293\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{io_8h_a53e2f9e259a7f87f482dd7bb7a30b461}{KeyboardControlJoin}}();}
-\DoxyCodeLine{00294\ }
-\DoxyCodeLine{00295\ \textcolor{preprocessor}{\#endif\ \ }\textcolor{comment}{//\ IO\_H\_}}
+\DoxyCodeLine{00295\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{io_8h_aab3c612e787d3b07cbce09a8bc496aa0}{KeyboardControlFork}}();}
+\DoxyCodeLine{00296\ }
+\DoxyCodeLine{00302\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{io_8h_a53e2f9e259a7f87f482dd7bb7a30b461}{KeyboardControlJoin}}();}
+\DoxyCodeLine{00303\ }
+\DoxyCodeLine{00304\ \textcolor{preprocessor}{\#endif\ \ }}
 
 \end{DoxyCode}

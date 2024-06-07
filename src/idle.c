@@ -30,11 +30,11 @@
 /* Thread Number & Resources */
 
 
-// Thread ID
+/// Thread ID
 pthread_t idle_thread;
-// Thread Resources (Shared Resources)
+/// Thread Resources (Shared Resources)
 ThreadResource resource;
-// Local Error Code
+/// Local Error Code
 static int error;
 
 
@@ -42,6 +42,8 @@ static int error;
 
 
 /**
+ * @brief Idle Mode Thread Function
+ * 
  * The Thread Function for Idle Mode
  * 
  * @param resource A pointer to a Resource sturcture
@@ -101,7 +103,9 @@ static void *IdleModeThread(void *resource) {
             }
 
             // Output the trolley info
+/// How many decimal places to include
 #define DECIMAL_PRECISION "3"
+/// Radians to Degrees Conversion Factor
 #define RAD_2_DEG(value) value * 180.0 / PI
             printf_lcd("\f"
                     "P:(%." DECIMAL_PRECISION "f, %."

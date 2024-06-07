@@ -17,21 +17,21 @@
 
 
 /* Error Macro */
-// Ther universal error code
+/// Ther universal error code
 extern int u_error;
 
 
 /* I/O Error Codes */
 
-// Unknown Exception
+/// Unknown Exception
 #define ENKWN -1
-// Out of Bounds Error
+/// Out of Bounds Error
 #define EOTBD -2
-// Velocity Exceeded Error
+/// Velocity Exceeded Error
 #define EVTYE -3
-// Angle Sensor Saturation Error
+/// Angle Sensor Saturation Error
 #define ESTRN -4
-// Encoder Error
+/// Encoder Error
 #define EENCR -5
 
 

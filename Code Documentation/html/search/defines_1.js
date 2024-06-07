@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['data_5flen_0',['DATA_LEN',['../anti-sway_8c.html#af02e45f15080b8ec9dd7b286157617ff',1,'anti-sway.c']]]
+  ['channels_0',['CHANNELS',['../io_8c.html#a19b7f1b22403d61234a92decaeb6953a',1,'io.c']]]
 ];

@@ -1,5 +1,5 @@
 \doxysection{thread-\/lib.h}
-\hypertarget{thread-lib_8h_source}{}\label{thread-lib_8h_source}\index{src/thread-\/lib.h@{src/thread-\/lib.h}}
+\hypertarget{thread-lib_8h_source}{}\label{thread-lib_8h_source}\index{C:/Users/tring/PycharmProjects/Capstone-\/Stuff/src/thread-\/lib.h@{C:/Users/tring/PycharmProjects/Capstone-\/Stuff/src/thread-\/lib.h}}
 \mbox{\hyperlink{thread-lib_8h}{Go to the documentation of this file.}}
 \begin{DoxyCode}{0}
 \DoxyCodeLine{00001\ }
@@ -23,7 +23,7 @@
 \DoxyCodeLine{00029\ }
 \DoxyCodeLine{00030\ }
 \DoxyCodeLine{00036\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
-\DoxyCodeLine{00037\ \ \ \ \ NiFpga\_IrqContext\ irq\_context;\ \ }
+\DoxyCodeLine{00037\ \ \ \ \ NiFpga\_IrqContext\ \mbox{\hyperlink{struct_thread_resource_a50b4ce453921f503ee83bba007c556ac}{irq\_context}};\ \ }
 \DoxyCodeLine{00038\ \ \ \ \ NiFpga\_Bool\ \mbox{\hyperlink{struct_thread_resource_aa6eb541244f3ca12576b29ccbab9f641}{irq\_thread\_rdy}};\ \ }
 \DoxyCodeLine{00039\ \}\ \mbox{\hyperlink{struct_thread_resource}{ThreadResource}};}
 \DoxyCodeLine{00040\ }
@@ -47,39 +47,40 @@
 \DoxyCodeLine{00067\ \textcolor{preprocessor}{\#define\ m\_p\ 0.765}}
 \DoxyCodeLine{00068\ }
 \DoxyCodeLine{00069\ }
-\DoxyCodeLine{00070\ \textcolor{comment}{/*/\ MyRio\ Session\ */}}
-\DoxyCodeLine{00071\ \textcolor{keyword}{extern}\ NiFpga\_Session\ myrio\_session;}
-\DoxyCodeLine{00072\ }
-\DoxyCodeLine{00073\ }
-\DoxyCodeLine{00074\ \textcolor{comment}{/*\ Thread\ Construction/Destruction\ */}}
+\DoxyCodeLine{00070\ \textcolor{comment}{/*\ MyRio\ Session\ */}}
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00073\ \textcolor{keyword}{extern}\ NiFpga\_Session\ \mbox{\hyperlink{thread-lib_8h_a185bfa2d35885a0f891c399e2b5399db}{myrio\_session}};}
+\DoxyCodeLine{00074\ }
 \DoxyCodeLine{00075\ }
-\DoxyCodeLine{00076\ }
-\DoxyCodeLine{00092\ \textcolor{preprocessor}{\#define\ START\_THREAD(thread,\ function,\ resource)\ \(\backslash\)}}
-\DoxyCodeLine{00093\ \textcolor{preprocessor}{\ \ \ \ resource.irq\_thread\_rdy\ =\ true;\ \(\backslash\)}}
-\DoxyCodeLine{00094\ \textcolor{preprocessor}{\ \ \ \ VERIFY(error,\ pthread\_create(\&thread,\ NULL,\ function,\ \&resource))}}
-\DoxyCodeLine{00095\ }
-\DoxyCodeLine{00106\ \textcolor{preprocessor}{\#define\ REGISTER\_TIMER(resource)\ \(\backslash\)}}
-\DoxyCodeLine{00107\ \textcolor{preprocessor}{\ \ \ \ Irq\_RegisterTimerIrq(\&timer,\ \&(resource.irq\_context),\ BTI\_US)}}
-\DoxyCodeLine{00108\ }
-\DoxyCodeLine{00124\ \textcolor{preprocessor}{\#define\ STOP\_THREAD(thread,\ resource)\ \(\backslash\)}}
-\DoxyCodeLine{00125\ \textcolor{preprocessor}{\ \ \ \ resource.irq\_thread\_rdy\ =\ false;\ \(\backslash\)}}
-\DoxyCodeLine{00126\ \textcolor{preprocessor}{\ \ \ \ VERIFY(error,\ pthread\_join(thread,\ NULL))}}
-\DoxyCodeLine{00127\ }
-\DoxyCodeLine{00137\ \textcolor{preprocessor}{\#define\ UNREGISTER\_TIMER(resource)\ \(\backslash\)}}
-\DoxyCodeLine{00138\ \textcolor{preprocessor}{\ \ \ \ Irq\_UnregisterTimerIrq(\&timer,\ resource.irq\_context)}}
-\DoxyCodeLine{00139\ }
-\DoxyCodeLine{00151\ \textcolor{preprocessor}{\#define\ TIMER\_TRIGGER(irq\_assert,\ resource)\ \(\backslash\)}}
-\DoxyCodeLine{00152\ \textcolor{preprocessor}{\ \ \ \ Irq\_Wait(resource-\/>irq\_context,\ \(\backslash\)}}
-\DoxyCodeLine{00153\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ TIMERIRQNO,\ \(\backslash\)}}
-\DoxyCodeLine{00154\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \&irq\_assert,\ \(\backslash\)}}
-\DoxyCodeLine{00155\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ (NiFpga\_Bool\ *)\ \&(resource-\/>irq\_thread\_rdy));\ \(\backslash\)}}
-\DoxyCodeLine{00156\ \textcolor{preprocessor}{\ \ \ \ NiFpga\_WriteU32(myrio\_session,\ IRQTIMERWRITE,\ BTI\_US);\ \(\backslash\)}}
-\DoxyCodeLine{00157\ \textcolor{preprocessor}{\ \ \ \ NiFpga\_WriteBool(myrio\_session,\ IRQTIMERSETTIME,\ NiFpga\_True)}}
-\DoxyCodeLine{00158\ }
-\DoxyCodeLine{00165\ \textcolor{preprocessor}{\#define\ EXIT\_THREAD()\ \(\backslash\)}}
-\DoxyCodeLine{00166\ \textcolor{preprocessor}{\ \ \ \ pthread\_exit(NULL);\ \(\backslash\)}}
-\DoxyCodeLine{00167\ \textcolor{preprocessor}{\ \ \ \ return\ NULL}}
-\DoxyCodeLine{00168\ }
-\DoxyCodeLine{00169\ \textcolor{preprocessor}{\#endif\ \ }\textcolor{comment}{//\ THREAD\_LIB\_H\_}}
+\DoxyCodeLine{00076\ \textcolor{comment}{/*\ Thread\ Construction/Destruction\ */}}
+\DoxyCodeLine{00077\ }
+\DoxyCodeLine{00078\ }
+\DoxyCodeLine{00094\ \textcolor{preprocessor}{\#define\ START\_THREAD(thread,\ function,\ resource)\ \(\backslash\)}}
+\DoxyCodeLine{00095\ \textcolor{preprocessor}{\ \ \ \ resource.irq\_thread\_rdy\ =\ true;\ \(\backslash\)}}
+\DoxyCodeLine{00096\ \textcolor{preprocessor}{\ \ \ \ VERIFY(error,\ pthread\_create(\&thread,\ NULL,\ function,\ \&resource))}}
+\DoxyCodeLine{00097\ }
+\DoxyCodeLine{00108\ \textcolor{preprocessor}{\#define\ REGISTER\_TIMER(resource)\ \(\backslash\)}}
+\DoxyCodeLine{00109\ \textcolor{preprocessor}{\ \ \ \ Irq\_RegisterTimerIrq(\&timer,\ \&(resource.irq\_context),\ BTI\_US)}}
+\DoxyCodeLine{00110\ }
+\DoxyCodeLine{00126\ \textcolor{preprocessor}{\#define\ STOP\_THREAD(thread,\ resource)\ \(\backslash\)}}
+\DoxyCodeLine{00127\ \textcolor{preprocessor}{\ \ \ \ resource.irq\_thread\_rdy\ =\ false;\ \(\backslash\)}}
+\DoxyCodeLine{00128\ \textcolor{preprocessor}{\ \ \ \ VERIFY(error,\ pthread\_join(thread,\ NULL))}}
+\DoxyCodeLine{00129\ }
+\DoxyCodeLine{00139\ \textcolor{preprocessor}{\#define\ UNREGISTER\_TIMER(resource)\ \(\backslash\)}}
+\DoxyCodeLine{00140\ \textcolor{preprocessor}{\ \ \ \ Irq\_UnregisterTimerIrq(\&timer,\ resource.irq\_context)}}
+\DoxyCodeLine{00141\ }
+\DoxyCodeLine{00153\ \textcolor{preprocessor}{\#define\ TIMER\_TRIGGER(irq\_assert,\ resource)\ \(\backslash\)}}
+\DoxyCodeLine{00154\ \textcolor{preprocessor}{\ \ \ \ Irq\_Wait(resource-\/>irq\_context,\ \(\backslash\)}}
+\DoxyCodeLine{00155\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ TIMERIRQNO,\ \(\backslash\)}}
+\DoxyCodeLine{00156\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \&irq\_assert,\ \(\backslash\)}}
+\DoxyCodeLine{00157\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ (NiFpga\_Bool\ *)\ \&(resource-\/>irq\_thread\_rdy));\ \(\backslash\)}}
+\DoxyCodeLine{00158\ \textcolor{preprocessor}{\ \ \ \ NiFpga\_WriteU32(myrio\_session,\ IRQTIMERWRITE,\ BTI\_US);\ \(\backslash\)}}
+\DoxyCodeLine{00159\ \textcolor{preprocessor}{\ \ \ \ NiFpga\_WriteBool(myrio\_session,\ IRQTIMERSETTIME,\ NiFpga\_True)}}
+\DoxyCodeLine{00160\ }
+\DoxyCodeLine{00167\ \textcolor{preprocessor}{\#define\ EXIT\_THREAD()\ \(\backslash\)}}
+\DoxyCodeLine{00168\ \textcolor{preprocessor}{\ \ \ \ pthread\_exit(NULL);\ \(\backslash\)}}
+\DoxyCodeLine{00169\ \textcolor{preprocessor}{\ \ \ \ return\ NULL}}
+\DoxyCodeLine{00170\ }
+\DoxyCodeLine{00171\ \textcolor{preprocessor}{\#endif\ \ }\textcolor{comment}{//\ THREAD\_LIB\_H\_}}
 
 \end{DoxyCode}

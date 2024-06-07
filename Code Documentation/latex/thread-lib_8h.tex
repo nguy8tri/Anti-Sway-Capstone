@@ -1,5 +1,5 @@
-\doxysection{src/thread-\/lib.h File Reference}
-\hypertarget{thread-lib_8h}{}\label{thread-lib_8h}\index{src/thread-\/lib.h@{src/thread-\/lib.h}}
+\doxysection{C\+:/\+Users/tring/\+Pycharm\+Projects/\+Capstone-\/\+Stuff/src/thread-\/lib.h File Reference}
+\hypertarget{thread-lib_8h}{}\label{thread-lib_8h}\index{C:/Users/tring/PycharmProjects/Capstone-\/Stuff/src/thread-\/lib.h@{C:/Users/tring/PycharmProjects/Capstone-\/Stuff/src/thread-\/lib.h}}
 
 
 Thread Library.  
@@ -63,15 +63,15 @@ struct \mbox{\hyperlink{struct_thread_resource}{Thread\+Resource}}
 \Hypertarget{thread-lib_8h_a4da22cb76511008562d997c7a7dcb6fd}\label{thread-lib_8h_a4da22cb76511008562d997c7a7dcb6fd} 
 \#define {\bfseries m\+\_\+p}~0.\+765
 \begin{DoxyCompactList}\small\item\em Mass of User (kg) \end{DoxyCompactList}\item 
-\#define \mbox{\hyperlink{thread-lib_8h_a026d08b407bd5430893a2f27602adc27}{START\+\_\+\+THREAD}}(thread,  function,  resource)
+\#define \mbox{\hyperlink{thread-lib_8h_a026d08b407bd5430893a2f27602adc27}{START\+\_\+\+THREAD}}(thread,  function,  \mbox{\hyperlink{idle_8c_abf4dd7d4f72545e3a4c3791318b9e3ac}{resource}})
 \begin{DoxyCompactList}\small\item\em Starts a thread. \end{DoxyCompactList}\item 
-\#define \mbox{\hyperlink{thread-lib_8h_a455689a1d61abe5203ec65135fd4b1d1}{REGISTER\+\_\+\+TIMER}}(resource)~    Irq\+\_\+\+Register\+Timer\+Irq(\&timer, \&(resource.\+irq\+\_\+context), \mbox{\hyperlink{thread-lib_8h_a9d6aa042ff9ec9b9024e2f0a53dade7a}{BTI\+\_\+\+US}})
+\#define \mbox{\hyperlink{thread-lib_8h_a455689a1d61abe5203ec65135fd4b1d1}{REGISTER\+\_\+\+TIMER}}(\mbox{\hyperlink{idle_8c_abf4dd7d4f72545e3a4c3791318b9e3ac}{resource}})~    Irq\+\_\+\+Register\+Timer\+Irq(\&\mbox{\hyperlink{io_8c_a9f1418121fc86d07cde0d1f423806266}{timer}}, \&(resource.\+irq\+\_\+context), \mbox{\hyperlink{thread-lib_8h_a9d6aa042ff9ec9b9024e2f0a53dade7a}{BTI\+\_\+\+US}})
 \begin{DoxyCompactList}\small\item\em Registers the global timer with a thread. \end{DoxyCompactList}\item 
-\#define \mbox{\hyperlink{thread-lib_8h_a01a443ae9ae39278e1b359175835e97a}{STOP\+\_\+\+THREAD}}(thread,  resource)
+\#define \mbox{\hyperlink{thread-lib_8h_a01a443ae9ae39278e1b359175835e97a}{STOP\+\_\+\+THREAD}}(thread,  \mbox{\hyperlink{idle_8c_abf4dd7d4f72545e3a4c3791318b9e3ac}{resource}})
 \begin{DoxyCompactList}\small\item\em Stops a thread in this process. \end{DoxyCompactList}\item 
-\#define \mbox{\hyperlink{thread-lib_8h_ab532ccf23cd85b5a9fc21025170a1f41}{UNREGISTER\+\_\+\+TIMER}}(resource)~    Irq\+\_\+\+Unregister\+Timer\+Irq(\&timer, resource.\+irq\+\_\+context)
+\#define \mbox{\hyperlink{thread-lib_8h_ab532ccf23cd85b5a9fc21025170a1f41}{UNREGISTER\+\_\+\+TIMER}}(\mbox{\hyperlink{idle_8c_abf4dd7d4f72545e3a4c3791318b9e3ac}{resource}})~    Irq\+\_\+\+Unregister\+Timer\+Irq(\&\mbox{\hyperlink{io_8c_a9f1418121fc86d07cde0d1f423806266}{timer}}, resource.\+irq\+\_\+context)
 \begin{DoxyCompactList}\small\item\em Unregisters the global timer with a thread. \end{DoxyCompactList}\item 
-\#define \mbox{\hyperlink{thread-lib_8h_a3940d08fbf3244247a60d85ef69a8d13}{TIMER\+\_\+\+TRIGGER}}(irq\+\_\+assert,  resource)
+\#define \mbox{\hyperlink{thread-lib_8h_a3940d08fbf3244247a60d85ef69a8d13}{TIMER\+\_\+\+TRIGGER}}(irq\+\_\+assert,  \mbox{\hyperlink{idle_8c_abf4dd7d4f72545e3a4c3791318b9e3ac}{resource}})
 \item 
 \#define \mbox{\hyperlink{thread-lib_8h_aa9e9f7c7d6b9a52c5b8835ff43504033}{EXIT\+\_\+\+THREAD}}()
 \end{DoxyCompactItemize}
@@ -80,7 +80,7 @@ struct \mbox{\hyperlink{struct_thread_resource}{Thread\+Resource}}
 \item 
 \Hypertarget{thread-lib_8h_a185bfa2d35885a0f891c399e2b5399db}\label{thread-lib_8h_a185bfa2d35885a0f891c399e2b5399db} 
 Ni\+Fpga\+\_\+\+Session {\bfseries myrio\+\_\+session}
-\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em The My\+Rio Session. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \doxysubsection{Detailed Description}
@@ -122,7 +122,7 @@ The thread associated with the function that calls this is now gone.
 \index{REGISTER\_TIMER@{REGISTER\_TIMER}!thread-\/lib.h@{thread-\/lib.h}}
 \doxysubsubsection{\texorpdfstring{REGISTER\_TIMER}{REGISTER\_TIMER}}
 {\footnotesize\ttfamily \label{thread-lib_8h_a455689a1d61abe5203ec65135fd4b1d1} 
-\#define REGISTER\+\_\+\+TIMER(\begin{DoxyParamCaption}\item[{}]{resource}{}\end{DoxyParamCaption})~    Irq\+\_\+\+Register\+Timer\+Irq(\&timer, \&(resource.\+irq\+\_\+context), \mbox{\hyperlink{thread-lib_8h_a9d6aa042ff9ec9b9024e2f0a53dade7a}{BTI\+\_\+\+US}})}
+\#define REGISTER\+\_\+\+TIMER(\begin{DoxyParamCaption}\item[{}]{\mbox{\hyperlink{idle_8c_abf4dd7d4f72545e3a4c3791318b9e3ac}{resource}}}{}\end{DoxyParamCaption})~    Irq\+\_\+\+Register\+Timer\+Irq(\&\mbox{\hyperlink{io_8c_a9f1418121fc86d07cde0d1f423806266}{timer}}, \&(resource.\+irq\+\_\+context), \mbox{\hyperlink{thread-lib_8h_a9d6aa042ff9ec9b9024e2f0a53dade7a}{BTI\+\_\+\+US}})}
 
 
 
@@ -145,12 +145,12 @@ The thread associated with resource is now associated with the global timer
 \index{START\_THREAD@{START\_THREAD}!thread-\/lib.h@{thread-\/lib.h}}
 \doxysubsubsection{\texorpdfstring{START\_THREAD}{START\_THREAD}}
 {\footnotesize\ttfamily \label{thread-lib_8h_a026d08b407bd5430893a2f27602adc27} 
-\#define START\+\_\+\+THREAD(\begin{DoxyParamCaption}\item[{}]{thread}{, }\item[{}]{function}{, }\item[{}]{resource}{}\end{DoxyParamCaption})}
+\#define START\+\_\+\+THREAD(\begin{DoxyParamCaption}\item[{}]{thread}{, }\item[{}]{function}{, }\item[{}]{\mbox{\hyperlink{idle_8c_abf4dd7d4f72545e3a4c3791318b9e3ac}{resource}}}{}\end{DoxyParamCaption})}
 
 {\bfseries Value\+:}
 \begin{DoxyCode}{0}
-\DoxyCodeLine{\ \ \ \ resource.\mbox{\hyperlink{struct_thread_resource_aa6eb541244f3ca12576b29ccbab9f641}{irq\_thread\_rdy}}\ =\ \textcolor{keyword}{true};\ \(\backslash\)}
-\DoxyCodeLine{\ \ \ \ VERIFY(\mbox{\hyperlink{anti-sway_8c_a11614f44ef4d939bdd984953346a7572}{error}},\ pthread\_create(\&thread,\ NULL,\ function,\ \&resource))}
+\DoxyCodeLine{\ \ \ \ \mbox{\hyperlink{idle_8c_abf4dd7d4f72545e3a4c3791318b9e3ac}{resource}}.\mbox{\hyperlink{struct_thread_resource_aa6eb541244f3ca12576b29ccbab9f641}{irq\_thread\_rdy}}\ =\ \textcolor{keyword}{true};\ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ VERIFY(\mbox{\hyperlink{anti-sway_8c_a11614f44ef4d939bdd984953346a7572}{error}},\ pthread\_create(\&thread,\ NULL,\ function,\ \&\mbox{\hyperlink{idle_8c_abf4dd7d4f72545e3a4c3791318b9e3ac}{resource}}))}
 
 \end{DoxyCode}
 
@@ -183,11 +183,11 @@ EXIT\+\_\+\+FAILURE upon failure to initialize the thread
 \index{STOP\_THREAD@{STOP\_THREAD}!thread-\/lib.h@{thread-\/lib.h}}
 \doxysubsubsection{\texorpdfstring{STOP\_THREAD}{STOP\_THREAD}}
 {\footnotesize\ttfamily \label{thread-lib_8h_a01a443ae9ae39278e1b359175835e97a} 
-\#define STOP\+\_\+\+THREAD(\begin{DoxyParamCaption}\item[{}]{thread}{, }\item[{}]{resource}{}\end{DoxyParamCaption})}
+\#define STOP\+\_\+\+THREAD(\begin{DoxyParamCaption}\item[{}]{thread}{, }\item[{}]{\mbox{\hyperlink{idle_8c_abf4dd7d4f72545e3a4c3791318b9e3ac}{resource}}}{}\end{DoxyParamCaption})}
 
 {\bfseries Value\+:}
 \begin{DoxyCode}{0}
-\DoxyCodeLine{\ \ \ \ resource.\mbox{\hyperlink{struct_thread_resource_aa6eb541244f3ca12576b29ccbab9f641}{irq\_thread\_rdy}}\ =\ \textcolor{keyword}{false};\ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \mbox{\hyperlink{idle_8c_abf4dd7d4f72545e3a4c3791318b9e3ac}{resource}}.\mbox{\hyperlink{struct_thread_resource_aa6eb541244f3ca12576b29ccbab9f641}{irq\_thread\_rdy}}\ =\ \textcolor{keyword}{false};\ \(\backslash\)}
 \DoxyCodeLine{\ \ \ \ VERIFY(\mbox{\hyperlink{anti-sway_8c_a11614f44ef4d939bdd984953346a7572}{error}},\ pthread\_join(thread,\ NULL))}
 
 \end{DoxyCode}
@@ -217,16 +217,16 @@ The thread associated with pthread\+\_\+t is now done
 \index{TIMER\_TRIGGER@{TIMER\_TRIGGER}!thread-\/lib.h@{thread-\/lib.h}}
 \doxysubsubsection{\texorpdfstring{TIMER\_TRIGGER}{TIMER\_TRIGGER}}
 {\footnotesize\ttfamily \label{thread-lib_8h_a3940d08fbf3244247a60d85ef69a8d13} 
-\#define TIMER\+\_\+\+TRIGGER(\begin{DoxyParamCaption}\item[{}]{irq\+\_\+assert}{, }\item[{}]{resource}{}\end{DoxyParamCaption})}
+\#define TIMER\+\_\+\+TRIGGER(\begin{DoxyParamCaption}\item[{}]{irq\+\_\+assert}{, }\item[{}]{\mbox{\hyperlink{idle_8c_abf4dd7d4f72545e3a4c3791318b9e3ac}{resource}}}{}\end{DoxyParamCaption})}
 
 {\bfseries Value\+:}
 \begin{DoxyCode}{0}
-\DoxyCodeLine{\ \ \ \ Irq\_Wait(resource-\/>irq\_context,\ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ Irq\_Wait(\mbox{\hyperlink{idle_8c_abf4dd7d4f72545e3a4c3791318b9e3ac}{resource}}-\/>\mbox{\hyperlink{struct_thread_resource_a50b4ce453921f503ee83bba007c556ac}{irq\_context}},\ \(\backslash\)}
 \DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ TIMERIRQNO,\ \(\backslash\)}
 \DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \&irq\_assert,\ \(\backslash\)}
-\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ (NiFpga\_Bool\ *)\ \&(resource-\/>\mbox{\hyperlink{struct_thread_resource_aa6eb541244f3ca12576b29ccbab9f641}{irq\_thread\_rdy}}));\ \(\backslash\)}
-\DoxyCodeLine{\ \ \ \ NiFpga\_WriteU32(myrio\_session,\ IRQTIMERWRITE,\ \mbox{\hyperlink{thread-lib_8h_a9d6aa042ff9ec9b9024e2f0a53dade7a}{BTI\_US}});\ \(\backslash\)}
-\DoxyCodeLine{\ \ \ \ NiFpga\_WriteBool(myrio\_session,\ IRQTIMERSETTIME,\ NiFpga\_True)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ (NiFpga\_Bool\ *)\ \&(\mbox{\hyperlink{idle_8c_abf4dd7d4f72545e3a4c3791318b9e3ac}{resource}}-\/>\mbox{\hyperlink{struct_thread_resource_aa6eb541244f3ca12576b29ccbab9f641}{irq\_thread\_rdy}}));\ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ NiFpga\_WriteU32(\mbox{\hyperlink{thread-lib_8h_a185bfa2d35885a0f891c399e2b5399db}{myrio\_session}},\ IRQTIMERWRITE,\ \mbox{\hyperlink{thread-lib_8h_a9d6aa042ff9ec9b9024e2f0a53dade7a}{BTI\_US}});\ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ NiFpga\_WriteBool(\mbox{\hyperlink{thread-lib_8h_a185bfa2d35885a0f891c399e2b5399db}{myrio\_session}},\ IRQTIMERSETTIME,\ NiFpga\_True)}
 
 \end{DoxyCode}
 Waits for a timer trigger (at the appropriate time step)
@@ -247,7 +247,7 @@ The timer will trigger after waiting for the standard time step (BTI\+\_\+\+S/\+
 \index{UNREGISTER\_TIMER@{UNREGISTER\_TIMER}!thread-\/lib.h@{thread-\/lib.h}}
 \doxysubsubsection{\texorpdfstring{UNREGISTER\_TIMER}{UNREGISTER\_TIMER}}
 {\footnotesize\ttfamily \label{thread-lib_8h_ab532ccf23cd85b5a9fc21025170a1f41} 
-\#define UNREGISTER\+\_\+\+TIMER(\begin{DoxyParamCaption}\item[{}]{resource}{}\end{DoxyParamCaption})~    Irq\+\_\+\+Unregister\+Timer\+Irq(\&timer, resource.\+irq\+\_\+context)}
+\#define UNREGISTER\+\_\+\+TIMER(\begin{DoxyParamCaption}\item[{}]{\mbox{\hyperlink{idle_8c_abf4dd7d4f72545e3a4c3791318b9e3ac}{resource}}}{}\end{DoxyParamCaption})~    Irq\+\_\+\+Unregister\+Timer\+Irq(\&\mbox{\hyperlink{io_8c_a9f1418121fc86d07cde0d1f423806266}{timer}}, resource.\+irq\+\_\+context)}
 
 
 

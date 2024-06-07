@@ -16,7 +16,18 @@
 
 /* Error Macro (for setup/shutdown) */
 
-
+/**
+ * @brief Verifies that a statement is true
+ * 
+ * @param code An integer varibale to hold the value
+ * of statement
+ * @param statement The statement to verify
+ * 
+ * @return false if statement is false
+ * 
+ * @post If a return is not executed, then
+ * code is now 0
+ */
 #define VERIFY(code, statement) \
 	if ((code = statement)) return code
 

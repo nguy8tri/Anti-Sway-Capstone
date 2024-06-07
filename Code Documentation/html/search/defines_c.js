@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['zero_5fgrad_0',['ZERO_GRAD',['../anti-sway_8c.html#aeba75176272663471e400c1c816a8cfd',1,'anti-sway.c']]]
+  ['r_0',['R',['../io_8h.html#a5c71a5e59a53413cd6c270266d63b031',1,'io.h']]],
+  ['register_5ftimer_1',['REGISTER_TIMER',['../thread-lib_8h.html#a455689a1d61abe5203ec65135fd4b1d1',1,'thread-lib.h']]]
 ];

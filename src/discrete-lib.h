@@ -15,8 +15,13 @@
 
 #include <float.h>
 
+
 /* Non-saturation constants */
+
+
+/// Positive Infinity
 #define POS_INF DBL_MAX
+/// Negative Infinity
 #define NEG_INF (-DBL_MAX)
 
 
@@ -60,9 +65,9 @@ typedef float Proportional;
  * A struct representing an integrator
 */
 typedef struct {
-    Proportional gain;   //! Integral Gain (with Timestep)
-    double prev_input;   //! Previous input
-    double prev_output;  //! Previous output
+    Proportional gain;   //!< Integral Gain (with Timestep)
+    double prev_input;   //!< Previous input
+    double prev_output;  //!< Previous output
 } Integrator;
 
 /**
@@ -71,9 +76,9 @@ typedef struct {
  * A struct representing a derivative term
 */
 typedef struct {
-    Proportional gain;   //! Differential Gain (with Timestep)
-    double prev_input;   //! Previous input
-    double prev_output;  //! Previous output
+    Proportional gain;   //!< Differential Gain (with Timestep)
+    double prev_input;   //!< Previous input
+    double prev_output;  //!< Previous output
 } Differentiator;
 
 

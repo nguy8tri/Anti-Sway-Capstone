@@ -13,7 +13,7 @@
 #ifndef RECORD_H_
 #define RECORD_H_
 
-// A File
+/// A File
 typedef int FileID_t;
 
 /**

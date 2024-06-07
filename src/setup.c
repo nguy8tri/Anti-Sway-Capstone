@@ -22,14 +22,14 @@
 #include "setup.h"
 
 
-// Local error flag
+/// Local error flag
 static int error;
 
 
 /* Declaration of universal error code */
 
 
-// Universal error code (extern)
+/// Universal error code (extern)
 int u_error;
 
 int Setup() {

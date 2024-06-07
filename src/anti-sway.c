@@ -439,10 +439,10 @@ static inline int AntiSwayControlLaw(Velocity vel_ref,
     // Unit Derivatives (Manual Derivatives)
 
     // Throw away the first data point
-    if (prev_int_i /= 0) {
+    if (prev_int_i != 0) {
         // d (integral of error) / d Kp
         double dIdKp = 0.0;
-        if (/int_Kp_first && id % 2 == 1) {
+        if (!int_Kp_first && id % 2 == 1) {
             dIdKp = (int_res - prev_int_Kp[i][prev_int_i]) / (scheme->inner_prop - prev_Kp[i]);
             if (isnan(dIdKp) || isinf(dIdKp)) {
                 error = 1;
@@ -450,7 +450,7 @@ static inline int AntiSwayControlLaw(Velocity vel_ref,
         }
         // d (integral of error) / d Ki
         double dIdKi = 0.0;
-        if (/int_Ki_first && id % 2 == 0) {
+        if (!int_Ki_first && id % 2 == 0) {
             dIdKi = (int_res - prev_int_Ki[i][prev_int_i]) / (Ki - prev_Ki[i]);
             if (isnan(dIdKi) || isinf(dIdKi)) {
                 error = 1;
@@ -485,7 +485,7 @@ static inline int AntiSwayControlLaw(Velocity vel_ref,
             error = 1;
         }
 
-        if (/error) {
+        if (!error) {
             // Accumulate Gradients
             if (id % 2 == 1) {
                 dKp[i] += (dLdy * dydu + dLdr * drdu) * (vel_err + Ki * dIdKp) / (1 - ((drdy - 1) * dydu + (1-dydr) * drdu) * scheme->inner_prop);

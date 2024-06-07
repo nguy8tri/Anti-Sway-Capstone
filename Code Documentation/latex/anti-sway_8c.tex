@@ -1,5 +1,5 @@
-\doxysection{src/anti-\/sway.c File Reference}
-\hypertarget{anti-sway_8c}{}\label{anti-sway_8c}\index{src/anti-\/sway.c@{src/anti-\/sway.c}}
+\doxysection{C\+:/\+Users/tring/\+Pycharm\+Projects/\+Capstone-\/\+Stuff/src/anti-\/sway.c File Reference}
+\hypertarget{anti-sway_8c}{}\label{anti-sway_8c}\index{C:/Users/tring/PycharmProjects/Capstone-\/Stuff/src/anti-\/sway.c@{C:/Users/tring/PycharmProjects/Capstone-\/Stuff/src/anti-\/sway.c}}
 
 
 Anti-\/\+Sway Control Law Implementation.  
@@ -53,9 +53,9 @@ struct \mbox{\hyperlink{struct_anti_sway_control_scheme}{Anti\+Sway\+Control\+Sc
 \item 
 static void \mbox{\hyperlink{anti-sway_8c_ab0def74dd8e01a69299e90de3d908ffb}{Setup\+Scheme}} (\mbox{\hyperlink{struct_anti_sway_control_scheme}{Anti\+Sway\+Control\+Scheme}} \texorpdfstring{$\ast$}{*}scheme, \mbox{\hyperlink{discrete-lib_8h_a843b842e5066711775adbb4283ab7123}{Proportional}} K\+\_\+p, \mbox{\hyperlink{discrete-lib_8h_a843b842e5066711775adbb4283ab7123}{Proportional}} K\+\_\+i, \mbox{\hyperlink{discrete-lib_8h_a843b842e5066711775adbb4283ab7123}{Proportional}} m)
 \begin{DoxyCompactList}\small\item\em Sets up the Anti-\/\+Sway Control Law (its feedback path) \end{DoxyCompactList}\item 
-static void \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{anti-sway_8c_aec2761f3b6d968de754480d114fd4579}{Anti\+Sway\+Mode\+Thread}} (void \texorpdfstring{$\ast$}{*}resource)
+static void \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{anti-sway_8c_aec2761f3b6d968de754480d114fd4579}{Anti\+Sway\+Mode\+Thread}} (void \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{idle_8c_abf4dd7d4f72545e3a4c3791318b9e3ac}{resource}})
 \begin{DoxyCompactList}\small\item\em Runs Anti-\/\+Sway. \end{DoxyCompactList}\item 
-static int \mbox{\hyperlink{anti-sway_8c_a37ac767cc33745df6f7e52ff6a6435d1}{Anti\+Sway\+Control\+Law}} (Velocity vel\+\_\+ref, Angle angle\+\_\+input, Velocity vel\+\_\+input, \mbox{\hyperlink{struct_anti_sway_control_scheme}{Anti\+Sway\+Control\+Scheme}} \texorpdfstring{$\ast$}{*}scheme, int(\texorpdfstring{$\ast$}{*}Set\+Voltage)(Voltage voltage))
+static int \mbox{\hyperlink{anti-sway_8c_a37ac767cc33745df6f7e52ff6a6435d1}{Anti\+Sway\+Control\+Law}} (\mbox{\hyperlink{io_8h_ab015b8f073ee615009ddacac0c05f30c}{Velocity}} vel\+\_\+ref, \mbox{\hyperlink{io_8h_ae149c304d2490d5120c530e2c9fdee4c}{Angle}} angle\+\_\+input, \mbox{\hyperlink{io_8h_ab015b8f073ee615009ddacac0c05f30c}{Velocity}} vel\+\_\+input, \mbox{\hyperlink{struct_anti_sway_control_scheme}{Anti\+Sway\+Control\+Scheme}} \texorpdfstring{$\ast$}{*}scheme, int(\texorpdfstring{$\ast$}{*}Set\+Voltage)(\mbox{\hyperlink{io_8h_a5d747de9f4b7109a3d8682f7d29186ca}{Voltage}} voltage))
 \begin{DoxyCompactList}\small\item\em Executes an iteration of the feedback path for Anti-\/\+Sway. \end{DoxyCompactList}\item 
 int \mbox{\hyperlink{anti-sway_8c_a05c2150260a69c98187405d22b9f9dc6}{Anti\+Sway\+Fork}} ()
 \begin{DoxyCompactList}\small\item\em Executes Anti-\/\+Sway Mode. \end{DoxyCompactList}\item 
@@ -92,7 +92,7 @@ static \mbox{\hyperlink{struct_anti_sway_control_scheme}{Anti\+Sway\+Control\+Sc
 static int {\bfseries error}
 \begin{DoxyCompactList}\small\item\em Local Error Code. \end{DoxyCompactList}\item 
 \Hypertarget{anti-sway_8c_a5a1f155d95d058a0efeac0f5e1e29e51}\label{anti-sway_8c_a5a1f155d95d058a0efeac0f5e1e29e51} 
-static File\+ID\+\_\+t {\bfseries file} = -\/1
+static \mbox{\hyperlink{record_8h_a86b411a8a4d101c5c9dc4bd192093cd4}{File\+ID\+\_\+t}} {\bfseries file} = -\/1
 \begin{DoxyCompactList}\small\item\em The file ID. \end{DoxyCompactList}\item 
 \Hypertarget{anti-sway_8c_a619bd77e030a7a2f68d4cc7a13bdcbf5}\label{anti-sway_8c_a619bd77e030a7a2f68d4cc7a13bdcbf5} 
 static char \texorpdfstring{$\ast$}{*} {\bfseries data\+\_\+file\+\_\+name} = "{}anti-\/sway.\+mat"{}
@@ -112,7 +112,7 @@ static int {\bfseries id} = 1
 static double {\bfseries t} = 0.\+0
 \begin{DoxyCompactList}\small\item\em timestamp \end{DoxyCompactList}\item 
 \Hypertarget{anti-sway_8c_a088726f01b6d19b7b3277f41af31e1ce}\label{anti-sway_8c_a088726f01b6d19b7b3277f41af31e1ce} 
-static File\+ID\+\_\+t {\bfseries tuning\+\_\+file} = -\/1
+static \mbox{\hyperlink{record_8h_a86b411a8a4d101c5c9dc4bd192093cd4}{File\+ID\+\_\+t}} {\bfseries tuning\+\_\+file} = -\/1
 \begin{DoxyCompactList}\small\item\em The tuning file. \end{DoxyCompactList}\item 
 \Hypertarget{anti-sway_8c_a93c18326690653eb01302bbab60c8e8a}\label{anti-sway_8c_a93c18326690653eb01302bbab60c8e8a} 
 static char \texorpdfstring{$\ast$}{*} {\bfseries tuning\+\_\+file\+\_\+name} = "{}anti-\/sway-\/tuning.\+mat"{}
@@ -191,7 +191,7 @@ Zeros out d\+Kp and d\+Ki
 \index{AntiSwayControlLaw@{AntiSwayControlLaw}!anti-\/sway.c@{anti-\/sway.c}}
 \doxysubsubsection{\texorpdfstring{AntiSwayControlLaw()}{AntiSwayControlLaw()}}
 {\footnotesize\ttfamily \label{anti-sway_8c_a37ac767cc33745df6f7e52ff6a6435d1} 
-static int Anti\+Sway\+Control\+Law (\begin{DoxyParamCaption}\item[{Velocity}]{vel\+\_\+ref}{, }\item[{Angle}]{angle\+\_\+input}{, }\item[{Velocity}]{vel\+\_\+input}{, }\item[{\mbox{\hyperlink{struct_anti_sway_control_scheme}{Anti\+Sway\+Control\+Scheme}} \texorpdfstring{$\ast$}{*}}]{scheme}{, }\item[{int(\texorpdfstring{$\ast$}{*}}]{Set\+Voltage~}{)(Voltage voltage)}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+static int Anti\+Sway\+Control\+Law (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{io_8h_ab015b8f073ee615009ddacac0c05f30c}{Velocity}}}]{vel\+\_\+ref}{, }\item[{\mbox{\hyperlink{io_8h_ae149c304d2490d5120c530e2c9fdee4c}{Angle}}}]{angle\+\_\+input}{, }\item[{\mbox{\hyperlink{io_8h_ab015b8f073ee615009ddacac0c05f30c}{Velocity}}}]{vel\+\_\+input}{, }\item[{\mbox{\hyperlink{struct_anti_sway_control_scheme}{Anti\+Sway\+Control\+Scheme}} \texorpdfstring{$\ast$}{*}}]{scheme}{, }\item[{int(\texorpdfstring{$\ast$}{*}}]{Set\+Voltage~}{)(\mbox{\hyperlink{io_8h_a5d747de9f4b7109a3d8682f7d29186ca}{Voltage}} voltage)}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
 
 
 

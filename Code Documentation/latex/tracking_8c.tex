@@ -1,5 +1,5 @@
-\doxysection{src/tracking.c File Reference}
-\hypertarget{tracking_8c}{}\label{tracking_8c}\index{src/tracking.c@{src/tracking.c}}
+\doxysection{C\+:/\+Users/tring/\+Pycharm\+Projects/\+Capstone-\/\+Stuff/src/tracking.c File Reference}
+\hypertarget{tracking_8c}{}\label{tracking_8c}\index{C:/Users/tring/PycharmProjects/Capstone-\/Stuff/src/tracking.c@{C:/Users/tring/PycharmProjects/Capstone-\/Stuff/src/tracking.c}}
 
 
 Tracking Mode Control Law.  
@@ -32,33 +32,24 @@ struct \mbox{\hyperlink{struct_tracking_control_scheme}{Tracking\+Control\+Schem
 \item 
 \Hypertarget{tracking_8c_a69c83bef9231e4ba0a0e10b42bcafd20}\label{tracking_8c_a69c83bef9231e4ba0a0e10b42bcafd20} 
 \#define {\bfseries NOMINAL\+\_\+\+REFERENCE\+\_\+\+ANGLE}~0.\+0
-\item 
+\begin{DoxyCompactList}\small\item\em Reference Angle (rad) \end{DoxyCompactList}\item 
 \Hypertarget{tracking_8c_aabd779802d5816bc27f860fdb5144182}\label{tracking_8c_aabd779802d5816bc27f860fdb5144182} 
 \#define {\bfseries T\+\_\+s}~0.\+1
-\item 
+\begin{DoxyCompactList}\small\item\em The settling time (0.\+1 s) \end{DoxyCompactList}\item 
 \Hypertarget{tracking_8c_a49a038072f9cee822a67cbaada9b770e}\label{tracking_8c_a49a038072f9cee822a67cbaada9b770e} 
 \#define {\bfseries os}~0.\+05
-\item 
-\Hypertarget{tracking_8c_a932443f2ffea76469eaafbe4ad7c2e12}\label{tracking_8c_a932443f2ffea76469eaafbe4ad7c2e12} 
-\#define {\bfseries K\+\_\+pi}~1.\+0
-\item 
-\Hypertarget{tracking_8c_a4c258935d9952d72fd24bcce92c178e1}\label{tracking_8c_a4c258935d9952d72fd24bcce92c178e1} 
-\#define {\bfseries K\+\_\+po}~-\/2619.\+5
-\item 
-\Hypertarget{tracking_8c_aacd55bd5f09b9a0321218f0f9ca4e8c4}\label{tracking_8c_aacd55bd5f09b9a0321218f0f9ca4e8c4} 
-\#define {\bfseries B\+\_\+t}~(8 \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{thread-lib_8h_a4da22cb76511008562d997c7a7dcb6fd}{m\+\_\+p}} / T\+\_\+s)
-\item 
+\begin{DoxyCompactList}\small\item\em The overshoot fraction (5\%) \end{DoxyCompactList}\item 
 \Hypertarget{tracking_8c_af02e45f15080b8ec9dd7b286157617ff}\label{tracking_8c_af02e45f15080b8ec9dd7b286157617ff} 
 \#define {\bfseries DATA\+\_\+\+LEN}~12
-\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em The number of entries. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsubsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
 static void \mbox{\hyperlink{tracking_8c_a6534b293c80ffafaaa77d8144c9dc1ac}{Setup\+Scheme}} (\mbox{\hyperlink{struct_tracking_control_scheme}{Tracking\+Control\+Scheme}} \texorpdfstring{$\ast$}{*}scheme, \mbox{\hyperlink{discrete-lib_8h_a843b842e5066711775adbb4283ab7123}{Proportional}} K\+\_\+o, \mbox{\hyperlink{discrete-lib_8h_a843b842e5066711775adbb4283ab7123}{Proportional}} K\+\_\+i, \mbox{\hyperlink{discrete-lib_8h_a843b842e5066711775adbb4283ab7123}{Proportional}} B)
 \item 
-static void \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{tracking_8c_a3100ac6cbe8f7a8ad044a9f52c9bb1d4}{Tracking\+Mode\+Thread}} (void \texorpdfstring{$\ast$}{*}resource)
+static void \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{tracking_8c_a3100ac6cbe8f7a8ad044a9f52c9bb1d4}{Tracking\+Mode\+Thread}} (void \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{idle_8c_abf4dd7d4f72545e3a4c3791318b9e3ac}{resource}})
 \item 
-static int \mbox{\hyperlink{tracking_8c_aa55145b60d7d18f523619a2f0c4537a2}{Tracking\+Control\+Law}} (Angle angle\+\_\+ref, Angle angle\+\_\+input, Velocity pos\+\_\+vel, \mbox{\hyperlink{struct_tracking_control_scheme}{Tracking\+Control\+Scheme}} \texorpdfstring{$\ast$}{*}scheme, int(\texorpdfstring{$\ast$}{*}Set\+Voltage)(Voltage voltage))
+static int \mbox{\hyperlink{tracking_8c_aa55145b60d7d18f523619a2f0c4537a2}{Tracking\+Control\+Law}} (\mbox{\hyperlink{io_8h_ae149c304d2490d5120c530e2c9fdee4c}{Angle}} angle\+\_\+ref, \mbox{\hyperlink{io_8h_ae149c304d2490d5120c530e2c9fdee4c}{Angle}} angle\+\_\+input, \mbox{\hyperlink{io_8h_ab015b8f073ee615009ddacac0c05f30c}{Velocity}} pos\+\_\+vel, \mbox{\hyperlink{struct_tracking_control_scheme}{Tracking\+Control\+Scheme}} \texorpdfstring{$\ast$}{*}scheme, int(\texorpdfstring{$\ast$}{*}Set\+Voltage)(\mbox{\hyperlink{io_8h_a5d747de9f4b7109a3d8682f7d29186ca}{Voltage}} voltage))
 \item 
 int \mbox{\hyperlink{tracking_8c_a5b32344d5c07f1e78c46cca875e7af86}{Tracking\+Fork}} ()
 \item 
@@ -69,36 +60,36 @@ int \mbox{\hyperlink{tracking_8c_a227acfbc56ccc8b4ef7715ce3634bd82}{Tracking\+Jo
 \item 
 \Hypertarget{tracking_8c_aca333e2112ef85b8da7c5c58461240c2}\label{tracking_8c_aca333e2112ef85b8da7c5c58461240c2} 
 pthread\+\_\+t {\bfseries tracking\+\_\+thread}
-\item 
+\begin{DoxyCompactList}\small\item\em Thread ID. \end{DoxyCompactList}\item 
 \Hypertarget{tracking_8c_abf4dd7d4f72545e3a4c3791318b9e3ac}\label{tracking_8c_abf4dd7d4f72545e3a4c3791318b9e3ac} 
 \mbox{\hyperlink{struct_thread_resource}{Thread\+Resource}} {\bfseries resource}
-\item 
+\begin{DoxyCompactList}\small\item\em Thread Resources (Shared Resources) \end{DoxyCompactList}\item 
 \Hypertarget{tracking_8c_a0e13767f4b9a8dd851c33d9d703a38af}\label{tracking_8c_a0e13767f4b9a8dd851c33d9d703a38af} 
 static \mbox{\hyperlink{struct_tracking_control_scheme}{Tracking\+Control\+Scheme}} {\bfseries x\+\_\+control}
-\item 
+\begin{DoxyCompactList}\small\item\em The Control Scheme for the X Motor. \end{DoxyCompactList}\item 
 \Hypertarget{tracking_8c_a628e5f5cf586791772b139df67caeb19}\label{tracking_8c_a628e5f5cf586791772b139df67caeb19} 
 static \mbox{\hyperlink{struct_tracking_control_scheme}{Tracking\+Control\+Scheme}} {\bfseries y\+\_\+control}
-\item 
+\begin{DoxyCompactList}\small\item\em The Control Scheme for the Y Motor. \end{DoxyCompactList}\item 
 \Hypertarget{tracking_8c_a11614f44ef4d939bdd984953346a7572}\label{tracking_8c_a11614f44ef4d939bdd984953346a7572} 
 static int {\bfseries error}
-\item 
+\begin{DoxyCompactList}\small\item\em Local Error Flag. \end{DoxyCompactList}\item 
 \Hypertarget{tracking_8c_a5a1f155d95d058a0efeac0f5e1e29e51}\label{tracking_8c_a5a1f155d95d058a0efeac0f5e1e29e51} 
-static File\+ID\+\_\+t {\bfseries file} = -\/1
-\item 
+static \mbox{\hyperlink{record_8h_a86b411a8a4d101c5c9dc4bd192093cd4}{File\+ID\+\_\+t}} {\bfseries file} = -\/1
+\begin{DoxyCompactList}\small\item\em The file ID. \end{DoxyCompactList}\item 
 \Hypertarget{tracking_8c_a619bd77e030a7a2f68d4cc7a13bdcbf5}\label{tracking_8c_a619bd77e030a7a2f68d4cc7a13bdcbf5} 
 static char \texorpdfstring{$\ast$}{*} {\bfseries data\+\_\+file\+\_\+name} = "{}tracking.\+mat"{}
-\item 
+\begin{DoxyCompactList}\small\item\em The file Name. \end{DoxyCompactList}\item 
 static char \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{tracking_8c_a3df6c268eb9de3b584cd89f9058f30f6}{data\+\_\+names}} \mbox{[}\mbox{\hyperlink{anti-sway_8c_af02e45f15080b8ec9dd7b286157617ff}{DATA\+\_\+\+LEN}}\mbox{]}
-\item 
+\begin{DoxyCompactList}\small\item\em The data names. \end{DoxyCompactList}\item 
 \Hypertarget{tracking_8c_a7b4664587f00f51bc74963d9c3591790}\label{tracking_8c_a7b4664587f00f51bc74963d9c3591790} 
 static double {\bfseries data} \mbox{[}\mbox{\hyperlink{anti-sway_8c_af02e45f15080b8ec9dd7b286157617ff}{DATA\+\_\+\+LEN}}\mbox{]}
-\item 
+\begin{DoxyCompactList}\small\item\em Buffer for data. \end{DoxyCompactList}\item 
 \Hypertarget{tracking_8c_a053a521868d16e054ab23866422b4003}\label{tracking_8c_a053a521868d16e054ab23866422b4003} 
 static double \texorpdfstring{$\ast$}{*} {\bfseries data\+\_\+buff} = \mbox{\hyperlink{anti-sway_8c_a7b4664587f00f51bc74963d9c3591790}{data}}
-\item 
+\begin{DoxyCompactList}\small\item\em Pointer to next data point to insert into buffer. \end{DoxyCompactList}\item 
 \Hypertarget{tracking_8c_a7441ef0865bcb3db9b8064dd7375c1ea}\label{tracking_8c_a7441ef0865bcb3db9b8064dd7375c1ea} 
 static int {\bfseries id} = 1
-\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em ID variable. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \doxysubsection{Detailed Description}
@@ -145,7 +136,7 @@ scheme is setup with appropriate outer/inner-\/loop control characteristics
 \index{TrackingControlLaw@{TrackingControlLaw}!tracking.c@{tracking.c}}
 \doxysubsubsection{\texorpdfstring{TrackingControlLaw()}{TrackingControlLaw()}}
 {\footnotesize\ttfamily \label{tracking_8c_aa55145b60d7d18f523619a2f0c4537a2} 
-static int Tracking\+Control\+Law (\begin{DoxyParamCaption}\item[{Angle}]{angle\+\_\+ref}{, }\item[{Angle}]{angle\+\_\+input}{, }\item[{Velocity}]{pos\+\_\+vel}{, }\item[{\mbox{\hyperlink{struct_tracking_control_scheme}{Tracking\+Control\+Scheme}} \texorpdfstring{$\ast$}{*}}]{scheme}{, }\item[{int(\texorpdfstring{$\ast$}{*}}]{Set\+Voltage~}{)(Voltage voltage)}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+static int Tracking\+Control\+Law (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{io_8h_ae149c304d2490d5120c530e2c9fdee4c}{Angle}}}]{angle\+\_\+ref}{, }\item[{\mbox{\hyperlink{io_8h_ae149c304d2490d5120c530e2c9fdee4c}{Angle}}}]{angle\+\_\+input}{, }\item[{\mbox{\hyperlink{io_8h_ab015b8f073ee615009ddacac0c05f30c}{Velocity}}}]{pos\+\_\+vel}{, }\item[{\mbox{\hyperlink{struct_tracking_control_scheme}{Tracking\+Control\+Scheme}} \texorpdfstring{$\ast$}{*}}]{scheme}{, }\item[{int(\texorpdfstring{$\ast$}{*}}]{Set\+Voltage~}{)(\mbox{\hyperlink{io_8h_a5d747de9f4b7109a3d8682f7d29186ca}{Voltage}} voltage)}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
 
 Executes 1 timestep for the Tracking Mode Control Law for its input to the plant
 
@@ -252,3 +243,7 @@ char\texorpdfstring{$\ast$}{*} data\+\_\+names\mbox{[}\mbox{\hyperlink{anti-sway
 \DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}inner\_y"{}},\ \textcolor{stringliteral}{"{}voltage\_y"{}}\}}
 
 \end{DoxyCode}
+
+
+The data names. 
+

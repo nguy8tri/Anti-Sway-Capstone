@@ -1,6 +1,4 @@
 var searchData=
 [
-  ['timer_5ftrigger_0',['TIMER_TRIGGER',['../thread-lib_8h.html#a3940d08fbf3244247a60d85ef69a8d13',1,'thread-lib.h']]],
-  ['tuning_1',['TUNING',['../anti-sway_8c.html#a554771ab4ad2f967a420dfc1200c61d0',1,'anti-sway.c']]],
-  ['tuning_5fdata_5flen_2',['TUNING_DATA_LEN',['../anti-sway_8c.html#a1b8aa22390dcf54cefa6ed1f50ef2929',1,'anti-sway.c']]]
+  ['os_0',['os',['../tracking_8c.html#a49a038072f9cee822a67cbaada9b770e',1,'tracking.c']]]
 ];

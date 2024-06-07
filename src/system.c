@@ -113,7 +113,7 @@ typedef enum {
 
 /* State Variables*/
 
-// State Functions
+/// State Functions
 static int (* states[])() = {AntiSwayState,
                               TrackingState,
                               IdleState,
@@ -121,11 +121,14 @@ static int (* states[])() = {AntiSwayState,
                               ErrorState,
                               StartState,
                               EndState};
-// Current State
+/// Current State
 static States state = START;
 
 
 /* Error Handling */
+
+
+/// Local Error Code
 static int error;
 
 
@@ -145,7 +148,6 @@ int SystemExec() {
 }
 
 static int AntiSwayState() {
-    // TODO(nguy8tri): other code for tracking, error, and stop transitions
     if (u_error) {
         AntiSwayJoin();
         state = ERROR;
@@ -157,7 +159,6 @@ static int AntiSwayState() {
 }
 
 static int TrackingState() {
-    // TODO(nguy8tri): other code for anti-sway, error, and stop transitions
     if (u_error) {
         TrackingJoin();
         state = ERROR;
@@ -169,7 +170,6 @@ static int TrackingState() {
 }
 
 static int IdleState() {
-    // TODO(nguy8tri): other code for tracking, anti-sway, and stop transitions
     if (u_error) {
         IdleJoin();
         state = ERROR;
@@ -216,7 +216,6 @@ static int MenuState() {
 }
 
 static int ErrorState() {
-    // TODO(nguy8tri): Determine the error that happened and print it
     SetXVoltage(0.0);
     SetYVoltage(0.0);
     if (u_error == ENKWN) {
@@ -256,14 +255,12 @@ static int ErrorState() {
 }
 
 static int StartState() {
-    // TODO(nguy8tri): Print out the beginning message
     VERIFY(error, Setup());
     state = MENU;
     return EXIT_SUCCESS;
 }
 
 static int EndState() {
-    // TODO(nguy8tri): Print out a stopping message
     VERIFY(error, Shutdown());
     return EXIT_SUCCESS;
 }

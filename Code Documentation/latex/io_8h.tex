@@ -1,5 +1,5 @@
-\doxysection{src/io.h File Reference}
-\hypertarget{io_8h}{}\label{io_8h}\index{src/io.h@{src/io.h}}
+\doxysection{C\+:/\+Users/tring/\+Pycharm\+Projects/\+Capstone-\/\+Stuff/src/io.h File Reference}
+\hypertarget{io_8h}{}\label{io_8h}\index{C:/Users/tring/PycharmProjects/Capstone-\/Stuff/src/io.h@{C:/Users/tring/PycharmProjects/Capstone-\/Stuff/src/io.h}}
 
 
 Sensor/\+Actuator (Input/\+Output) Interfacing Library Header.  
@@ -11,7 +11,7 @@ Include dependency graph for io.\+h\+:\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
-\includegraphics[width=218pt]{io_8h__incl}
+\includegraphics[width=234pt]{io_8h__incl}
 \end{center}
 \end{figure}
 This graph shows which files directly or indirectly include this file\+:\nopagebreak
@@ -35,39 +35,38 @@ struct \mbox{\hyperlink{struct_velocities}{Velocities}}
 \item 
 \Hypertarget{io_8h_a25d4020685fadb5a82f521eab3a649d8}\label{io_8h_a25d4020685fadb5a82f521eab3a649d8} 
 \#define {\bfseries MOTOR\+\_\+\+V\+\_\+\+LIM\+\_\+H}~10.\+000
-\item 
+\begin{DoxyCompactList}\small\item\em Motor Voltage High Limit (V) \end{DoxyCompactList}\item 
 \Hypertarget{io_8h_afad73f43bfda705238ac4372862a8d2b}\label{io_8h_afad73f43bfda705238ac4372862a8d2b} 
 \#define {\bfseries MOTOR\+\_\+\+V\+\_\+\+LIM\+\_\+L}~-\/10.\+000
-\item 
+\begin{DoxyCompactList}\small\item\em Motor Voltage Low Limit (V) \end{DoxyCompactList}\item 
 \Hypertarget{io_8h_a5c71a5e59a53413cd6c270266d63b031}\label{io_8h_a5c71a5e59a53413cd6c270266d63b031} 
 \#define {\bfseries R}~0.\+0062
-\item 
+\begin{DoxyCompactList}\small\item\em Pulley Radius (m) \end{DoxyCompactList}\item 
 \Hypertarget{io_8h_aad5f2ea0575772b7ace5d2330a427157}\label{io_8h_aad5f2ea0575772b7ace5d2330a427157} 
 \#define {\bfseries K\+\_\+a}~0.\+41
-\item 
+\begin{DoxyCompactList}\small\item\em Current Constant (A/V) \end{DoxyCompactList}\item 
 \Hypertarget{io_8h_a47d134ef80e82dff263950784c667183}\label{io_8h_a47d134ef80e82dff263950784c667183} 
 \#define {\bfseries K\+\_\+m}~0.\+11
-\item 
-\#define \mbox{\hyperlink{io_8h_a99dfa3108d9e93b87ba00e233ab2ea71}{FORCE\+\_\+\+TO\+\_\+\+VOLTAGE}}(force)~    (force) \texorpdfstring{$\ast$}{*} R / (K\+\_\+a \texorpdfstring{$\ast$}{*} K\+\_\+m)
-\item 
-\Hypertarget{io_8h_adb14aa5743f7d00d563c7d461dfe21da}\label{io_8h_adb14aa5743f7d00d563c7d461dfe21da} 
-\#define {\bfseries VOLTAGE\+\_\+\+TO\+\_\+\+FORCE}(voltage)~ (voltage) \texorpdfstring{$\ast$}{*} (K\+\_\+a \texorpdfstring{$\ast$}{*} K\+\_\+m) / R
-\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Motor Constant (Nm/A) \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{io_8h_a99dfa3108d9e93b87ba00e233ab2ea71}{FORCE\+\_\+\+TO\+\_\+\+VOLTAGE}}(force)~    (force) \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{io_8h_a5c71a5e59a53413cd6c270266d63b031}{R}} / (\mbox{\hyperlink{io_8h_aad5f2ea0575772b7ace5d2330a427157}{K\+\_\+a}} \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{io_8h_a47d134ef80e82dff263950784c667183}{K\+\_\+m}})
+\begin{DoxyCompactList}\small\item\em Force to Voltage Conversion. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{io_8h_adb14aa5743f7d00d563c7d461dfe21da}{VOLTAGE\+\_\+\+TO\+\_\+\+FORCE}}(voltage)~ (voltage) \texorpdfstring{$\ast$}{*} (\mbox{\hyperlink{io_8h_aad5f2ea0575772b7ace5d2330a427157}{K\+\_\+a}} \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{io_8h_a47d134ef80e82dff263950784c667183}{K\+\_\+m}}) / \mbox{\hyperlink{io_8h_a5c71a5e59a53413cd6c270266d63b031}{R}}
+\begin{DoxyCompactList}\small\item\em Voltage to Force Conversion. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsubsection*{Typedefs}
 \begin{DoxyCompactItemize}
 \item 
 \Hypertarget{io_8h_ae149c304d2490d5120c530e2c9fdee4c}\label{io_8h_ae149c304d2490d5120c530e2c9fdee4c} 
 typedef float {\bfseries Angle}
-\item 
+\begin{DoxyCompactList}\small\item\em Alias for an Angle. \end{DoxyCompactList}\item 
 \Hypertarget{io_8h_a56fac1137951484b5ad04db4d6d1e53c}\label{io_8h_a56fac1137951484b5ad04db4d6d1e53c} 
 typedef float {\bfseries Position}
-\item 
+\begin{DoxyCompactList}\small\item\em Alias for a Position. \end{DoxyCompactList}\item 
 \Hypertarget{io_8h_ab015b8f073ee615009ddacac0c05f30c}\label{io_8h_ab015b8f073ee615009ddacac0c05f30c} 
 typedef float {\bfseries Velocity}
-\item 
+\begin{DoxyCompactList}\small\item\em Alias for Velocity. \end{DoxyCompactList}\item 
 \Hypertarget{io_8h_a5d747de9f4b7109a3d8682f7d29186ca}\label{io_8h_a5d747de9f4b7109a3d8682f7d29186ca} 
 typedef float {\bfseries Voltage}
-\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Alias for Voltage. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsubsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
@@ -91,9 +90,9 @@ int \mbox{\hyperlink{io_8h_adcb3dcf93416a844bdbfe3a11c81881a}{Get\+User\+Positio
 \item 
 int \mbox{\hyperlink{io_8h_ab31e062d140eefdddbfdd5de1dc6f595}{Get\+User\+Velocity}} (\mbox{\hyperlink{struct_angles}{Angles}} \texorpdfstring{$\ast$}{*}angle, \mbox{\hyperlink{struct_velocities}{Velocities}} \texorpdfstring{$\ast$}{*}vel, \mbox{\hyperlink{struct_velocities}{Velocities}} \texorpdfstring{$\ast$}{*}result)
 \item 
-int \mbox{\hyperlink{io_8h_a2a45f6fcd9f479d915d4e8cb8e618bc0}{Set\+XVoltage}} (Voltage voltage)
+int \mbox{\hyperlink{io_8h_a2a45f6fcd9f479d915d4e8cb8e618bc0}{Set\+XVoltage}} (\mbox{\hyperlink{io_8h_a5d747de9f4b7109a3d8682f7d29186ca}{Voltage}} voltage)
 \item 
-int \mbox{\hyperlink{io_8h_a4418209a1dac1a4333d5edbb84120cfa}{Set\+YVoltage}} (Voltage voltage)
+int \mbox{\hyperlink{io_8h_a4418209a1dac1a4333d5edbb84120cfa}{Set\+YVoltage}} (\mbox{\hyperlink{io_8h_a5d747de9f4b7109a3d8682f7d29186ca}{Voltage}} voltage)
 \item 
 bool \mbox{\hyperlink{io_8h_a78356349ecab59eb0251d1f05b16c38b}{Pressed\+Delete}} ()
 \item 
@@ -104,9 +103,8 @@ int \mbox{\hyperlink{io_8h_a53e2f9e259a7f87f482dd7bb7a30b461}{Keyboard\+Control\
 \doxysubsubsection*{Variables}
 \begin{DoxyCompactItemize}
 \item 
-\Hypertarget{io_8h_a9f1418121fc86d07cde0d1f423806266}\label{io_8h_a9f1418121fc86d07cde0d1f423806266} 
-My\+Rio\+\_\+\+Irq\+Timer {\bfseries timer}
-\end{DoxyCompactItemize}
+My\+Rio\+\_\+\+Irq\+Timer \mbox{\hyperlink{io_8h_a9f1418121fc86d07cde0d1f423806266}{timer}}
+\begin{DoxyCompactList}\small\item\em The Timer. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \doxysubsection{Detailed Description}
@@ -131,17 +129,37 @@ Copyright (c) 2024
 \index{FORCE\_TO\_VOLTAGE@{FORCE\_TO\_VOLTAGE}!io.h@{io.h}}
 \doxysubsubsection{\texorpdfstring{FORCE\_TO\_VOLTAGE}{FORCE\_TO\_VOLTAGE}}
 {\footnotesize\ttfamily \label{io_8h_a99dfa3108d9e93b87ba00e233ab2ea71} 
-\#define FORCE\+\_\+\+TO\+\_\+\+VOLTAGE(\begin{DoxyParamCaption}\item[{}]{force}{}\end{DoxyParamCaption})~    (force) \texorpdfstring{$\ast$}{*} R / (K\+\_\+a \texorpdfstring{$\ast$}{*} K\+\_\+m)}
+\#define FORCE\+\_\+\+TO\+\_\+\+VOLTAGE(\begin{DoxyParamCaption}\item[{}]{force}{}\end{DoxyParamCaption})~    (force) \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{io_8h_a5c71a5e59a53413cd6c270266d63b031}{R}} / (\mbox{\hyperlink{io_8h_aad5f2ea0575772b7ace5d2330a427157}{K\+\_\+a}} \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{io_8h_a47d134ef80e82dff263950784c667183}{K\+\_\+m}})}
 
-Force to Voltage Conversion
+
+
+Force to Voltage Conversion. 
 
 
 \begin{DoxyParams}{Parameters}
-{\em force} & An int/float/double expression, which represents the force to transmit\\
+{\em force} & An int/float/double expression, which represents the force to transmit (through the motor)\\
 \hline
 \end{DoxyParams}
 \begin{DoxyPostcond}{Postcondition}
 Becomes the conversion between force to the voltage to output 
+\end{DoxyPostcond}
+\Hypertarget{io_8h_adb14aa5743f7d00d563c7d461dfe21da}\index{io.h@{io.h}!VOLTAGE\_TO\_FORCE@{VOLTAGE\_TO\_FORCE}}
+\index{VOLTAGE\_TO\_FORCE@{VOLTAGE\_TO\_FORCE}!io.h@{io.h}}
+\doxysubsubsection{\texorpdfstring{VOLTAGE\_TO\_FORCE}{VOLTAGE\_TO\_FORCE}}
+{\footnotesize\ttfamily \label{io_8h_adb14aa5743f7d00d563c7d461dfe21da} 
+\#define VOLTAGE\+\_\+\+TO\+\_\+\+FORCE(\begin{DoxyParamCaption}\item[{}]{voltage}{}\end{DoxyParamCaption})~ (voltage) \texorpdfstring{$\ast$}{*} (\mbox{\hyperlink{io_8h_aad5f2ea0575772b7ace5d2330a427157}{K\+\_\+a}} \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{io_8h_a47d134ef80e82dff263950784c667183}{K\+\_\+m}}) / \mbox{\hyperlink{io_8h_a5c71a5e59a53413cd6c270266d63b031}{R}}}
+
+
+
+Voltage to Force Conversion. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em voltage} & An int/float/double expression, which represents the voltage to transmit (through the motor)\\
+\hline
+\end{DoxyParams}
+\begin{DoxyPostcond}{Postcondition}
+Converts voltage into a force 
 \end{DoxyPostcond}
 
 
@@ -207,7 +225,7 @@ Obtains the user command (for anti-\/sway)
 
 A \doxylink{struct_velocities}{Velocities} structure, which reflects the change in position requested from the user 
 \end{DoxyReturn}
-\Hypertarget{io_8h_ae63c00627326f08d2a4622a84d1e747a}\index{io.h@{io.h}!GetTrolleyPosition@{GetTrolleyPosition}}
+Setup discrete velocity commands, -\/1, 0, and 1\Hypertarget{io_8h_ae63c00627326f08d2a4622a84d1e747a}\index{io.h@{io.h}!GetTrolleyPosition@{GetTrolleyPosition}}
 \index{GetTrolleyPosition@{GetTrolleyPosition}!io.h@{io.h}}
 \doxysubsubsection{\texorpdfstring{GetTrolleyPosition()}{GetTrolleyPosition()}}
 {\footnotesize\ttfamily \label{io_8h_ae63c00627326f08d2a4622a84d1e747a} 
@@ -325,6 +343,31 @@ Sets up the System-\/\+Sensor/\+Actuator Interface
 \begin{DoxyReturn}{Returns}
 0 upon success, negative otherwise 
 \end{DoxyReturn}
+Setup Timer
+
+Setup Encoders Channels
+
+Setup Potentiometer Voltage Channels (are swapped)
+
+Setup Motor Channels
+
+Setup Keyboard Channels \& Resources
+
+Setup Reset flag
+
+Calibration Message
+
+Set Reference \doxylink{struct_positions}{Positions}
+
+Setup the holding
+
+Calibrate voltage intercepts for potentiometerHere is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=282pt]{io_8h_a7b088d617c531995213dd9440eaf4b27_cgraph}
+\end{center}
+\end{figure}
 \Hypertarget{io_8h_a77ff867027690d0264ec77033686b105}\index{io.h@{io.h}!IOShutdown@{IOShutdown}}
 \index{IOShutdown@{IOShutdown}!io.h@{io.h}}
 \doxysubsubsection{\texorpdfstring{IOShutdown()}{IOShutdown()}}
@@ -336,7 +379,13 @@ Shutsdown the System-\/\+Sensor/\+Actuator Interface
 \begin{DoxyReturn}{Returns}
 0 upon success, negative otherwise 
 \end{DoxyReturn}
-\Hypertarget{io_8h_aab3c612e787d3b07cbce09a8bc496aa0}\index{io.h@{io.h}!KeyboardControlFork@{KeyboardControlFork}}
+Dissasociate with Encoders
+
+Dissasociate with Potentiometers
+
+Disassociate with Motor
+
+Destroy Keyboard Lock\Hypertarget{io_8h_aab3c612e787d3b07cbce09a8bc496aa0}\index{io.h@{io.h}!KeyboardControlFork@{KeyboardControlFork}}
 \index{KeyboardControlFork@{KeyboardControlFork}!io.h@{io.h}}
 \doxysubsubsection{\texorpdfstring{KeyboardControlFork()}{KeyboardControlFork()}}
 {\footnotesize\ttfamily \label{io_8h_aab3c612e787d3b07cbce09a8bc496aa0} 
@@ -350,7 +399,7 @@ If its already running, does nothing
 \begin{DoxyReturn}{Returns}
 0 upon success, negative if error 
 \end{DoxyReturn}
-Here is the call graph for this function\+:\nopagebreak
+Begin Keyboard ThreadHere is the call graph for this function\+:\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -368,7 +417,7 @@ Stops Keyboard Control for Anti-\/\+Sway (concurrent process)
 \begin{DoxyReturn}{Returns}
 0 upon success, negative if error 
 \end{DoxyReturn}
-\Hypertarget{io_8h_a78356349ecab59eb0251d1f05b16c38b}\index{io.h@{io.h}!PressedDelete@{PressedDelete}}
+Destroy Keymap Thread\Hypertarget{io_8h_a78356349ecab59eb0251d1f05b16c38b}\index{io.h@{io.h}!PressedDelete@{PressedDelete}}
 \index{PressedDelete@{PressedDelete}!io.h@{io.h}}
 \doxysubsubsection{\texorpdfstring{PressedDelete()}{PressedDelete()}}
 {\footnotesize\ttfamily \label{io_8h_a78356349ecab59eb0251d1f05b16c38b} 
@@ -394,7 +443,7 @@ The next time Get\+Trolley\+Velocity is called, both velocities are zero
 \index{SetXVoltage@{SetXVoltage}!io.h@{io.h}}
 \doxysubsubsection{\texorpdfstring{SetXVoltage()}{SetXVoltage()}}
 {\footnotesize\ttfamily \label{io_8h_a2a45f6fcd9f479d915d4e8cb8e618bc0} 
-int Set\+XVoltage (\begin{DoxyParamCaption}\item[{Voltage}]{voltage}{}\end{DoxyParamCaption})}
+int Set\+XVoltage (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{io_8h_a5d747de9f4b7109a3d8682f7d29186ca}{Voltage}}}]{voltage}{}\end{DoxyParamCaption})}
 
 Sets the voltage of the X motor
 
@@ -405,10 +454,24 @@ Sets the voltage of the X motor
 \index{SetYVoltage@{SetYVoltage}!io.h@{io.h}}
 \doxysubsubsection{\texorpdfstring{SetYVoltage()}{SetYVoltage()}}
 {\footnotesize\ttfamily \label{io_8h_a4418209a1dac1a4333d5edbb84120cfa} 
-int Set\+YVoltage (\begin{DoxyParamCaption}\item[{Voltage}]{voltage}{}\end{DoxyParamCaption})}
+int Set\+YVoltage (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{io_8h_a5d747de9f4b7109a3d8682f7d29186ca}{Voltage}}}]{voltage}{}\end{DoxyParamCaption})}
 
 Sets the voltage of the Y motor
 
 \begin{DoxyReturn}{Returns}
 0 upon success, other integers if otherwise 
 \end{DoxyReturn}
+
+
+\doxysubsection{Variable Documentation}
+\Hypertarget{io_8h_a9f1418121fc86d07cde0d1f423806266}\index{io.h@{io.h}!timer@{timer}}
+\index{timer@{timer}!io.h@{io.h}}
+\doxysubsubsection{\texorpdfstring{timer}{timer}}
+{\footnotesize\ttfamily \label{io_8h_a9f1418121fc86d07cde0d1f423806266} 
+My\+Rio\+\_\+\+Irq\+Timer timer\hspace{0.3cm}{\ttfamily [extern]}}
+
+
+
+The Timer. 
+
+The Timer. 

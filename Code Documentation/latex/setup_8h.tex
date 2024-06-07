@@ -1,5 +1,5 @@
-\doxysection{src/setup.h File Reference}
-\hypertarget{setup_8h}{}\label{setup_8h}\index{src/setup.h@{src/setup.h}}
+\doxysection{C\+:/\+Users/tring/\+Pycharm\+Projects/\+Capstone-\/\+Stuff/src/setup.h File Reference}
+\hypertarget{setup_8h}{}\label{setup_8h}\index{C:/Users/tring/PycharmProjects/Capstone-\/Stuff/src/setup.h@{C:/Users/tring/PycharmProjects/Capstone-\/Stuff/src/setup.h}}
 
 
 System Setup Header.  
@@ -15,9 +15,8 @@ This graph shows which files directly or indirectly include this file\+:\nopageb
 \doxysubsubsection*{Macros}
 \begin{DoxyCompactItemize}
 \item 
-\Hypertarget{setup_8h_a8176c171675cc3b400eb81519b33d736}\label{setup_8h_a8176c171675cc3b400eb81519b33d736} 
-\#define {\bfseries VERIFY}(code,  statement)~ if ((code = statement)) return code
-\end{DoxyCompactItemize}
+\#define \mbox{\hyperlink{setup_8h_a8176c171675cc3b400eb81519b33d736}{VERIFY}}(code,  statement)~ if ((code = statement)) return code
+\begin{DoxyCompactList}\small\item\em Verifies that a statement is true. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsubsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
@@ -44,6 +43,32 @@ Copyright (c) 2024
 \end{DoxyCopyright}
 
 
+\doxysubsection{Macro Definition Documentation}
+\Hypertarget{setup_8h_a8176c171675cc3b400eb81519b33d736}\index{setup.h@{setup.h}!VERIFY@{VERIFY}}
+\index{VERIFY@{VERIFY}!setup.h@{setup.h}}
+\doxysubsubsection{\texorpdfstring{VERIFY}{VERIFY}}
+{\footnotesize\ttfamily \label{setup_8h_a8176c171675cc3b400eb81519b33d736} 
+\#define VERIFY(\begin{DoxyParamCaption}\item[{}]{code}{, }\item[{}]{statement}{}\end{DoxyParamCaption})~ if ((code = statement)) return code}
+
+
+
+Verifies that a statement is true. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em code} & An integer varibale to hold the value of statement \\
+\hline
+{\em statement} & The statement to verify\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+false if statement is false
+\end{DoxyReturn}
+\begin{DoxyPostcond}{Postcondition}
+If a return is not executed, then code is now 0 
+\end{DoxyPostcond}
+
+
 \doxysubsection{Function Documentation}
 \Hypertarget{setup_8h_a50ac2197010a8cf188eafc647122f1a3}\index{setup.h@{setup.h}!Setup@{Setup}}
 \index{Setup@{Setup}!setup.h@{setup.h}}
@@ -60,7 +85,7 @@ Here is the call graph for this function\+:\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
-\includegraphics[width=209pt]{setup_8h_a50ac2197010a8cf188eafc647122f1a3_cgraph}
+\includegraphics[width=350pt]{setup_8h_a50ac2197010a8cf188eafc647122f1a3_cgraph}
 \end{center}
 \end{figure}
 \Hypertarget{setup_8h_ad8f28fefdab9c8f60c69dec040dfa363}\index{setup.h@{setup.h}!Shutdown@{Shutdown}}

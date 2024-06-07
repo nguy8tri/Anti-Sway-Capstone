@@ -28,9 +28,9 @@
 /* Thread Number & Resources */
 
 
-// Thread ID
+/// Thread ID
 pthread_t tracking_thread;
-// Thread Resources (Shared Resources)
+/// Thread Resources (Shared Resources)
 ThreadResource resource;
 
 
@@ -43,9 +43,9 @@ ThreadResource resource;
  * Represents the Inner and Outer Loop Elements
 */
 typedef struct {
-    //! Combined Outer-Loop Constant
+    ///! Combined Outer-Loop Constant
     Proportional combined_constants;
-    //! Artifical Damping (Inner Loop Feedback Gain)
+    ///! Artifical Damping (Inner Loop Feedback Gain)
     Proportional damping;
 } TrackingControlScheme;
 
@@ -53,44 +53,44 @@ typedef struct {
 /* Control-Loop Variables */
 
 
-// Reference Angle (rad)
+/// Reference Angle (rad)
 #define NOMINAL_REFERENCE_ANGLE 0.0
-// The Control Scheme for the X Motor
+/// The Control Scheme for the X Motor
 static TrackingControlScheme x_control;
-// The Control Scheme for the Y Motor
+/// The Control Scheme for the Y Motor
 static TrackingControlScheme y_control;
 
-// The settling time (0.1 s)
+/// The settling time (0.1 s)
 #define T_s 0.1
-// The overshoot fraction (5%)
+/// The overshoot fraction (5%)
 #define os 0.05
 
 
-// Local Error Flag
+/// Local Error Flag
 static int error;
 
 
 /* Data Recording Structures */
 
 
-// The file ID
+/// The file ID
 static FileID_t file = -1;
-// The file Name
+/// The file Name
 static char *data_file_name = "tracking.mat";
-// The number of entries
+/// The number of entries
 #define DATA_LEN 12
-// The data names
+/// The data names
 static char *data_names[DATA_LEN] = {"id", "t",
                                      "angle_x", "angle_y",
                                      "trolley_pos_x", "trolley_pos_y",
                                      "trolley_vel_x", "trolley_vel_y",
                                      "inner_x", "voltage_x",
                                      "inner_y", "voltage_y"};
-// Buffer for data
+/// Buffer for data
 static double data[DATA_LEN];
-// Pointer to next data point to insert into buffer
+/// Pointer to next data point to insert into buffer
 static double *data_buff = data;
-// ID variable
+/// ID variable
 static int id = 1;
 
 /**

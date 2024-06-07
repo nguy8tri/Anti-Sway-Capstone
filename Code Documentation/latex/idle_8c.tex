@@ -1,5 +1,5 @@
-\doxysection{src/idle.c File Reference}
-\hypertarget{idle_8c}{}\label{idle_8c}\index{src/idle.c@{src/idle.c}}
+\doxysection{C\+:/\+Users/tring/\+Pycharm\+Projects/\+Capstone-\/\+Stuff/src/idle.c File Reference}
+\hypertarget{idle_8c}{}\label{idle_8c}\index{C:/Users/tring/PycharmProjects/Capstone-\/Stuff/src/idle.c@{C:/Users/tring/PycharmProjects/Capstone-\/Stuff/src/idle.c}}
 
 
 Idle Mode Implementation.  
@@ -34,8 +34,8 @@ Include dependency graph for idle.\+c\+:\nopagebreak
 \doxysubsubsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
-static void \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{idle_8c_a5e05a5fb119e55f4d0b643d63b573812}{Idle\+Mode\+Thread}} (void \texorpdfstring{$\ast$}{*}resource)
-\item 
+static void \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{idle_8c_a5e05a5fb119e55f4d0b643d63b573812}{Idle\+Mode\+Thread}} (void \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{idle_8c_abf4dd7d4f72545e3a4c3791318b9e3ac}{resource}})
+\begin{DoxyCompactList}\small\item\em Idle Mode Thread Function. \end{DoxyCompactList}\item 
 int \mbox{\hyperlink{idle_8c_a59c3993b84f9015712777e355ac71129}{Idle\+Fork}} ()
 \item 
 int \mbox{\hyperlink{idle_8c_aa09de38e1e81e28a0ec7c6a4f982b165}{Idle\+Join}} ()
@@ -45,13 +45,13 @@ int \mbox{\hyperlink{idle_8c_aa09de38e1e81e28a0ec7c6a4f982b165}{Idle\+Join}} ()
 \item 
 \Hypertarget{idle_8c_a2a29cea2cce22171afec6fae8b1512fe}\label{idle_8c_a2a29cea2cce22171afec6fae8b1512fe} 
 pthread\+\_\+t {\bfseries idle\+\_\+thread}
-\item 
+\begin{DoxyCompactList}\small\item\em Thread ID. \end{DoxyCompactList}\item 
 \Hypertarget{idle_8c_abf4dd7d4f72545e3a4c3791318b9e3ac}\label{idle_8c_abf4dd7d4f72545e3a4c3791318b9e3ac} 
 \mbox{\hyperlink{struct_thread_resource}{Thread\+Resource}} {\bfseries resource}
-\item 
+\begin{DoxyCompactList}\small\item\em Thread Resources (Shared Resources) \end{DoxyCompactList}\item 
 \Hypertarget{idle_8c_a11614f44ef4d939bdd984953346a7572}\label{idle_8c_a11614f44ef4d939bdd984953346a7572} 
 static int {\bfseries error}
-\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Local Error Code. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \doxysubsection{Detailed Description}
@@ -110,6 +110,10 @@ Stops Idle Mode (concurrent process) and our pain
 {\footnotesize\ttfamily \label{idle_8c_a5e05a5fb119e55f4d0b643d63b573812} 
 static void \texorpdfstring{$\ast$}{*} Idle\+Mode\+Thread (\begin{DoxyParamCaption}\item[{void \texorpdfstring{$\ast$}{*}}]{resource}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
 
+
+
+Idle Mode Thread Function. 
+
 The Thread Function for Idle Mode
 
 
@@ -120,7 +124,9 @@ The Thread Function for Idle Mode
 \begin{DoxyReturn}{Returns}
 NULL 
 \end{DoxyReturn}
-Here is the call graph for this function\+:\nopagebreak
+How many decimal places to include
+
+Radians to Degrees Conversion FactorHere is the call graph for this function\+:\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode

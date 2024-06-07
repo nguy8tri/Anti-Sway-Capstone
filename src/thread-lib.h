@@ -34,8 +34,8 @@
  * Represents a resource for a thread
  */
 typedef struct {
-    NiFpga_IrqContext irq_context;  /// context
-    NiFpga_Bool irq_thread_rdy;  /// stop signal
+    NiFpga_IrqContext irq_context;  ///< context
+    NiFpga_Bool irq_thread_rdy;  ///< stop signal
 } ThreadResource;
 
 
@@ -67,7 +67,9 @@ typedef struct {
 #define m_p 0.765
 
 
-/*/ MyRio Session */
+/* MyRio Session */
+
+/// The MyRio Session
 extern NiFpga_Session myrio_session;
 
 
@@ -148,7 +150,7 @@ extern NiFpga_Session myrio_session;
  * time step (BTI_S/MS/US)
  * @post The timer will trigger after waiting for the standard time step (BTI_S/MS/US)
 */
-#define \
+#define TIMER_TRIGGER(irq_assert, resource) \
     Irq_Wait(resource->irq_context, \
              TIMERIRQNO, \
              &irq_assert, \

@@ -20,13 +20,13 @@
 
 /* Input/Output Data Types */
 
-// Alias for an Angle
+/// Alias for an Angle
 typedef float Angle;
-// Alias for a Position
+/// Alias for a Position
 typedef float Position;
-// Alias for Velocity
+/// Alias for Velocity
 typedef float Velocity;
-// Alias for Voltage
+/// Alias for Voltage
 typedef float Voltage;
 
 
@@ -37,9 +37,9 @@ typedef float Voltage;
  * along both directions, in radians
 */
 typedef struct {
-    //! Angle Parallel to X Direction
+    ///! Angle Parallel to X Direction
     Angle x_angle;
-    //! Angle Parallel to Y Direction
+    ///! Angle Parallel to Y Direction
     Angle y_angle;
 } Angles;
 
@@ -50,9 +50,9 @@ typedef struct {
  * in 2D space, in meters
 */
 typedef struct {
-    //! X Position
+    ///! X Position
     Position x_pos;
-    //! Y Position
+    ///! Y Position
     Position y_pos;
 } Positions;
 
@@ -63,41 +63,50 @@ typedef struct {
  * in 2D space, in meters/second
 */
 typedef struct {
-    //! X Velocity
+    ///! X Velocity
     Velocity x_vel;
-    //! Y Velocity
+    ///! Y Velocity
     Velocity y_vel;
 } Velocities;
 
 /* Sensor Variables */
-// The Timer
+/// The Timer
 extern MyRio_IrqTimer timer;
 
 /* Actuator Limits */
-// Motor Voltage High Limit (V)
+/// Motor Voltage High Limit (V)
 #define MOTOR_V_LIM_H 10.000
-// Motor Voltage Low Limit (V)
+/// Motor Voltage Low Limit (V)
 #define MOTOR_V_LIM_L -10.000
 
 /* Physical Parameters */
-// Pulley Radius (m)
+/// Pulley Radius (m)
 #define R 0.0062
-// Current Constant (A/V)
+/// Current Constant (A/V)
 #define K_a 0.41
-// Motor Constant (Nm/A)
+/// Motor Constant (Nm/A)
 #define K_m 0.11
 /**
- * Force to Voltage Conversion
+ * @brief Force to Voltage Conversion
  * 
  * @param force An int/float/double
  * expression, which represents the force
- * to transmit
+ * to transmit (through the motor)
  * 
  * @post Becomes the conversion between
  * force to the voltage to output
 */
 #define FORCE_TO_VOLTAGE(force) \
     (force) * R / (K_a * K_m)
+/**
+ * @brief Voltage to Force Conversion
+ * 
+ * @param voltage An int/float/double
+ * expression, which represents the voltage
+ * to transmit (through the motor)
+ * 
+ * @post Converts voltage into a force
+ */
 #define VOLTAGE_TO_FORCE(voltage) \
 	(voltage) * (K_a * K_m) / R
 
@@ -292,4 +301,4 @@ int KeyboardControlFork();
 */
 int KeyboardControlJoin();
 
-#endif  // IO_H_
+#endif  /// IO_H_

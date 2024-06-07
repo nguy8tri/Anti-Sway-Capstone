@@ -1,5 +1,5 @@
-\doxysection{src/io.c File Reference}
-\hypertarget{io_8c}{}\label{io_8c}\index{src/io.c@{src/io.c}}
+\doxysection{C\+:/\+Users/tring/\+Pycharm\+Projects/\+Capstone-\/\+Stuff/src/io.c File Reference}
+\hypertarget{io_8c}{}\label{io_8c}\index{C:/Users/tring/PycharmProjects/Capstone-\/Stuff/src/io.c@{C:/Users/tring/PycharmProjects/Capstone-\/Stuff/src/io.c}}
 
 
 Sensor/\+Actuator (Input/\+Output) Interfacing Library.  
@@ -31,52 +31,48 @@ Include dependency graph for io.\+c\+:\nopagebreak
 \item 
 \Hypertarget{io_8c_af09588c2529cc1e4cb7e619578b5d6bf}\label{io_8c_af09588c2529cc1e4cb7e619578b5d6bf} 
 \#define {\bfseries X\+\_\+\+CONNECTOR\+\_\+\+ID}~0
-\item 
+\begin{DoxyCompactList}\small\item\em X Motor Encoder Connector ID (on Connector C) \end{DoxyCompactList}\item 
 \Hypertarget{io_8c_a9eab2dec5febb27d36b0982b9e7c790e}\label{io_8c_a9eab2dec5febb27d36b0982b9e7c790e} 
 \#define {\bfseries Y\+\_\+\+CONNECTOR\+\_\+\+ID}~1
-\item 
-\Hypertarget{io_8c_aaf9ea920da209ac0e6bd8755dd80ca79}\label{io_8c_aaf9ea920da209ac0e6bd8755dd80ca79} 
-\#define {\bfseries POTENTIOMETER\+\_\+\+SLOPE}~-\/2.\+11 \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{thread-lib_8h_a598a3330b3c21701223ee0ca14316eca}{PI}} / 180.\+0
+\begin{DoxyCompactList}\small\item\em Y Motor Encoder Connector ID (on Connector C) \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{io_8c_aaf9ea920da209ac0e6bd8755dd80ca79}{POTENTIOMETER\+\_\+\+SLOPE}}~-\/2.\+11 \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{thread-lib_8h_a598a3330b3c21701223ee0ca14316eca}{PI}} / 180.\+0
 \item 
 \Hypertarget{io_8c_a89c5908d3d0cb8807d4d3d9e9ffc9e07}\label{io_8c_a89c5908d3d0cb8807d4d3d9e9ffc9e07} 
 \#define {\bfseries POT\+\_\+\+V\+\_\+\+LIM\+\_\+\+LO}~-\/20.\+0
-\item 
+\begin{DoxyCompactList}\small\item\em Lower Potentiometer Voltage Saturation Limit (V) \end{DoxyCompactList}\item 
 \Hypertarget{io_8c_a76d2c81595b56c4a13d9eb6ee610153a}\label{io_8c_a76d2c81595b56c4a13d9eb6ee610153a} 
 \#define {\bfseries POT\+\_\+\+V\+\_\+\+LIM\+\_\+\+HI}~20.\+0
+\begin{DoxyCompactList}\small\item\em Upper Potentiometer Voltage Saturation Limit (V) \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{io_8c_a525f350bbb0cf54f5c98bcf8a60cf26f}{ENC\+\_\+\+CNT\+\_\+\+REV}}~2000.\+0
 \item 
-\Hypertarget{io_8c_a525f350bbb0cf54f5c98bcf8a60cf26f}\label{io_8c_a525f350bbb0cf54f5c98bcf8a60cf26f} 
-\#define {\bfseries ENC\+\_\+\+CNT\+\_\+\+REV}~2000.\+0
+\#define \mbox{\hyperlink{io_8c_a8feb6e79e5a9bd651a99c5f3fec53540}{M\+\_\+\+PER\+\_\+\+REV}}~0.\+01267 \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{thread-lib_8h_a598a3330b3c21701223ee0ca14316eca}{PI}}
 \item 
-\Hypertarget{io_8c_a8feb6e79e5a9bd651a99c5f3fec53540}\label{io_8c_a8feb6e79e5a9bd651a99c5f3fec53540} 
-\#define {\bfseries M\+\_\+\+PER\+\_\+\+REV}~0.\+01267 \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{thread-lib_8h_a598a3330b3c21701223ee0ca14316eca}{PI}}
+\#define \mbox{\hyperlink{io_8c_a69f1d6fb79304fa6eecef75fe558d486}{ENC\+\_\+2\+\_\+\+POS}}(value)~    (value) / \mbox{\hyperlink{io_8c_a525f350bbb0cf54f5c98bcf8a60cf26f}{ENC\+\_\+\+CNT\+\_\+\+REV}} \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{io_8c_a8feb6e79e5a9bd651a99c5f3fec53540}{M\+\_\+\+PER\+\_\+\+REV}}
 \item 
-\#define \mbox{\hyperlink{io_8c_a69f1d6fb79304fa6eecef75fe558d486}{ENC\+\_\+2\+\_\+\+POS}}(value)~    (value) / ENC\+\_\+\+CNT\+\_\+\+REV \texorpdfstring{$\ast$}{*} M\+\_\+\+PER\+\_\+\+REV
-\item 
-\#define \mbox{\hyperlink{io_8c_a492059ce1225838aa3401dd22486d0f4}{ENC\+\_\+2\+\_\+\+VEL}}(value)~    (value) / (\mbox{\hyperlink{thread-lib_8h_a958eb6faa8e03be0253b87bfe9c99420}{BTI\+\_\+S}} \texorpdfstring{$\ast$}{*} ENC\+\_\+\+CNT\+\_\+\+REV) \texorpdfstring{$\ast$}{*} M\+\_\+\+PER\+\_\+\+REV
+\#define \mbox{\hyperlink{io_8c_a492059ce1225838aa3401dd22486d0f4}{ENC\+\_\+2\+\_\+\+VEL}}(value)~    (value) / (\mbox{\hyperlink{thread-lib_8h_a958eb6faa8e03be0253b87bfe9c99420}{BTI\+\_\+S}} \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{io_8c_a525f350bbb0cf54f5c98bcf8a60cf26f}{ENC\+\_\+\+CNT\+\_\+\+REV}}) \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{io_8c_a8feb6e79e5a9bd651a99c5f3fec53540}{M\+\_\+\+PER\+\_\+\+REV}}
 \item 
 \Hypertarget{io_8c_a378b5bda4f17f347a8844d0b5d7695ba}\label{io_8c_a378b5bda4f17f347a8844d0b5d7695ba} 
 \#define {\bfseries X\+\_\+\+LIM\+\_\+\+LO}~0.\+0
-\item 
+\begin{DoxyCompactList}\small\item\em Lower X Limit. \end{DoxyCompactList}\item 
 \Hypertarget{io_8c_a7a6af1933c05e91dfe33cbc70ec2e99a}\label{io_8c_a7a6af1933c05e91dfe33cbc70ec2e99a} 
 \#define {\bfseries Y\+\_\+\+LIM\+\_\+\+LO}~0.\+0
-\item 
+\begin{DoxyCompactList}\small\item\em Lower Y Limit. \end{DoxyCompactList}\item 
 \Hypertarget{io_8c_a6cc41b8886129ea061d062d130bcb499}\label{io_8c_a6cc41b8886129ea061d062d130bcb499} 
 \#define {\bfseries X\+\_\+\+LIM\+\_\+\+HI}~0.\+35
-\item 
+\begin{DoxyCompactList}\small\item\em Higher X Limit. \end{DoxyCompactList}\item 
 \Hypertarget{io_8c_a9492f810a6c49d5559e06ab2f13a70d2}\label{io_8c_a9492f810a6c49d5559e06ab2f13a70d2} 
 \#define {\bfseries Y\+\_\+\+LIM\+\_\+\+HI}~0.\+35
-\item 
+\begin{DoxyCompactList}\small\item\em Higher Y Limit. \end{DoxyCompactList}\item 
 \Hypertarget{io_8c_aa42d611dc388ebfc44705e441fbf5c03}\label{io_8c_aa42d611dc388ebfc44705e441fbf5c03} 
 \#define {\bfseries VEL\+\_\+\+LIM\+\_\+\+ABS}~1.\+0
-\item 
+\begin{DoxyCompactList}\small\item\em Absolute Velocity Limit. \end{DoxyCompactList}\item 
 \Hypertarget{io_8c_a19b7f1b22403d61234a92decaeb6953a}\label{io_8c_a19b7f1b22403d61234a92decaeb6953a} 
 \#define {\bfseries CHANNELS}~16
-\item 
+\begin{DoxyCompactList}\small\item\em Number of Channels. \end{DoxyCompactList}\item 
 \Hypertarget{io_8c_acc5e90a5a36a38127e6abdf26a275296}\label{io_8c_acc5e90a5a36a38127e6abdf26a275296} 
 \#define {\bfseries LCD\+\_\+\+KEYPAD\+\_\+\+LEN}~4
-\item 
-\Hypertarget{io_8c_a723779b23a9d156cb373a38ae2f6dcc8}\label{io_8c_a723779b23a9d156cb373a38ae2f6dcc8} 
-\#define {\bfseries UNIT\+\_\+\+VEL}~0.\+15
+\begin{DoxyCompactList}\small\item\em Keypad Length. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{io_8c_a723779b23a9d156cb373a38ae2f6dcc8}{UNIT\+\_\+\+VEL}}~0.\+15
 \item 
 \Hypertarget{io_8c_a75faf51ebce8cf713bc43a24c65dcd61}\label{io_8c_a75faf51ebce8cf713bc43a24c65dcd61} 
 \#define {\bfseries DEL\+\_\+\+ROW}~7
@@ -95,7 +91,7 @@ typedef bool \mbox{\hyperlink{io_8c_a6bda06b90ee8604550510a231566add5}{Keymap}}\
 \doxysubsubsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
-static void \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{io_8c_a06dad2fdba82bb262796926ff460d5dd}{Keymap\+Thread}} (void \texorpdfstring{$\ast$}{*}resource)
+static void \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{io_8c_a06dad2fdba82bb262796926ff460d5dd}{Keymap\+Thread}} (void \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{idle_8c_abf4dd7d4f72545e3a4c3791318b9e3ac}{resource}})
 \item 
 static int \mbox{\hyperlink{io_8c_a7d13be53afbc68da096c6f3dc4042c15}{Handle\+Encoder\+Error}} (\mbox{\hyperlink{struct_positions}{Positions}} \texorpdfstring{$\ast$}{*}curr\+\_\+pos, \mbox{\hyperlink{struct_velocities}{Velocities}} \texorpdfstring{$\ast$}{*}curr\+\_\+vel)
 \item 
@@ -123,9 +119,9 @@ int \mbox{\hyperlink{io_8c_adcb3dcf93416a844bdbfe3a11c81881a}{Get\+User\+Positio
 \item 
 int \mbox{\hyperlink{io_8c_ab31e062d140eefdddbfdd5de1dc6f595}{Get\+User\+Velocity}} (\mbox{\hyperlink{struct_angles}{Angles}} \texorpdfstring{$\ast$}{*}angle, \mbox{\hyperlink{struct_velocities}{Velocities}} \texorpdfstring{$\ast$}{*}vel, \mbox{\hyperlink{struct_velocities}{Velocities}} \texorpdfstring{$\ast$}{*}result)
 \item 
-int \mbox{\hyperlink{io_8c_a2a45f6fcd9f479d915d4e8cb8e618bc0}{Set\+XVoltage}} (Voltage voltage)
+int \mbox{\hyperlink{io_8c_a2a45f6fcd9f479d915d4e8cb8e618bc0}{Set\+XVoltage}} (\mbox{\hyperlink{io_8h_a5d747de9f4b7109a3d8682f7d29186ca}{Voltage}} voltage)
 \item 
-int \mbox{\hyperlink{io_8c_a4418209a1dac1a4333d5edbb84120cfa}{Set\+YVoltage}} (Voltage voltage)
+int \mbox{\hyperlink{io_8c_a4418209a1dac1a4333d5edbb84120cfa}{Set\+YVoltage}} (\mbox{\hyperlink{io_8h_a5d747de9f4b7109a3d8682f7d29186ca}{Voltage}} voltage)
 \item 
 bool \mbox{\hyperlink{io_8c_a78356349ecab59eb0251d1f05b16c38b}{Pressed\+Delete}} ()
 \item 
@@ -133,80 +129,74 @@ int \mbox{\hyperlink{io_8c_aab3c612e787d3b07cbce09a8bc496aa0}{Keyboard\+Control\
 \item 
 int \mbox{\hyperlink{io_8c_a53e2f9e259a7f87f482dd7bb7a30b461}{Keyboard\+Control\+Join}} ()
 \item 
-\Hypertarget{io_8c_aa7ed595e8e718801c3a23021b2ec3cce}\label{io_8c_aa7ed595e8e718801c3a23021b2ec3cce} 
-char {\bfseries getkey} ()
+char \mbox{\hyperlink{io_8c_aa7ed595e8e718801c3a23021b2ec3cce}{getkey}} ()
 \end{DoxyCompactItemize}
 \doxysubsubsection*{Variables}
 \begin{DoxyCompactItemize}
 \item 
 \Hypertarget{io_8c_a8409a0d351d4fba2eeef26a7dcc585a8}\label{io_8c_a8409a0d351d4fba2eeef26a7dcc585a8} 
 static bool {\bfseries reset}
+\begin{DoxyCompactList}\small\item\em Reset Variable for measuring velocity. \end{DoxyCompactList}\item 
+static float \mbox{\hyperlink{io_8c_addcb7d3d90b6aabfa7890e4a0eb48636}{potentiometer\+\_\+v\+\_\+x\+\_\+intercept}}
 \item 
-\Hypertarget{io_8c_addcb7d3d90b6aabfa7890e4a0eb48636}\label{io_8c_addcb7d3d90b6aabfa7890e4a0eb48636} 
-static float {\bfseries potentiometer\+\_\+v\+\_\+x\+\_\+intercept}
-\item 
-\Hypertarget{io_8c_af6bbfcc2a73a849aa996ed3242a781eb}\label{io_8c_af6bbfcc2a73a849aa996ed3242a781eb} 
-static float {\bfseries potentiometer\+\_\+v\+\_\+y\+\_\+intercept}
+static float \mbox{\hyperlink{io_8c_af6bbfcc2a73a849aa996ed3242a781eb}{potentiometer\+\_\+v\+\_\+y\+\_\+intercept}}
 \item 
 \Hypertarget{io_8c_aca24f82724ce2dfcea239209d41802da}\label{io_8c_aca24f82724ce2dfcea239209d41802da} 
 static My\+Rio\+\_\+\+Aio {\bfseries x\+\_\+potentiometer}
-\item 
+\begin{DoxyCompactList}\small\item\em X Potentiometer. \end{DoxyCompactList}\item 
 \Hypertarget{io_8c_a33aa81689986a17e69847225cd8f381b}\label{io_8c_a33aa81689986a17e69847225cd8f381b} 
 static My\+Rio\+\_\+\+Aio {\bfseries y\+\_\+potentiometer}
-\item 
+\begin{DoxyCompactList}\small\item\em Y Potentiometer. \end{DoxyCompactList}\item 
 \Hypertarget{io_8c_a80da53154b88007a31661ea96794a98d}\label{io_8c_a80da53154b88007a31661ea96794a98d} 
 static My\+Rio\+\_\+\+Encoder {\bfseries x\+\_\+encoder}
-\item 
+\begin{DoxyCompactList}\small\item\em X Motor Encoder. \end{DoxyCompactList}\item 
 \Hypertarget{io_8c_a32eb0d2ad0ae92687ffa4f8333dfa062}\label{io_8c_a32eb0d2ad0ae92687ffa4f8333dfa062} 
 static My\+Rio\+\_\+\+Encoder {\bfseries y\+\_\+encoder}
+\begin{DoxyCompactList}\small\item\em Y Motor Encoder. \end{DoxyCompactList}\item 
+static int32\+\_\+t \mbox{\hyperlink{io_8c_a03a892dc6792f6b4f2fb5f116f651f6b}{first\+\_\+enc\+\_\+state}} \mbox{[}2\mbox{]}
 \item 
-\Hypertarget{io_8c_a03a892dc6792f6b4f2fb5f116f651f6b}\label{io_8c_a03a892dc6792f6b4f2fb5f116f651f6b} 
-static int32\+\_\+t {\bfseries first\+\_\+enc\+\_\+state} \mbox{[}2\mbox{]}
-\item 
-\Hypertarget{io_8c_a9a2686e088a9016eb8daa65b353cfc5b}\label{io_8c_a9a2686e088a9016eb8daa65b353cfc5b} 
-static int32\+\_\+t {\bfseries prev\+\_\+enc\+\_\+state} \mbox{[}2\mbox{]}
+static int32\+\_\+t \mbox{\hyperlink{io_8c_a9a2686e088a9016eb8daa65b353cfc5b}{prev\+\_\+enc\+\_\+state}} \mbox{[}2\mbox{]}
 \item 
 \Hypertarget{io_8c_a9515f3a220dd926d88442872748d662e}\label{io_8c_a9515f3a220dd926d88442872748d662e} 
 static bool {\bfseries holding\+\_\+vel\+\_\+set}
-\item 
+\begin{DoxyCompactList}\small\item\em Indicator if the holding for velocity is set. \end{DoxyCompactList}\item 
 \Hypertarget{io_8c_af93336f419cb0435c11b836d413f2dea}\label{io_8c_af93336f419cb0435c11b836d413f2dea} 
 static bool {\bfseries holding\+\_\+pos\+\_\+set}
-\item 
+\begin{DoxyCompactList}\small\item\em Indicator if the holding for position is set. \end{DoxyCompactList}\item 
 \Hypertarget{io_8c_abfc7efd956cf8b86be1522e6bf163ec6}\label{io_8c_abfc7efd956cf8b86be1522e6bf163ec6} 
 static \mbox{\hyperlink{struct_velocities}{Velocities}} {\bfseries holding\+\_\+vel}
-\item 
+\begin{DoxyCompactList}\small\item\em Encoder Holding for velocity. \end{DoxyCompactList}\item 
 \Hypertarget{io_8c_add3aa638324323ad678b98db5320fb96}\label{io_8c_add3aa638324323ad678b98db5320fb96} 
 static \mbox{\hyperlink{struct_positions}{Positions}} {\bfseries holding\+\_\+pos}
-\item 
+\begin{DoxyCompactList}\small\item\em Encoder Holding for position. \end{DoxyCompactList}\item 
 static const Encoder\+\_\+\+Status\+Mask \mbox{\hyperlink{io_8c_aef77d0e0c42832b6719aee65ee52b9d9}{enc\+\_\+st\+\_\+mask}}
-\item 
+\begin{DoxyCompactList}\small\item\em Encoder Error Mask. \end{DoxyCompactList}\item 
 \Hypertarget{io_8c_a18a813e2239f1d0bb758b8e8172d5354}\label{io_8c_a18a813e2239f1d0bb758b8e8172d5354} 
 My\+Rio\+\_\+\+Aio {\bfseries x\+\_\+motor}
-\item 
+\begin{DoxyCompactList}\small\item\em X Motor Voltage Channel. \end{DoxyCompactList}\item 
 \Hypertarget{io_8c_a902ce2bec4b6e3c8ed2b71de374d9c14}\label{io_8c_a902ce2bec4b6e3c8ed2b71de374d9c14} 
 My\+Rio\+\_\+\+Aio {\bfseries y\+\_\+motor}
-\item 
-\Hypertarget{io_8c_a9f1418121fc86d07cde0d1f423806266}\label{io_8c_a9f1418121fc86d07cde0d1f423806266} 
-My\+Rio\+\_\+\+Irq\+Timer {\bfseries timer}
-\item 
+\begin{DoxyCompactList}\small\item\em Y Motor Voltage Channel. \end{DoxyCompactList}\item 
+My\+Rio\+\_\+\+Irq\+Timer \mbox{\hyperlink{io_8c_a9f1418121fc86d07cde0d1f423806266}{timer}}
+\begin{DoxyCompactList}\small\item\em Universal Timer. \end{DoxyCompactList}\item 
 \Hypertarget{io_8c_a874c75c3635736312f418a2ad03ab9f8}\label{io_8c_a874c75c3635736312f418a2ad03ab9f8} 
-static My\+Rio\+\_\+\+Dio {\bfseries channel} \mbox{[}CHANNELS\mbox{]}
-\item 
+static My\+Rio\+\_\+\+Dio {\bfseries channel} \mbox{[}\mbox{\hyperlink{io_8c_a19b7f1b22403d61234a92decaeb6953a}{CHANNELS}}\mbox{]}
+\begin{DoxyCompactList}\small\item\em Keyboard channels. \end{DoxyCompactList}\item 
 \Hypertarget{io_8c_abe75dc5f99a8133bf874cd1a3c2d6ffa}\label{io_8c_abe75dc5f99a8133bf874cd1a3c2d6ffa} 
 static pthread\+\_\+mutex\+\_\+t {\bfseries keyboard}
-\item 
+\begin{DoxyCompactList}\small\item\em Keyboard lock. \end{DoxyCompactList}\item 
 \Hypertarget{io_8c_ac1095353c73b1a483b8ab0758242d275}\label{io_8c_ac1095353c73b1a483b8ab0758242d275} 
 static \mbox{\hyperlink{io_8c_a6bda06b90ee8604550510a231566add5}{Keymap}} {\bfseries keymap}
-\item 
+\begin{DoxyCompactList}\small\item\em Our keymap. \end{DoxyCompactList}\item 
 \Hypertarget{io_8c_a2785380668a31df75a1e118272e3e6c0}\label{io_8c_a2785380668a31df75a1e118272e3e6c0} 
 static pthread\+\_\+t {\bfseries keymap\+\_\+thread}
-\item 
+\begin{DoxyCompactList}\small\item\em Thread for Keymap Thread. \end{DoxyCompactList}\item 
 \Hypertarget{io_8c_a831eb62125dc618c98a2889006ee96ca}\label{io_8c_a831eb62125dc618c98a2889006ee96ca} 
 static \mbox{\hyperlink{struct_thread_resource}{Thread\+Resource}} {\bfseries keymap\+\_\+resource}
-\item 
+\begin{DoxyCompactList}\small\item\em Thread Resource for Keymap Thread. \end{DoxyCompactList}\item 
 \Hypertarget{io_8c_a11614f44ef4d939bdd984953346a7572}\label{io_8c_a11614f44ef4d939bdd984953346a7572} 
 static int {\bfseries error}
-\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Local Error Flag. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \doxysubsection{Detailed Description}
@@ -231,7 +221,7 @@ Copyright (c) 2024
 \index{ENC\_2\_POS@{ENC\_2\_POS}!io.c@{io.c}}
 \doxysubsubsection{\texorpdfstring{ENC\_2\_POS}{ENC\_2\_POS}}
 {\footnotesize\ttfamily \label{io_8c_a69f1d6fb79304fa6eecef75fe558d486} 
-\#define ENC\+\_\+2\+\_\+\+POS(\begin{DoxyParamCaption}\item[{}]{value}{}\end{DoxyParamCaption})~    (value) / ENC\+\_\+\+CNT\+\_\+\+REV \texorpdfstring{$\ast$}{*} M\+\_\+\+PER\+\_\+\+REV}
+\#define ENC\+\_\+2\+\_\+\+POS(\begin{DoxyParamCaption}\item[{}]{value}{}\end{DoxyParamCaption})~    (value) / \mbox{\hyperlink{io_8c_a525f350bbb0cf54f5c98bcf8a60cf26f}{ENC\+\_\+\+CNT\+\_\+\+REV}} \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{io_8c_a8feb6e79e5a9bd651a99c5f3fec53540}{M\+\_\+\+PER\+\_\+\+REV}}}
 
 Converts a BDI quantity to meters
 
@@ -244,16 +234,40 @@ Converts a BDI quantity to meters
 \index{ENC\_2\_VEL@{ENC\_2\_VEL}!io.c@{io.c}}
 \doxysubsubsection{\texorpdfstring{ENC\_2\_VEL}{ENC\_2\_VEL}}
 {\footnotesize\ttfamily \label{io_8c_a492059ce1225838aa3401dd22486d0f4} 
-\#define ENC\+\_\+2\+\_\+\+VEL(\begin{DoxyParamCaption}\item[{}]{value}{}\end{DoxyParamCaption})~    (value) / (\mbox{\hyperlink{thread-lib_8h_a958eb6faa8e03be0253b87bfe9c99420}{BTI\+\_\+S}} \texorpdfstring{$\ast$}{*} ENC\+\_\+\+CNT\+\_\+\+REV) \texorpdfstring{$\ast$}{*} M\+\_\+\+PER\+\_\+\+REV}
+\#define ENC\+\_\+2\+\_\+\+VEL(\begin{DoxyParamCaption}\item[{}]{value}{}\end{DoxyParamCaption})~    (value) / (\mbox{\hyperlink{thread-lib_8h_a958eb6faa8e03be0253b87bfe9c99420}{BTI\+\_\+S}} \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{io_8c_a525f350bbb0cf54f5c98bcf8a60cf26f}{ENC\+\_\+\+CNT\+\_\+\+REV}}) \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{io_8c_a8feb6e79e5a9bd651a99c5f3fec53540}{M\+\_\+\+PER\+\_\+\+REV}}}
 
 Converts a BDI/\+BTI quantity to meters per second
 
 
 \begin{DoxyParams}{Parameters}
-{\em The} & value to convert \\
+{\em value} & The value to convert \\
 \hline
 \end{DoxyParams}
+\Hypertarget{io_8c_a525f350bbb0cf54f5c98bcf8a60cf26f}\index{io.c@{io.c}!ENC\_CNT\_REV@{ENC\_CNT\_REV}}
+\index{ENC\_CNT\_REV@{ENC\_CNT\_REV}!io.c@{io.c}}
+\doxysubsubsection{\texorpdfstring{ENC\_CNT\_REV}{ENC\_CNT\_REV}}
+{\footnotesize\ttfamily \label{io_8c_a525f350bbb0cf54f5c98bcf8a60cf26f} 
+\#define ENC\+\_\+\+CNT\+\_\+\+REV~2000.\+0}
 
+Number of counts in one revolution TODO(nguy8tri)\+: Find this quantity \Hypertarget{io_8c_a8feb6e79e5a9bd651a99c5f3fec53540}\index{io.c@{io.c}!M\_PER\_REV@{M\_PER\_REV}}
+\index{M\_PER\_REV@{M\_PER\_REV}!io.c@{io.c}}
+\doxysubsubsection{\texorpdfstring{M\_PER\_REV}{M\_PER\_REV}}
+{\footnotesize\ttfamily \label{io_8c_a8feb6e79e5a9bd651a99c5f3fec53540} 
+\#define M\+\_\+\+PER\+\_\+\+REV~0.\+01267 \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{thread-lib_8h_a598a3330b3c21701223ee0ca14316eca}{PI}}}
+
+Meters per revolution Diameter of upper pulley (12 mm) \texorpdfstring{$\ast$}{*} PI \Hypertarget{io_8c_aaf9ea920da209ac0e6bd8755dd80ca79}\index{io.c@{io.c}!POTENTIOMETER\_SLOPE@{POTENTIOMETER\_SLOPE}}
+\index{POTENTIOMETER\_SLOPE@{POTENTIOMETER\_SLOPE}!io.c@{io.c}}
+\doxysubsubsection{\texorpdfstring{POTENTIOMETER\_SLOPE}{POTENTIOMETER\_SLOPE}}
+{\footnotesize\ttfamily \label{io_8c_aaf9ea920da209ac0e6bd8755dd80ca79} 
+\#define POTENTIOMETER\+\_\+\+SLOPE~-\/2.\+11 \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{thread-lib_8h_a598a3330b3c21701223ee0ca14316eca}{PI}} / 180.\+0}
+
+Best-\/\+Fit Potentiometer Slope (rad/V) TODO(nguy8tri)\+: Find this quantity \Hypertarget{io_8c_a723779b23a9d156cb373a38ae2f6dcc8}\index{io.c@{io.c}!UNIT\_VEL@{UNIT\_VEL}}
+\index{UNIT\_VEL@{UNIT\_VEL}!io.c@{io.c}}
+\doxysubsubsection{\texorpdfstring{UNIT\_VEL}{UNIT\_VEL}}
+{\footnotesize\ttfamily \label{io_8c_a723779b23a9d156cb373a38ae2f6dcc8} 
+\#define UNIT\+\_\+\+VEL~0.\+15}
+
+The unit velocity stop corresponding to a keypad touch (m/s) 
 
 \doxysubsection{Typedef Documentation}
 \Hypertarget{io_8c_a6bda06b90ee8604550510a231566add5}\index{io.c@{io.c}!Keymap@{Keymap}}
@@ -288,6 +302,21 @@ Here is the call graph for this function\+:\nopagebreak
 \begin{center}
 \leavevmode
 \includegraphics[width=350pt]{io_8c_a6464ecd89623f2f77f41894d032fcaef_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{io_8c_aa7ed595e8e718801c3a23021b2ec3cce}\index{io.c@{io.c}!getkey@{getkey}}
+\index{getkey@{getkey}!io.c@{io.c}}
+\doxysubsubsection{\texorpdfstring{getkey()}{getkey()}}
+{\footnotesize\ttfamily \label{io_8c_aa7ed595e8e718801c3a23021b2ec3cce} 
+char getkey (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+Keypad characters
+
+Locking style allows for \doxylink{io_8c_aa7ed595e8e718801c3a23021b2ec3cce}{getkey()} to take precedence over all other keyboard commandsHere is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=195pt]{io_8c_aa7ed595e8e718801c3a23021b2ec3cce_cgraph}
 \end{center}
 \end{figure}
 \Hypertarget{io_8c_a82eebee08f3a434bbc7e4793163c2c15}\index{io.c@{io.c}!GetReferenceAngleCommand@{GetReferenceAngleCommand}}
@@ -326,7 +355,7 @@ Obtains the user command (for anti-\/sway)
 
 A \doxylink{struct_velocities}{Velocities} structure, which reflects the change in position requested from the user 
 \end{DoxyReturn}
-\Hypertarget{io_8c_ae63c00627326f08d2a4622a84d1e747a}\index{io.c@{io.c}!GetTrolleyPosition@{GetTrolleyPosition}}
+Setup discrete velocity commands, -\/1, 0, and 1\Hypertarget{io_8c_ae63c00627326f08d2a4622a84d1e747a}\index{io.c@{io.c}!GetTrolleyPosition@{GetTrolleyPosition}}
 \index{GetTrolleyPosition@{GetTrolleyPosition}!io.c@{io.c}}
 \doxysubsubsection{\texorpdfstring{GetTrolleyPosition()}{GetTrolleyPosition()}}
 {\footnotesize\ttfamily \label{io_8c_ae63c00627326f08d2a4622a84d1e747a} 
@@ -454,7 +483,17 @@ Handles Error Processing from Position/\+Velocity Measurements
 \begin{DoxyPostcond}{Postcondition}
 Iff negative is returned, both motors are switched off 
 \end{DoxyPostcond}
-Here is the call graph for this function\+:\nopagebreak
+Check Positional Limits first
+
+Now, check velocity limits
+
+Now, check if there is an encoder error
+
+u\+\_\+error = EENCR; con\+C\+\_\+\+Encoder\+\_\+initialize(myrio\+\_\+session, \&x\+\_\+encoder, X\+\_\+\+CONNECTOR\+\_\+\+ID);
+
+u\+\_\+error = EENCR; con\+C\+\_\+\+Encoder\+\_\+initialize(myrio\+\_\+session, \&y\+\_\+encoder, Y\+\_\+\+CONNECTOR\+\_\+\+ID);
+
+Output ErrorHere is the call graph for this function\+:\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -495,6 +534,31 @@ Sets up the System-\/\+Sensor/\+Actuator Interface
 \begin{DoxyReturn}{Returns}
 0 upon success, negative otherwise 
 \end{DoxyReturn}
+Setup Timer
+
+Setup Encoders Channels
+
+Setup Potentiometer Voltage Channels (are swapped)
+
+Setup Motor Channels
+
+Setup Keyboard Channels \& Resources
+
+Setup Reset flag
+
+Calibration Message
+
+Set Reference \doxylink{struct_positions}{Positions}
+
+Setup the holding
+
+Calibrate voltage intercepts for potentiometerHere is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=282pt]{io_8c_a7b088d617c531995213dd9440eaf4b27_cgraph}
+\end{center}
+\end{figure}
 \Hypertarget{io_8c_a77ff867027690d0264ec77033686b105}\index{io.c@{io.c}!IOShutdown@{IOShutdown}}
 \index{IOShutdown@{IOShutdown}!io.c@{io.c}}
 \doxysubsubsection{\texorpdfstring{IOShutdown()}{IOShutdown()}}
@@ -506,7 +570,13 @@ Shutsdown the System-\/\+Sensor/\+Actuator Interface
 \begin{DoxyReturn}{Returns}
 0 upon success, negative otherwise 
 \end{DoxyReturn}
-\Hypertarget{io_8c_aab3c612e787d3b07cbce09a8bc496aa0}\index{io.c@{io.c}!KeyboardControlFork@{KeyboardControlFork}}
+Dissasociate with Encoders
+
+Dissasociate with Potentiometers
+
+Disassociate with Motor
+
+Destroy Keyboard Lock\Hypertarget{io_8c_aab3c612e787d3b07cbce09a8bc496aa0}\index{io.c@{io.c}!KeyboardControlFork@{KeyboardControlFork}}
 \index{KeyboardControlFork@{KeyboardControlFork}!io.c@{io.c}}
 \doxysubsubsection{\texorpdfstring{KeyboardControlFork()}{KeyboardControlFork()}}
 {\footnotesize\ttfamily \label{io_8c_aab3c612e787d3b07cbce09a8bc496aa0} 
@@ -520,7 +590,7 @@ If its already running, does nothing
 \begin{DoxyReturn}{Returns}
 0 upon success, negative if error 
 \end{DoxyReturn}
-Here is the call graph for this function\+:\nopagebreak
+Begin Keyboard ThreadHere is the call graph for this function\+:\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -538,7 +608,7 @@ Stops Keyboard Control for Anti-\/\+Sway (concurrent process)
 \begin{DoxyReturn}{Returns}
 0 upon success, negative if error 
 \end{DoxyReturn}
-\Hypertarget{io_8c_a06dad2fdba82bb262796926ff460d5dd}\index{io.c@{io.c}!KeymapThread@{KeymapThread}}
+Destroy Keymap Thread\Hypertarget{io_8c_a06dad2fdba82bb262796926ff460d5dd}\index{io.c@{io.c}!KeymapThread@{KeymapThread}}
 \index{KeymapThread@{KeymapThread}!io.c@{io.c}}
 \doxysubsubsection{\texorpdfstring{KeymapThread()}{KeymapThread()}}
 {\footnotesize\ttfamily \label{io_8c_a06dad2fdba82bb262796926ff460d5dd} 
@@ -546,11 +616,6 @@ static void \texorpdfstring{$\ast$}{*} Keymap\+Thread (\begin{DoxyParamCaption}\
 
 Obtains the numerical buttons pressed (1 through 9)
 
-
-\begin{DoxyParams}{Parameters}
-{\em keymap} & The thread resource to signal this thread when to stop\\
-\hline
-\end{DoxyParams}
 \begin{DoxyReturn}{Returns}
 NULL
 \end{DoxyReturn}
@@ -583,7 +648,7 @@ The next time Get\+Trolley\+Velocity is called, both velocities are zero
 \index{SetXVoltage@{SetXVoltage}!io.c@{io.c}}
 \doxysubsubsection{\texorpdfstring{SetXVoltage()}{SetXVoltage()}}
 {\footnotesize\ttfamily \label{io_8c_a2a45f6fcd9f479d915d4e8cb8e618bc0} 
-int Set\+XVoltage (\begin{DoxyParamCaption}\item[{Voltage}]{voltage}{}\end{DoxyParamCaption})}
+int Set\+XVoltage (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{io_8h_a5d747de9f4b7109a3d8682f7d29186ca}{Voltage}}}]{voltage}{}\end{DoxyParamCaption})}
 
 Sets the voltage of the X motor
 
@@ -594,7 +659,7 @@ Sets the voltage of the X motor
 \index{SetYVoltage@{SetYVoltage}!io.c@{io.c}}
 \doxysubsubsection{\texorpdfstring{SetYVoltage()}{SetYVoltage()}}
 {\footnotesize\ttfamily \label{io_8c_a4418209a1dac1a4333d5edbb84120cfa} 
-int Set\+YVoltage (\begin{DoxyParamCaption}\item[{Voltage}]{voltage}{}\end{DoxyParamCaption})}
+int Set\+YVoltage (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{io_8h_a5d747de9f4b7109a3d8682f7d29186ca}{Voltage}}}]{voltage}{}\end{DoxyParamCaption})}
 
 Sets the voltage of the Y motor
 
@@ -612,7 +677,7 @@ Waits for approximate 5 ms
 \begin{DoxyPostcond}{Postcondition}
 About 5 ms have passed 
 \end{DoxyPostcond}
-
+Wait Constant
 
 \doxysubsection{Variable Documentation}
 \Hypertarget{io_8c_aef77d0e0c42832b6719aee65ee52b9d9}\index{io.c@{io.c}!enc\_st\_mask@{enc\_st\_mask}}
@@ -627,3 +692,42 @@ const Encoder\+\_\+\+Status\+Mask enc\+\_\+st\+\_\+mask\hspace{0.3cm}{\ttfamily 
 \DoxyCodeLine{\ \ \ \ (Encoder\_StError)}
 
 \end{DoxyCode}
+
+
+Encoder Error Mask. 
+
+\Hypertarget{io_8c_a03a892dc6792f6b4f2fb5f116f651f6b}\index{io.c@{io.c}!first\_enc\_state@{first\_enc\_state}}
+\index{first\_enc\_state@{first\_enc\_state}!io.c@{io.c}}
+\doxysubsubsection{\texorpdfstring{first\_enc\_state}{first\_enc\_state}}
+{\footnotesize\ttfamily \label{io_8c_a03a892dc6792f6b4f2fb5f116f651f6b} 
+int32\+\_\+t first\+\_\+enc\+\_\+state\mbox{[}2\mbox{]}\hspace{0.3cm}{\ttfamily [static]}}
+
+First Encoder state for both the X and Y Encoders \Hypertarget{io_8c_addcb7d3d90b6aabfa7890e4a0eb48636}\index{io.c@{io.c}!potentiometer\_v\_x\_intercept@{potentiometer\_v\_x\_intercept}}
+\index{potentiometer\_v\_x\_intercept@{potentiometer\_v\_x\_intercept}!io.c@{io.c}}
+\doxysubsubsection{\texorpdfstring{potentiometer\_v\_x\_intercept}{potentiometer\_v\_x\_intercept}}
+{\footnotesize\ttfamily \label{io_8c_addcb7d3d90b6aabfa7890e4a0eb48636} 
+float potentiometer\+\_\+v\+\_\+x\+\_\+intercept\hspace{0.3cm}{\ttfamily [static]}}
+
+Calibrated Voltage Intercept (x-\/intercept) for X Potentiometer \Hypertarget{io_8c_af6bbfcc2a73a849aa996ed3242a781eb}\index{io.c@{io.c}!potentiometer\_v\_y\_intercept@{potentiometer\_v\_y\_intercept}}
+\index{potentiometer\_v\_y\_intercept@{potentiometer\_v\_y\_intercept}!io.c@{io.c}}
+\doxysubsubsection{\texorpdfstring{potentiometer\_v\_y\_intercept}{potentiometer\_v\_y\_intercept}}
+{\footnotesize\ttfamily \label{io_8c_af6bbfcc2a73a849aa996ed3242a781eb} 
+float potentiometer\+\_\+v\+\_\+y\+\_\+intercept\hspace{0.3cm}{\ttfamily [static]}}
+
+Calibrated Voltage Intercept (x-\/intercept) for Y Potentiometer \Hypertarget{io_8c_a9a2686e088a9016eb8daa65b353cfc5b}\index{io.c@{io.c}!prev\_enc\_state@{prev\_enc\_state}}
+\index{prev\_enc\_state@{prev\_enc\_state}!io.c@{io.c}}
+\doxysubsubsection{\texorpdfstring{prev\_enc\_state}{prev\_enc\_state}}
+{\footnotesize\ttfamily \label{io_8c_a9a2686e088a9016eb8daa65b353cfc5b} 
+int32\+\_\+t prev\+\_\+enc\+\_\+state\mbox{[}2\mbox{]}\hspace{0.3cm}{\ttfamily [static]}}
+
+Previous Encoder state (from the last time either Get\+Trolley\+Position or Get\+Trolley\+Velocity is caled), for both the X and Y Encoders \Hypertarget{io_8c_a9f1418121fc86d07cde0d1f423806266}\index{io.c@{io.c}!timer@{timer}}
+\index{timer@{timer}!io.c@{io.c}}
+\doxysubsubsection{\texorpdfstring{timer}{timer}}
+{\footnotesize\ttfamily \label{io_8c_a9f1418121fc86d07cde0d1f423806266} 
+My\+Rio\+\_\+\+Irq\+Timer timer}
+
+
+
+Universal Timer. 
+
+The Timer. 

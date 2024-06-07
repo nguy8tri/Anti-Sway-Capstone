@@ -1,5 +1,5 @@
-\doxysection{src/record.c File Reference}
-\hypertarget{record_8c}{}\label{record_8c}\index{src/record.c@{src/record.c}}
+\doxysection{C\+:/\+Users/tring/\+Pycharm\+Projects/\+Capstone-\/\+Stuff/src/record.c File Reference}
+\hypertarget{record_8c}{}\label{record_8c}\index{C:/Users/tring/PycharmProjects/Capstone-\/Stuff/src/record.c@{C:/Users/tring/PycharmProjects/Capstone-\/Stuff/src/record.c}}
 
 
 Data Recording Interface.  
@@ -27,13 +27,13 @@ struct \mbox{\hyperlink{struct_data_file__t}{Data\+File\+\_\+t}}
 \item 
 \Hypertarget{record_8c_a3f981fdcd55b00f4dfc0fad4c73dac88}\label{record_8c_a3f981fdcd55b00f4dfc0fad4c73dac88} 
 \#define {\bfseries DEFAULT\+\_\+\+NUM\+\_\+\+FILES}~3
-\item 
+\begin{DoxyCompactList}\small\item\em Default number of Files to remember. \end{DoxyCompactList}\item 
 \Hypertarget{record_8c_ac19a3d94c88e8f4b3d47950665ae786e}\label{record_8c_ac19a3d94c88e8f4b3d47950665ae786e} 
 \#define {\bfseries DEFAULT\+\_\+\+NUM\+\_\+\+VALS}~10
-\item 
+\begin{DoxyCompactList}\small\item\em Default number of values for data arrays. \end{DoxyCompactList}\item 
 \Hypertarget{record_8c_a63408dd543a00313a6dfdbf55d0fff66}\label{record_8c_a63408dd543a00313a6dfdbf55d0fff66} 
 \#define {\bfseries DEFAULT\+\_\+\+RESIZE\+\_\+\+FACTOR}~2
-\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Default resize factor. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsubsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
@@ -41,11 +41,11 @@ static void \mbox{\hyperlink{record_8c_ad65d75df875305837c1feebab27abbc1}{Deallo
 \item 
 static int \mbox{\hyperlink{record_8c_a7566156be85c632b77aa467f8bd29250}{Reallocate\+Helper}} (\mbox{\hyperlink{struct_data_file__t}{Data\+File\+\_\+t}} \texorpdfstring{$\ast$}{*}f)
 \item 
-File\+ID\+\_\+t \mbox{\hyperlink{record_8c_a6ed72a430e567bb2944a36c7d4417a52}{Open\+Data\+File}} (char \texorpdfstring{$\ast$}{*}name, char \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}entry\+\_\+names, int num\+\_\+entries)
+\mbox{\hyperlink{record_8h_a86b411a8a4d101c5c9dc4bd192093cd4}{File\+ID\+\_\+t}} \mbox{\hyperlink{record_8c_a6ed72a430e567bb2944a36c7d4417a52}{Open\+Data\+File}} (char \texorpdfstring{$\ast$}{*}name, char \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}entry\+\_\+names, int num\+\_\+entries)
 \item 
-int \mbox{\hyperlink{record_8c_a4e8f7939cca5f98bd4c0d77dc86a1238}{Record\+Data}} (File\+ID\+\_\+t \mbox{\hyperlink{anti-sway_8c_a5a1f155d95d058a0efeac0f5e1e29e51}{file}}, double \mbox{\hyperlink{anti-sway_8c_a7b4664587f00f51bc74963d9c3591790}{data}}\mbox{[}$\,$\mbox{]}, int data\+\_\+length)
+int \mbox{\hyperlink{record_8c_a4e8f7939cca5f98bd4c0d77dc86a1238}{Record\+Data}} (\mbox{\hyperlink{record_8h_a86b411a8a4d101c5c9dc4bd192093cd4}{File\+ID\+\_\+t}} \mbox{\hyperlink{anti-sway_8c_a5a1f155d95d058a0efeac0f5e1e29e51}{file}}, double \mbox{\hyperlink{anti-sway_8c_a7b4664587f00f51bc74963d9c3591790}{data}}\mbox{[}$\,$\mbox{]}, int data\+\_\+length)
 \item 
-int \mbox{\hyperlink{record_8c_a9f4af0dd1c73fb2986a7936c67574553}{Record\+Value}} (File\+ID\+\_\+t \mbox{\hyperlink{anti-sway_8c_a5a1f155d95d058a0efeac0f5e1e29e51}{file}}, char \texorpdfstring{$\ast$}{*}value\+\_\+name, double value)
+int \mbox{\hyperlink{record_8c_a9f4af0dd1c73fb2986a7936c67574553}{Record\+Value}} (\mbox{\hyperlink{record_8h_a86b411a8a4d101c5c9dc4bd192093cd4}{File\+ID\+\_\+t}} \mbox{\hyperlink{anti-sway_8c_a5a1f155d95d058a0efeac0f5e1e29e51}{file}}, char \texorpdfstring{$\ast$}{*}value\+\_\+name, double value)
 \item 
 int \mbox{\hyperlink{record_8c_ae43c0ff4436be3247297ef8261c942e0}{Save\+Data\+Files}} ()
 \end{DoxyCompactItemize}
@@ -54,13 +54,13 @@ int \mbox{\hyperlink{record_8c_ae43c0ff4436be3247297ef8261c942e0}{Save\+Data\+Fi
 \item 
 \Hypertarget{record_8c_a9e92651537c97147bf40c316ddaebd64}\label{record_8c_a9e92651537c97147bf40c316ddaebd64} 
 static \mbox{\hyperlink{struct_data_file__t}{Data\+File\+\_\+t}} \texorpdfstring{$\ast$}{*} {\bfseries files} = NULL
-\item 
+\begin{DoxyCompactList}\small\item\em The data files this module is handling. \end{DoxyCompactList}\item 
 \Hypertarget{record_8c_a70fbdb4ac81ecb8a257691170b40f4bb}\label{record_8c_a70fbdb4ac81ecb8a257691170b40f4bb} 
 static int {\bfseries num\+\_\+files} = 0
-\item 
+\begin{DoxyCompactList}\small\item\em The number of files this module is handling. \end{DoxyCompactList}\item 
 \Hypertarget{record_8c_a8120220a2a3b3bad89783cdbb264b52c}\label{record_8c_a8120220a2a3b3bad89783cdbb264b52c} 
 static int {\bfseries capacity\+\_\+files} = 0
-\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em The number of files this module can handle. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \doxysubsection{Detailed Description}
@@ -91,7 +91,7 @@ Deallocates the entire module \Hypertarget{record_8c_a6ed72a430e567bb2944a36c7d4
 \index{OpenDataFile@{OpenDataFile}!record.c@{record.c}}
 \doxysubsubsection{\texorpdfstring{OpenDataFile()}{OpenDataFile()}}
 {\footnotesize\ttfamily \label{record_8c_a6ed72a430e567bb2944a36c7d4417a52} 
-File\+ID\+\_\+t Open\+Data\+File (\begin{DoxyParamCaption}\item[{char \texorpdfstring{$\ast$}{*}}]{name}{, }\item[{char \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{entry\+\_\+names}{, }\item[{int}]{num\+\_\+entries}{}\end{DoxyParamCaption})}
+\mbox{\hyperlink{record_8h_a86b411a8a4d101c5c9dc4bd192093cd4}{File\+ID\+\_\+t}} Open\+Data\+File (\begin{DoxyParamCaption}\item[{char \texorpdfstring{$\ast$}{*}}]{name}{, }\item[{char \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{entry\+\_\+names}{, }\item[{int}]{num\+\_\+entries}{}\end{DoxyParamCaption})}
 
 Opens a data file
 
@@ -137,7 +137,7 @@ for all 0 \texorpdfstring{$<$}{<}= i \texorpdfstring{$<$}{<}= f-\/\texorpdfstrin
 \index{RecordData@{RecordData}!record.c@{record.c}}
 \doxysubsubsection{\texorpdfstring{RecordData()}{RecordData()}}
 {\footnotesize\ttfamily \label{record_8c_a4e8f7939cca5f98bd4c0d77dc86a1238} 
-int Record\+Data (\begin{DoxyParamCaption}\item[{File\+ID\+\_\+t}]{file}{, }\item[{double}]{data}{\mbox{[}$\,$\mbox{]}, }\item[{int}]{data\+\_\+length}{}\end{DoxyParamCaption})}
+int Record\+Data (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{record_8h_a86b411a8a4d101c5c9dc4bd192093cd4}{File\+ID\+\_\+t}}}]{file}{, }\item[{double}]{data}{\mbox{[}$\,$\mbox{]}, }\item[{int}]{data\+\_\+length}{}\end{DoxyParamCaption})}
 
 Records data for each entry
 
@@ -164,7 +164,7 @@ Here is the call graph for this function\+:\nopagebreak
 \index{RecordValue@{RecordValue}!record.c@{record.c}}
 \doxysubsubsection{\texorpdfstring{RecordValue()}{RecordValue()}}
 {\footnotesize\ttfamily \label{record_8c_a9f4af0dd1c73fb2986a7936c67574553} 
-int Record\+Value (\begin{DoxyParamCaption}\item[{File\+ID\+\_\+t}]{file}{, }\item[{char \texorpdfstring{$\ast$}{*}}]{value\+\_\+name}{, }\item[{double}]{value}{}\end{DoxyParamCaption})}
+int Record\+Value (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{record_8h_a86b411a8a4d101c5c9dc4bd192093cd4}{File\+ID\+\_\+t}}}]{file}{, }\item[{char \texorpdfstring{$\ast$}{*}}]{value\+\_\+name}{, }\item[{double}]{value}{}\end{DoxyParamCaption})}
 
 Records one-\/time data
 

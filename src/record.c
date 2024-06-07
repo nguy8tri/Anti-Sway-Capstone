@@ -24,11 +24,11 @@
 /* Resizable Array Constants */
 
 
-// Default number of Files to remember
+/// Default number of Files to remember
 #define DEFAULT_NUM_FILES 3
-// Default number of values for data arrays
+/// Default number of values for data arrays
 #define DEFAULT_NUM_VALS 10
-// Default resize factor
+/// Default resize factor
 #define DEFAULT_RESIZE_FACTOR 2
 
 
@@ -41,11 +41,17 @@
  * Internal Representation of a Data File
 */
 typedef struct {
+    /// The MATFILE that this DataFile will store its data into
     MATFILE *file;
+    /// The number of arrays in this file
     int num_entries;
+    /// The names of all arrays in this file
     char **entry_names;
+    /// The number of values in each array
     int num_vals;
+    /// The capacity of the arrays in the data structure below
     int vals_capacity;
+    /// A pointer to pointers to arrays for the data being stored (2D array)
     double **entry_values;
 } DataFile_t;
 
@@ -53,11 +59,11 @@ typedef struct {
 /* Internal File Tracking Variables */
 
 
-// The data files this module is handling
+/// The data files this module is handling
 static DataFile_t *files = NULL;
-// The number of files this module is handling
+/// The number of files this module is handling
 static int num_files = 0;
-// The number of files this module can handle
+/// The number of files this module can handle
 static int capacity_files = 0;
 
 
