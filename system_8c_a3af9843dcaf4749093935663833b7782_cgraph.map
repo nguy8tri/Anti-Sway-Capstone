@@ -1,0 +1,19 @@
+<map id="AntiSwayState" name="AntiSwayState">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,107,113,133"/>
+<area shape="rect" id="Node000002" href="$anti-sway_8c.html#a99a2631efccd94414434bb28ce60f713" title="Stops Anti&#45;Sway Mode." alt="" coords="164,81,264,108"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="113,109,149,103,149,108,114,114"/>
+<area shape="rect" id="Node000009" href="$io_8c.html#a78356349ecab59eb0251d1f05b16c38b" title=" " alt="" coords="161,132,267,159"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="114,126,146,132,145,137,113,131"/>
+<area shape="rect" id="Node000003" href="$io_8c.html#a53e2f9e259a7f87f482dd7bb7a30b461" title=" " alt="" coords="315,5,455,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="239,78,314,42,329,35,331,40,316,46,242,83"/>
+<area shape="rect" id="Node000004" href="$record_8c.html#a4e8f7939cca5f98bd4c0d77dc86a1238" title=" " alt="" coords="341,56,430,83"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="264,85,325,75,326,81,264,90"/>
+<area shape="rect" id="Node000007" href="$io_8c.html#a2a45f6fcd9f479d915d4e8cb8e618bc0" title=" " alt="" coords="339,107,431,133"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="264,99,324,108,323,114,264,105"/>
+<area shape="rect" id="Node000008" href="$io_8c.html#a4418209a1dac1a4333d5edbb84120cfa" title=" " alt="" coords="338,157,432,184"/>
+<area shape="poly" id="edge7_Node000002_Node000008" title=" " alt="" coords="245,106,268,118,316,143,330,149,328,154,314,148,266,122,243,111"/>
+<area shape="rect" id="Node000005" href="$record_8c.html#ad65d75df875305837c1feebab27abbc1" title=" " alt="" coords="503,31,623,57"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="430,60,488,52,489,57,431,66"/>
+<area shape="rect" id="Node000006" href="$record_8c.html#a7566156be85c632b77aa467f8bd29250" title=" " alt="" coords="503,81,623,108"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="431,73,489,81,488,87,430,78"/>
+</map>

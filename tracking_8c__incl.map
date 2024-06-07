@@ -1,0 +1,41 @@
+<map id="C:/Users/tring/PycharmProjects/Capstone&#45;Stuff/src/tracking.c" name="C:/Users/tring/PycharmProjects/Capstone&#45;Stuff/src/tracking.c">
+<area shape="rect" id="Node000001" title="Tracking Mode Control Law." alt="" coords="321,5,527,48"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="106,245,180,272"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="322,32,240,42,196,52,153,66,111,84,73,108,40,137,13,172,9,184,10,195,16,206,27,215,57,231,92,243,90,248,55,236,24,219,12,209,5,197,3,184,8,169,36,133,70,103,109,80,151,61,195,47,239,37,321,27"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="22,171,98,197"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="346,51,279,72,211,98,147,131,93,164,90,159,144,126,208,94,277,67,344,46"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="427,96,491,123"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="435,48,450,81,445,83,431,50"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="515,96,578,123"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="457,46,517,85,514,90,454,51"/>
+<area shape="rect" id="Node000006" href="$setup_8h.html" title="System Setup Header." alt="" coords="648,171,712,197"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="417,49,408,86,409,105,417,121,439,143,461,157,484,163,509,165,565,163,598,163,633,168,633,173,597,169,565,168,509,170,483,168,459,161,436,148,413,124,404,106,403,85,412,48"/>
+<area shape="rect" id="Node000007" href="$io_8h.html" title="Sensor/Actuator (Input/Output) Interfacing Library Header." alt="" coords="122,171,164,197"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="362,51,309,72,256,98,209,130,169,162,166,158,206,126,253,94,307,67,360,46"/>
+<area shape="rect" id="Node000009" href="$thread-lib_8h.html" title="Thread Library." alt="" coords="267,96,352,123"/>
+<area shape="poly" id="edge9_Node000001_Node000009" title=" " alt="" coords="396,51,341,89,338,85,393,46"/>
+<area shape="rect" id="Node000014" href="$discrete-lib_8h.html" title="Discrete Control Law Implementation Library Header." alt="" coords="603,96,698,123"/>
+<area shape="poly" id="edge19_Node000001_Node000014" title=" " alt="" coords="483,46,602,88,600,93,482,51"/>
+<area shape="rect" id="Node000016" href="$record_8h.html" title="Data Recording Interface Header." alt="" coords="722,96,790,123"/>
+<area shape="poly" id="edge21_Node000001_Node000016" title=" " alt="" coords="514,46,707,92,706,98,513,51"/>
+<area shape="rect" id="Node000017" href="$tracking_8h.html" title="Tracking Mode Control Law Header." alt="" coords="814,96,893,123"/>
+<area shape="poly" id="edge22_Node000001_Node000017" title=" " alt="" coords="528,42,800,93,799,98,527,48"/>
+<area shape="poly" id="edge7_Node000007_Node000002" title=" " alt="" coords="145,198,145,230,140,230,140,198"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="338,245,425,272"/>
+<area shape="poly" id="edge8_Node000007_Node000008" title=" " alt="" coords="165,189,326,238,325,243,164,194"/>
+<area shape="poly" id="edge10_Node000009_Node000002" title=" " alt="" coords="292,125,229,173,166,236,162,232,225,169,289,121"/>
+<area shape="poly" id="edge11_Node000009_Node000003" title=" " alt="" coords="267,126,114,170,112,165,266,120"/>
+<area shape="poly" id="edge18_Node000009_Node000006" title=" " alt="" coords="353,117,371,120,501,142,633,167,632,173,500,147,370,125,352,122"/>
+<area shape="poly" id="edge17_Node000009_Node000007" title=" " alt="" coords="281,126,179,170,177,165,279,121"/>
+<area shape="poly" id="edge16_Node000009_Node000008" title=" " alt="" coords="353,116,435,137,471,152,494,169,500,181,500,192,488,212,465,228,437,242,435,237,462,224,484,208,495,191,495,182,490,172,469,157,434,143,352,121"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="555,171,624,197"/>
+<area shape="poly" id="edge12_Node000009_Node000010" title=" " alt="" coords="353,119,540,167,539,172,352,124"/>
+<area shape="rect" id="Node000011" title=" " alt="" coords="238,171,293,197"/>
+<area shape="poly" id="edge13_Node000009_Node000011" title=" " alt="" coords="304,125,283,159,279,156,299,122"/>
+<area shape="rect" id="Node000012" title=" " alt="" coords="317,171,390,197"/>
+<area shape="poly" id="edge14_Node000009_Node000012" title=" " alt="" coords="319,122,340,156,336,159,315,125"/>
+<area shape="rect" id="Node000013" title=" " alt="" coords="414,171,480,197"/>
+<area shape="poly" id="edge15_Node000009_Node000013" title=" " alt="" coords="335,121,411,161,408,165,332,126"/>
+<area shape="rect" id="Node000015" title=" " alt="" coords="736,171,792,197"/>
+<area shape="poly" id="edge20_Node000014_Node000015" title=" " alt="" coords="672,121,733,160,730,164,669,125"/>
+</map>

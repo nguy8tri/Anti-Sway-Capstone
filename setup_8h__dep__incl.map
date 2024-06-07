@@ -1,0 +1,25 @@
+<map id="C:/Users/tring/PycharmProjects/Capstone&#45;Stuff/src/setup.h" name="C:/Users/tring/PycharmProjects/Capstone&#45;Stuff/src/setup.h">
+<area shape="rect" id="Node000001" title="System Setup Header." alt="" coords="533,5,739,48"/>
+<area shape="rect" id="Node000002" href="$anti-sway_8c.html" title="Anti&#45;Sway Control Law Implementation." alt="" coords="5,187,211,229"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="562,56,170,189,168,184,560,51"/>
+<area shape="rect" id="Node000003" href="$idle_8c.html" title="Idle Mode Implementation." alt="" coords="235,187,440,229"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="583,58,511,98,369,189,366,184,508,94,581,53"/>
+<area shape="rect" id="Node000004" href="$record_8c.html" title="Data Recording Interface." alt="" coords="813,96,1019,139"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="717,51,851,93,849,98,715,56"/>
+<area shape="rect" id="Node000005" href="$setup_8c.html" title="System Setup." alt="" coords="1043,96,1248,139"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="754,46,1031,93,1043,95,1042,101,1030,99,753,51"/>
+<area shape="rect" id="Node000006" href="$system_8c.html" title="System (Turing Machine)" alt="" coords="464,187,669,229"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="566,58,542,75,524,97,518,120,523,143,535,165,550,185,545,188,531,168,518,145,513,120,519,95,538,71,562,53"/>
+<area shape="rect" id="Node000007" href="$thread-lib_8h.html" title="Thread Library." alt="" coords="533,96,739,139"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="639,64,639,96,633,96,633,64"/>
+<area shape="rect" id="Node000010" href="$tracking_8c.html" title="Tracking Mode Control Law." alt="" coords="1152,187,1357,229"/>
+<area shape="poly" id="edge13_Node000001_Node000010" title=" " alt="" coords="688,54,752,94,777,117,787,127,802,136,850,155,892,166,930,172,966,174,1043,175,1140,184,1152,186,1151,191,1140,189,1043,181,966,180,930,178,891,172,849,160,800,141,784,131,773,121,749,98,686,58"/>
+<area shape="poly" id="edge7_Node000007_Node000002" title=" " alt="" coords="518,140,223,189,212,191,211,186,222,184,517,135"/>
+<area shape="poly" id="edge8_Node000007_Node000003" title=" " alt="" coords="552,146,408,189,407,183,551,141"/>
+<area shape="poly" id="edge11_Node000007_Node000006" title=" " alt="" coords="613,152,585,188,581,185,609,149"/>
+<area shape="rect" id="Node000008" href="$io_8c.html" title="Sensor/Actuator (Input/Output) Interfacing Library." alt="" coords="693,187,899,229"/>
+<area shape="poly" id="edge9_Node000007_Node000008" title=" " alt="" coords="688,144,760,184,757,189,685,149"/>
+<area shape="rect" id="Node000009" href="$main_8c.html" title="Main File." alt="" coords="923,187,1128,229"/>
+<area shape="poly" id="edge10_Node000007_Node000009" title=" " alt="" coords="743,140,935,183,933,189,742,145"/>
+<area shape="poly" id="edge12_Node000007_Node000010" title=" " alt="" coords="754,136,758,136,949,160,1140,184,1152,186,1151,191,1140,189,948,165,757,141,754,141"/>
+</map>

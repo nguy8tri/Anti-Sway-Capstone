@@ -1,0 +1,5 @@
+<map id="AntiSwayControlScheme" name="AntiSwayControlScheme">
+<area shape="rect" id="Node000001" title="Anti&#45;Sway Mode Feedback Control Block." alt="" coords="5,96,171,123"/>
+<area shape="rect" id="Node000002" href="$struct_integrator.html" title="Control Block: Integrator." alt="" coords="50,5,126,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="91,48,91,95,85,95,85,48"/>
+</map>
