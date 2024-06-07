@@ -432,6 +432,32 @@ Thus, any State Function can set the variable \texttt{state} using the \texttt{e
     Notice it is very critical for these fields to align in both the \texttt{enum} and the \texttt{states} array, and for all functions in the array to have the exact same function signature (save the name of course).
 \end{tcolorbox}
 
+\subsubsection{System Operation}
+Upon startup, the following message will appear:
+\begin{center}
+    \begin{lstlisting}
+        Please stablize for calibration.
+        Press ENTR when ready._
+    \end{lstlisting}
+\end{center}
+After moving the trolley to the desired reference position, and making it still, the user calibrates the system, and then we enter normal operation. Normal operation is marked by the MENU state, which displays the following prompt:
+\begin{center}
+    \begin{lstlisting}
+        Indicate a mode:
+        1) Tracking
+        2) Anti-Sway
+        3) Idle, 4) Exit
+    \end{lstlisting}
+\end{center}
+After which the user enters a number, and then presses enter to start the corresponding mode (or exit)
+While in a mode, the user can press the $\leftarrow$ key to exit the mode, but the mode will stay in operation until that is done, or, until the error state is triggered. If the error is recoverable, a prompt like the one below will show:
+\begin{lstlisting}
+        Error: An encoder(s) has failed..
+        Press:
+        1) Continue
+        2) Exit
+\end{lstlisting}
+after which the user simply has to press 1 to reenter the menu state, or 2 to exit the program.
 \newpage
 
 \subsection{Thread Management: \texttt{thread-lib}}
@@ -675,6 +701,10 @@ Let's inspect the sensor/actuator functions a bit more. Within the module, each 
     \item \texttt{int GetAngle(Angles *result)}: This obtains the angle that the rod makes with the trolley. This is done via the potentiometer, whose output is an analog voltage. Thus, their interfacing functions deal with \underline{A}nalog \underline{i}nput/\underline{o}utput (so \texttt{Aio} functions).
     \item \texttt{int SetXVoltage(Voltage voltage)}, \texttt{int SetYVoltage(Voltage voltage)}: This allows us to actuate the motors by sending an analog voltage, thus this also deals with the \texttt{Aio} functions.
 \end{itemize}
+
+\begin{tcolorbox}[colframe=blue!50!black!70,title=Future Modification]
+    In retrospect, we should've not had a \texttt{SetXVoltage()} and \texttt{SetYVoltage()}. We should've had a \texttt{SetXForce()} and \texttt{SetYForce()}, because our control laws work with force, not voltage. The effect is that each control law must convert their output from a force to a voltage, which could've been handled internally by these functions.
+\end{tcolorbox}
 
 \begin{tcolorbox}[colframe=red!75!black,colback=yellow!5, title=WARNING]
     When installing the motor wires for any axis, it is possible to reverse them such that a positive voltage will result in a negative force (a force in the direction of the negative axis). If this occurs, the fix is to either reverse the wiring of ground and positive, or to reverse the voltage signal sent to the motor. The latter should be achieved by changing the \texttt{SetXVoltage()} or \texttt{SetYVoltage()} functions by negating the parameter of the appropriate function. This effectively fools the control laws into thinking that they are sending voltages according to the global sign convention, which is very necessary.
@@ -1039,6 +1069,22 @@ Looking carefully, these both contain all the Control Blocks necessary to replic
 \end{itemize}
 Thus, this \texttt{<Mode>Scheme} data structure helps us seperate the control laws, \texttt{<Mode>SetupScheme} helps us setup each of the data structures, while \texttt{<Mode>ControlLaw} executes them independently, by passing one of \texttt{SetXVoltage()} or \texttt{SetYVoltage()}.
 
+\subsubsection{Sensor Assurance: Idle Mode}
+The purpose of Idle Mode is to check whether the sensors are working properly and that they increment in the right direction (they follow the sign convention established). During the operation of Idle Mode, the following message, which is updated regularly, is displayed:
+\begin{center}
+    \begin{tabular}{c}
+        \begin{lstlisting}
+P: (X.XXX, X.XXX) m
+V: (X.XXX, X.XXX) m/s
+A: (X.XXX, X.XXX) deg
+        \end{lstlisting}
+    \end{tabular}
+\end{center}
+Thus, by providing a print-out of the sensor measurements, we can verify whether the system is working properly by moving it around.
+\begin{tcolorbox}[colframe=blue!50!black!70,title=Future Modification]
+    Idle Mode has a bug. The velocity output is incorrect, because the BTI of this mode is distorted due to the user of \texttt{printf\_lcd()}. This was not an important issue because the main purpose of idle mode is simply to see that the sensors were working properly. However, if one wishes to make this reading more accurate, then you would want to make the measurement of the velocity (or just all of the measurements) and the printing of the measurements parallel tasks, which would involve yet another Fork-Join threading activity.
+\end{tcolorbox}
+
 \subsection{Data Requisition: \texttt{record}}
 This section is a wrapper around the \texttt{matlabfiles} module. It simply adapts the functionality of the module to our particular uses. In particular, we want the ability to:
 \begin{itemize}
@@ -1260,7 +1306,7 @@ To train the above PID Controller, one must:
     \item We have completed what is called an Epoch of Gradient Descent. Essentially, we repeat until convergence, or until we want to.
 \end{enumerate}
 
-    Essentially this should be done over and over again until the loss stays roughly the same. One thing to note though, is that the nature of the partial derivatives with respect to the PI parameters demand that we carry out step 4 for only one parameter at a time for accuracy sake. If we were to step both at a time, we wouldn't really know the effect of changing particular parameters. Thus, what actually is executed is called Coordinate Descent. However, that is not possible, as physical noise prevents us from doing this (will discuss later).
+    Essentially this should be done over and over again until the loss stays roughly the same. One thing to note though, is that the nature of the partial derivatives with respect to the PI parameters demand that we carry out step 4 for only one parameter at a time for accuracy sake. If we were to step both at a time, we wouldn't really know the effect of changing particular parameters. Thus, what actually is executed is called Coordinate Descent. However, that is not possible, as physical noise prevents us from doing this (will discuss later). To see the result of this, please refer to the Capstone Final Paper.
 
 \newpage
 

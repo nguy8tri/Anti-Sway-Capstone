@@ -64,14 +64,6 @@ static TrackingControlScheme y_control;
 #define T_s 0.1
 // The overshoot fraction (5%)
 #define os 0.05
-// TODO(nguy8tri): Make code that will
-// automate this step
-// The inner-loop proportional constant
-#define K_pi 1.0
-// The outer-loop proportional constant
-#define K_po -2619.5
-// The artifical damping
-#define B_t (8 * m_p / T_s)
 
 
 // Local Error Flag

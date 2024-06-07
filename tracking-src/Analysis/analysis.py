@@ -123,10 +123,14 @@ def get_theoretical_model(M, M_u, K, B, l_perp) -> Tuple[ct.TransferFunction, ct
     F_supp = M_u * g # 100% weight support
     ang_closed_num = [M, B, 0]
     pos_closed_num = [F_supp - K]
+    vel_closed_num = [F_supp- K, 0]
     closed_den = [l_perp * M, l_perp * B, F_supp - K]
 
-    return (ct.tf(ang_closed_num, closed_den),
-            ct.tf(pos_closed_num, closed_den))
+    theta, pos = (ct.tf(ang_closed_num, closed_den),
+                  ct.tf(pos_closed_num, closed_den))
+    f = -B * ct.tf(vel_closed_num, closed_den) - K * theta
+    return theta, pos, f
+
 
 def diagnostic():
     data = scipy.io.loadmat("../tracking-exp1.mat")
@@ -219,14 +223,18 @@ def tracking_experiment_1():
     M_y = 0.664
     M_x = 2.092
 
-    ang_model_x, pos_model_x = get_theoretical_model(M_x, M_u, K_x, B_x, l_perp)
-    ang_model_y, pos_model_y = get_theoretical_model(M_y, M_u, K_y, B_y, l_perp)
+    ang_model_x, pos_model_x, f_model_x = get_theoretical_model(M_x, M_u, K_x, B_x, l_perp)
+    ang_model_y, pos_model_y, f_model_y = get_theoretical_model(M_y, M_u, K_y, B_y, l_perp)
 
     t = get_entry(data, "t")
     meas_ang_x = get_entry(data, "angle_x")
     meas_ang_y = get_entry(data, "angle_y")
     meas_pos_x = get_entry(data, "trolley_pos_x")
     meas_pos_y = get_entry(data, "trolley_pos_y")
+    meas_f_x = get_entry(data, "voltage_x") / F_2_V
+    meas_f_y = get_entry(data, "voltage_y") / F_2_V
+    meas_vel_x = get_entry(data, "trolley_vel_x")
+    meas_vel_y = get_entry(data, "trolley_vel_y")
 
     user_pos_x = l_perp * np.sin(meas_ang_x) + meas_pos_x
     user_pos_y = l_perp * np.sin(meas_ang_y) + meas_pos_y
@@ -236,9 +244,11 @@ def tracking_experiment_1():
 
     ang_model_res_x = ct.forced_response(ang_model_x, t, user_pos_x)
     pos_model_res_x = ct.forced_response(pos_model_x, t, user_pos_x)
+    f_model_res_x = ct.forced_response(f_model_x, t, user_pos_x)
 
     ang_model_res_y = ct.forced_response(ang_model_y, t, user_pos_y)
     pos_model_res_y = ct.forced_response(pos_model_y, t, user_pos_y)
+    f_model_res_y = ct.forced_response(f_model_y, t, user_pos_y)
 
     initial_filter = 25
 
@@ -248,12 +258,19 @@ def tracking_experiment_1():
     theo_pos_x = pos_model_res_x.y[0][initial_filter:]
     theo_pos_y = pos_model_res_y.y[0][initial_filter:]
 
+    theo_f_x = f_model_res_x.y[0][initial_filter:]
+    theo_f_y = f_model_res_y.y[0][initial_filter:]
+
     t = t[initial_filter:]
 
     meas_ang_x = np.rad2deg(meas_ang_x)[initial_filter:]
     meas_ang_y = np.rad2deg(meas_ang_y)[initial_filter:]
     meas_pos_x = meas_pos_x[initial_filter:]
     meas_pos_y = meas_pos_y[initial_filter:]
+    meas_f_x = meas_f_x[initial_filter:]
+    meas_f_y = meas_f_y[initial_filter:]
+    meas_vel_x = meas_vel_x[initial_filter:]
+    meas_vel_y = meas_vel_y[initial_filter:]
 
     user_pos_x = user_pos_x[initial_filter:]
     user_pos_y = user_pos_y[initial_filter:]
@@ -274,7 +291,7 @@ def tracking_experiment_1():
     plt.plot(t, theo_ang_y, label="Theoretical")
     plt.plot(t, meas_ang_y, label="Actual")
     plt.legend()
-
+    plt.savefig("tracking-exp2-ang")
     plt.show()
 
     plt.figure(figsize=(7, 5))
@@ -297,28 +314,45 @@ def tracking_experiment_1():
     plt.plot(t[sample], theo_pos_y[sample], '.', label="Theoretical")
     plt.plot(t[sample], meas_pos_y[sample], '.', label="Actual")
     plt.legend()
-
+    plt.savefig("tracking-exp2-pos")
     plt.show()
 
     plt.figure(figsize=(8, 5))
     plt.suptitle("Errors (Theoretical v. Actual)")
 
     plt.subplot(4, 1, 1)
-    plt.ylabel("X Angular \n(deg)")
-    plt.plot(t, theo_ang_x - meas_ang_x)
-
-    plt.subplot(4, 1, 2)
-    plt.ylabel("Y Angular \n(deg)")
-    plt.plot(t, theo_ang_y - meas_ang_y)
-
-    plt.subplot(4, 1, 3)
     plt.ylabel("X Position \n(m)")
     plt.plot(t, theo_pos_x - meas_pos_x)
 
-    plt.subplot(4, 1, 4)
+    plt.subplot(4, 1, 2)
     plt.ylabel("Y Position \n(m)")
     plt.plot(t, theo_pos_y - meas_pos_y)
 
+    plt.subplot(4, 1, 3)
+    plt.ylabel("X Angular \n(deg)")
+    plt.plot(t, theo_ang_x - meas_ang_x)
+
+    plt.subplot(4, 1, 4)
+    plt.ylabel("Y Angular \n(deg)")
+    plt.plot(t, theo_ang_y - meas_ang_y)
+    plt.savefig("tracking-exp2-err")
+    plt.show()
+
+
+    plt.plot()
+    plt.suptitle("Theoretical v. Actual Force")
+    plt.subplot(2, 1, 1)
+    plt.ylabel("X Force (N)")
+    plt.plot(t, theo_f_x, label="Theoretical")
+    plt.plot(t, meas_f_x, label="Actual")
+    plt.legend()
+    plt.subplot(2, 1, 2)
+    plt.ylabel("Y Force (N)")
+    plt.xlabel("Time (s)")
+    plt.plot(t, theo_f_y, label="Theoretical")
+    plt.plot(t, meas_f_y, label="Actual")
+    plt.legend()
+    plt.savefig("tracking-exp2-force")
     plt.show()
 
 def pos_vel_comparison():
@@ -492,12 +526,13 @@ def auto_tune_diagnostic():
     plt.ylabel("Loss ([m/s]^2)")
     plt.plot([i for i in range(1, len(total_losses_x) + 1)], total_losses_x, label="X Loss")
     plt.plot(33, total_losses_x[32], '.', label="Chosen")
-    plt.xlabel("Time (s)")
+    plt.xlabel("Epochs (s)")
     plt.legend()
     # plt.subplot(2, 1, 2)
     # plt.ylabel("Loss ([m/s]^2)")
     # plt.xlabel("Epochs")
     # plt.plot(total_losses_y, label="Y Loss")
+    plt.savefig("pi-auto-tune-loss")
     plt.show()
 
     r = np.argwhere((id == 1) | \
@@ -530,6 +565,7 @@ def auto_tune_diagnostic():
         plt.plot(t[:550], trolley_vel_x[q], label="Response")
         if i == 0:
             plt.legend(loc="lower right")
+    plt.savefig("pi-auto-tune-training-progression")
     plt.show()
 
     print(get_entry(data, "Kp_x'")[np.argwhere(id == 33)][0] / (M_x + M_u))
@@ -551,6 +587,7 @@ def auto_tune_diagnostic():
     plt.plot(vel_ref_y_, label="Mod")
     plt.plot(trolley_vel_y, label="Response")
     plt.legend()
+
     plt.show()
 
     Kp_y = get_entry(data, "Kp_y'")[:hi]
@@ -606,13 +643,13 @@ def auto_tune_diagnostic():
     plt.legend()
     plt.show()
 
-    dKp_x = dKp_x * count_x
-    dKi_x = dKi_x * count_x
+    dKp_x = dKp_x * 550
+    dKi_x = dKi_x * 550
     dKp_y = dKp_y * count_y
     dKi_y = dKi_y * count_y
 
     plt.figure()
-    plt.title("Gradients v. Epochs (Non-Normalized)")
+    plt.title("Gradients v. Epochs (Normalized)")
     plt.ylabel("Gradient (Negative)")
     plt.xlabel("Epochs")
     plt.plot(-dKp_x[odd], label="Kₚ")
@@ -620,6 +657,7 @@ def auto_tune_diagnostic():
     # plt.plot(dKp_y[odd], label="Kp_y")
     # plt.plot(dKi_y[even], label="Ki_y")
     plt.legend()
+    plt.savefig("pi-auto-tune-gradients")
     plt.show()
 
     plt.figure()
@@ -634,6 +672,7 @@ def auto_tune_diagnostic():
     # plt.plot(Kp_y[odd], label="Kp_y")
     # plt.plot(Ki_y[even], label="Ki_y")
     plt.legend()
+    plt.savefig("pi-auto-tune-params")
     plt.show()
 
     print(Kp_x[31], Ki_x[31], Kp_y[25], Ki_y[25])
@@ -724,6 +763,8 @@ def tracking_experiment_slow():
     ang_y = get_entry(data, "angle_y")[y_data]
     u_x = s_x + 0.47 * np.sin(ang_x)
     u_y = s_y + 0.47 * np.sin(ang_y)
+    f_x = get_entry(data, "voltage_x") / F_2_V
+    f_y = get_entry(data, "voltage_y") / F_2_V
 
 
     plt.figure()
@@ -789,16 +830,18 @@ def tracking_experiment_slow():
     M_y = 0.664
     M_x = 2.092
 
-    ang_model_x, pos_model_x = get_theoretical_model(M_x, M_u, K_x, B_x, l_perp)
-    ang_model_y, pos_model_y = get_theoretical_model(M_y, M_u, K_y, B_y, l_perp)
+    ang_model_x, pos_model_x, f_model_x = get_theoretical_model(M_x, M_u, K_x, B_x, l_perp)
+    ang_model_y, pos_model_y, f_model_y = get_theoretical_model(M_y, M_u, K_y, B_y, l_perp)
 
     ang_res_x, pos_res_x = (ct.forced_response(ang_model_x, t_ref_x, s_ref_x),
                             ct.forced_response(pos_model_x, t_ref_x, s_ref_x))
     ang_res_y, pos_res_y = (ct.forced_response(ang_model_y, t_ref_y, s_ref_y),
                             ct.forced_response(pos_model_y, t_ref_y, s_ref_y))
+    f_res_x, f_res_y = (ct.forced_response(f_model_x, t_ref_x, s_ref_x),
+                        ct.forced_response(f_model_y, t_ref_y, s_ref_y))
 
     plt.figure()
-    plt.suptitle("Position")
+    plt.suptitle("Theoretical v. Actual Position")
     plt.subplot(2, 1, 1)
     plt.ylabel("X Position (m)")
     plt.plot(t_ref_x, u_x[t_1x:t_3x], label="Reference")
@@ -812,10 +855,11 @@ def tracking_experiment_slow():
     plt.plot(t_ref_y, pos_res_y.y[0] + s_y[t_1y], label="Theoretical")
     plt.plot(t_ref_y, s_y[t_1y:t_3y], label="Actual")
     plt.legend()
+    plt.savefig("tracking-exp1-pos")
     plt.show()
 
     plt.figure()
-    plt.suptitle("Angle")
+    plt.suptitle("Theoretical v. Actual Angle")
     plt.subplot(2, 1, 1)
     plt.ylabel("X Angle (deg)")
     plt.plot(t_ref_x, np.rad2deg(ang_res_x.y[0] + ang_x[t_1x]), label="Theoretical")
@@ -827,37 +871,51 @@ def tracking_experiment_slow():
     plt.plot(t_ref_y, np.rad2deg(ang_res_y.y[0] + ang_y[t_1y]), label="Theoretical")
     plt.plot(t_ref_y, np.rad2deg(ang_y[t_1y:t_3y]), label="Actual")
     plt.legend()
+    plt.savefig("tracking-exp1-ang")
     plt.show()
 
     plt.figure()
-    plt.suptitle("Position Error")
-    plt.subplot(2, 1, 1)
+    plt.suptitle("Errors (Theoretical v. Actual)")
+    plt.subplot(4, 1, 1)
     plt.ylabel("X Position (m)")
-    plt.plot(t_ref_x, (u_x[t_1x:t_3x]).flatten() - (pos_res_x.y[0] + s_x[t_1x]).flatten(), label="R-T")
-    plt.plot(t_ref_x, (u_x[t_1x:t_3x]).flatten() - s_x[t_1x:t_3x].flatten(), label="R-A")
     plt.plot(t_ref_x, (pos_res_x.y[0] + s_x[t_1x]).flatten() - s_x[t_1x:t_3x].flatten(), label="A-T")
-    plt.legend()
-    plt.subplot(2, 1, 2)
+    # plt.legend()
+    plt.subplot(4, 1, 2)
     plt.ylabel("Y Position (m)")
     plt.xlabel("Time(s)")
-    plt.plot(t_ref_y, (u_y[t_1y:t_3y]).flatten() - (pos_res_y.y[0] + s_y[t_1y]).flatten(), label="R-T")
-    plt.plot(t_ref_y, (u_y[t_1y:t_3y]).flatten() - s_y[t_1y:t_3y].flatten(), label="R-A")
     plt.plot(t_ref_y, (pos_res_y.y[0] + s_y[t_1y]).flatten() - s_y[t_1y:t_3y].flatten(), label="A-T")
-    plt.legend()
-    plt.show()
-
-    plt.figure()
-    plt.suptitle("Angle Error")
-    plt.subplot(2, 1, 1)
+    # plt.legend()
+    plt.subplot(4, 1, 3)
     plt.ylabel("X Angle (deg)")
     plt.plot(t_ref_x, np.rad2deg(ang_res_x.y[0] + ang_x[t_1x]).flatten() - np.rad2deg(ang_x[t_1x:t_3x]).flatten(), label="Actual")
-    plt.legend()
-    plt.subplot(2, 1, 2)
+    # plt.legend()
+    plt.subplot(4, 1, 4)
     plt.ylabel("Y Angle (deg)")
     plt.xlabel("Time(s)")
     plt.plot(t_ref_y, (np.rad2deg(ang_res_y.y[0] + ang_y[t_1y])).flatten() - np.rad2deg(ang_y[t_1y:t_3y]).flatten(), label="Actual")
-    plt.legend()
+    # plt.legend()
+    plt.savefig("tracking-exp1-err")
     plt.show()
+
+    f_res_x, f_res_y = (ct.forced_response(f_model_x, t_ref_x, s_ref_x),
+                        ct.forced_response(f_model_y, t_ref_y, s_ref_y))
+
+    plt.plot()
+    plt.suptitle("Theoretical v. Actual Force")
+    plt.subplot(2, 1, 1)
+    plt.ylabel("X Force (N)")
+    plt.plot(t_ref_x, f_res_x.y[0], label="Theoretical")
+    plt.plot(t_ref_x, f_x[t_1x:t_3x], label="Actual")
+    plt.legend()
+    plt.subplot(2, 1, 2)
+    plt.ylabel("Y Force (N)")
+    plt.xlabel("Time (s)")
+    plt.plot(t_ref_y, f_res_y.y[0], label="Theoretical")
+    plt.plot(t_ref_y, f_y[t_1y:t_3y], label="Actual")
+    plt.legend()
+    plt.savefig("tracking-exp1-force")
+    plt.show()
+
 
     data = scipy.io.loadmat("../tracking-exp1.mat")
 
@@ -865,8 +923,10 @@ def tracking_experiment_slow():
     t_y = t_x
     s_x = get_entry(data, "trolley_pos_x")
     s_y = get_entry(data, "trolley_pos_y")
-    u_x = s_x + 0.47 * np.sin(get_entry(data, "angle_x"))
-    u_y = s_y + 0.47 * np.sin(get_entry(data, "angle_y"))
+    a_x = get_entry(data, "angle_x")
+    a_y = get_entry(data, "angle_y")
+    u_x = s_x + 0.47 * np.sin(a_x)
+    u_y = s_y + 0.47 * np.sin(a_y)
 
     plt.figure()
     plt.suptitle("Controller Performance (Positional Comparison)")
@@ -881,6 +941,7 @@ def tracking_experiment_slow():
     plt.plot(t_y, u_y, label="User Position")
     plt.plot(t_y, s_y, label="Trolley")
     plt.legend()
+    plt.savefig("tracking-exp2-perf-pos")
     plt.show()
 
     plt.figure()
@@ -892,7 +953,8 @@ def tracking_experiment_slow():
     plt.ylabel("Y Positional Error (m)")
     plt.xlabel("Time (s)")
     plt.plot(t_y, (s_y - u_y))
+    plt.savefig("tracking-exp1-perf-pos-err")
     plt.show()
 
 if __name__ == "__main__":
-    auto_tune_diagnostic()
+    tracking_experiment_slow()
