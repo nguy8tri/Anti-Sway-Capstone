@@ -1,0 +1,9 @@
+<map id="GetAngle" name="GetAngle">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,31,81,57"/>
+<area shape="rect" id="Node000002" href="$io_8c.html#a510645322ccd6eed8f97194a1f0c6fb6" title=" " alt="" coords="129,31,299,57"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="81,41,113,41,113,47,81,47"/>
+<area shape="rect" id="Node000003" href="$io_8c.html#a2a45f6fcd9f479d915d4e8cb8e618bc0" title=" " alt="" coords="348,5,440,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="299,29,332,25,333,30,300,35"/>
+<area shape="rect" id="Node000004" href="$io_8c.html#a4418209a1dac1a4333d5edbb84120cfa" title=" " alt="" coords="347,56,441,83"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="300,53,332,58,331,63,299,59"/>
+</map>

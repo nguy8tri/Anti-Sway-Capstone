@@ -1,11 +1,31 @@
-// Copyright 2024 Anti-Sway Team (Nguyen, Tri; Espinola, Malachi;
-// Tevy, Vattanary; Hokenstad, Ethan; Neff, Callen)
+/**
+ * @file discrete-lib.c
+ * @author Anti-Sway Team: Nguyen, Tri; Espinola, Malachi;
+ * Tevy, Vattanary; Hokenstad, Ethan; Neff, Callen)
+ * @brief Discrete Control Law Implementation Library
+ * @version 0.1
+ * @date 2024-06-03
+ * 
+ * @copyright Copyright (c) 2024
+ * 
+ */
 
 #include <stdlib.h>
 
 #include "discrete-lib.h"
 
-// Saturates a value (val) given a low (lo) and high (hi) value
+/**
+ * @brief Saturates a value
+ * 
+ * Saturates a value to be between some low and high value
+ * 
+ * @param val The numerical value to saturate
+ * @param lo The numerical lower limit
+ * @param hi The numerical upper limit
+ * 
+ * Evaluates to val iff lo <= val <= hi, lo iff val < lo and
+ * hi iff val > hi
+ */
 #define SATURATE(val, lo, hi) val < lo ? lo : (val > hi ? hi : val)
 
 

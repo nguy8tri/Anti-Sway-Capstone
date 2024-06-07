@@ -1,0 +1,15 @@
+<map id="AntiSwayJoin" name="AntiSwayJoin">
+<area shape="rect" id="Node000001" title="Stops Anti&#45;Sway Mode." alt="" coords="5,81,105,108"/>
+<area shape="rect" id="Node000002" href="$io_8c.html#a53e2f9e259a7f87f482dd7bb7a30b461" title=" " alt="" coords="153,5,293,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="79,78,152,42,166,36,168,41,154,46,82,83"/>
+<area shape="rect" id="Node000003" href="$record_8c.html#a4e8f7939cca5f98bd4c0d77dc86a1238" title=" " alt="" coords="178,56,268,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="105,85,163,76,163,81,105,90"/>
+<area shape="rect" id="Node000006" href="$io_8c.html#a2a45f6fcd9f479d915d4e8cb8e618bc0" title=" " alt="" coords="177,107,269,133"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="105,99,161,108,161,113,105,105"/>
+<area shape="rect" id="Node000007" href="$io_8c.html#a4418209a1dac1a4333d5edbb84120cfa" title=" " alt="" coords="176,157,270,184"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="82,106,154,143,168,149,166,154,152,148,79,111"/>
+<area shape="rect" id="Node000004" href="$record_8c.html#ad65d75df875305837c1feebab27abbc1" title=" " alt="" coords="341,31,460,57"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="268,60,326,52,326,57,268,66"/>
+<area shape="rect" id="Node000005" href="$record_8c.html#a7566156be85c632b77aa467f8bd29250" title=" " alt="" coords="341,81,460,108"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="268,73,326,81,326,87,268,78"/>
+</map>

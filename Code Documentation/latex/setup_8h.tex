@@ -1,0 +1,83 @@
+\doxysection{src/setup.h File Reference}
+\hypertarget{setup_8h}{}\label{setup_8h}\index{src/setup.h@{src/setup.h}}
+
+
+System Setup Header.  
+
+
+This graph shows which files directly or indirectly include this file\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{setup_8h__dep__incl}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{setup_8h_a8176c171675cc3b400eb81519b33d736}\label{setup_8h_a8176c171675cc3b400eb81519b33d736} 
+\#define {\bfseries VERIFY}(code,  statement)~ if ((code = statement)) return code
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{setup_8h_a50ac2197010a8cf188eafc647122f1a3}{Setup}} ()
+\item 
+int \mbox{\hyperlink{setup_8h_ad8f28fefdab9c8f60c69dec040dfa363}{Shutdown}} ()
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+System Setup Header. 
+
+\begin{DoxyAuthor}{Author}
+Anti-\/\+Sway Team\+: Nguyen, Tri; Espinola, Malachi; Tevy, Vattanary; Hokenstad, Ethan; Neff, Callen) 
+\end{DoxyAuthor}
+\begin{DoxyVersion}{Version}
+0.\+1 
+\end{DoxyVersion}
+\begin{DoxyDate}{Date}
+2024-\/06-\/03
+\end{DoxyDate}
+\begin{DoxyCopyright}{Copyright}
+Copyright (c) 2024 
+\end{DoxyCopyright}
+
+
+\doxysubsection{Function Documentation}
+\Hypertarget{setup_8h_a50ac2197010a8cf188eafc647122f1a3}\index{setup.h@{setup.h}!Setup@{Setup}}
+\index{Setup@{Setup}!setup.h@{setup.h}}
+\doxysubsubsection{\texorpdfstring{Setup()}{Setup()}}
+{\footnotesize\ttfamily \label{setup_8h_a50ac2197010a8cf188eafc647122f1a3} 
+int Setup (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+Sets up the entire System
+
+\begin{DoxyReturn}{Returns}
+0 upon success, negative otherwise 
+\end{DoxyReturn}
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=209pt]{setup_8h_a50ac2197010a8cf188eafc647122f1a3_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{setup_8h_ad8f28fefdab9c8f60c69dec040dfa363}\index{setup.h@{setup.h}!Shutdown@{Shutdown}}
+\index{Shutdown@{Shutdown}!setup.h@{setup.h}}
+\doxysubsubsection{\texorpdfstring{Shutdown()}{Shutdown()}}
+{\footnotesize\ttfamily \label{setup_8h_ad8f28fefdab9c8f60c69dec040dfa363} 
+int Shutdown (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+Shuts the entire System down
+
+\begin{DoxyReturn}{Returns}
+0 upon success, negative otherwise 
+\end{DoxyReturn}
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{setup_8h_ad8f28fefdab9c8f60c69dec040dfa363_cgraph}
+\end{center}
+\end{figure}

@@ -1,5 +1,14 @@
-// Copyright 2024 Anti-Sway Team (Nguyen, Tri; Espinola, Malachi;
-// Tevy, Vattanary; Hokenstad, Ethan; Neff, Callen)
+/**
+ * @file anti-sway.c
+ * @author Anti-Sway Team: Nguyen, Tri; Espinola, Malachi;
+ * Tevy, Vattanary; Hokenstad, Ethan; Neff, Callen)
+ * @brief Anti-Sway Control Law Implementation
+ * @version 0.1
+ * @date 2024-06-03
+ * 
+ * @copyright Copyright (c) 2024
+ * 
+ */
 
 #include <stdbool.h>
 #include <pthread.h>
@@ -19,35 +28,38 @@
 /* Thread Number & Resources */
 
 
-// Thread ID
+/// Thread ID
 pthread_t anti_sway_thread = NULL;
-// Thread Resources (Shared Resources)
+/// Thread Resources (Shared Resources)
 ThreadResource anti_sway_resource;
 
 
 /* Inner-Outer Loop Control Characteristics */
 
 
-// The proportional constant for inner-loop
+/// The proportional constant for inner-loop
 static double K_ptx = 51.55550206284189;
-// The integral constant for inner-loop control
+/// The integral constant for inner-loop control
 static double K_itx = 33.28586146285062;
-// The proportional constant for inner-loop
+/// The proportional constant for inner-loop
 static double K_pty = 0.8*55.65965893434064;
-// The integral constant for inner-loop control
+/// The integral constant for inner-loop control
 static double K_ity = 0.8*31.59324977878787;
 
 /* Control Loop Scheme */
 
 
 /**
+ * @brief Anti-Sway Mode Feedback Control Block
+ * 
  * Represents the Inner and Outer Loop Elements
 */
 typedef struct {
-    // Outer feedback
+    /// Outer feedback
     Proportional outer_feedback;
-    // Inner PI Control
+    /// Inner PI Proportional Gain
     Proportional inner_prop;
+    /// Innner PI Integral Term
     Integrator inner_int;
 } AntiSwayControlScheme;
 
@@ -55,59 +67,100 @@ typedef struct {
 /* Control-Loop Variables */
 
 
-// The Control Scheme for the X Motor
-// TODO(nguy8tri): Define this statically
+/// The Control Scheme for the X Motor
 static AntiSwayControlScheme x_control;
-// The Control Scheme for the Y Motor
-// TODO(nguy8tri): Define this statically
+/// The Control Scheme for the Y Motor
 static AntiSwayControlScheme y_control;
 
 
 /* Error Code */
 
-
+/// Local Error Code
 static int error;
 
 
 /* Data Recording Structures */
 
 
-// The file ID
+/// The file ID
 static FileID_t file = -1;
-// The file Name
+/// The file Name
 static char *data_file_name = "anti-sway.mat";
-// The number of entries
+/// The number of entries
 #define DATA_LEN 20
-// The data names
+/// The data names
 static char *data_names[DATA_LEN] = {"id", "t",
                                      "vel_ref_x", "vel_ref_y",
                                      "angle_x", "angle_y",
                                      "trolley_vel_x", "trolley_vel_y",
                                      "vel_err_x", "voltage_x", "int_out_x", "Kp_x'", "Ki_x'", "loss_x",
                                      "vel_err_y", "voltage_y", "int_out_y", "Kp_y'", "Ki_y'", "loss_y"};
-// Buffer for data
+/// Buffer for data
 static double data[DATA_LEN];
-// Pointer to next data point to insert into buffer
+/// Pointer to next data point to insert into buffer
 static double *data_buff = data;
-// ID variable
+/// ID variable
 static int id = 1;
-// timestamp
+/// timestamp
 static double t = 0.0;
 
 
 /* Gradient Descent Variables */
-// #define TUNING
+
+// For more information on how this is done, please
+// see the software documentation
+
+// Toggle on (uncomment) to put Anti-Sway into
+/// Tuning Mode
+#define TUNING
 #ifdef TUNING
+/// The tuning file
 static FileID_t tuning_file = -1;
+/// The name of the tuning file
 static char *tuning_file_name = "anti-sway-tuning.mat";
+/// The number of array entries within the tuning file
 #define TUNING_DATA_LEN 10
+/// The names of the array entries for the tuning file
 static char *tuning_data_names[TUNING_DATA_LEN] = {"count_x", "count_y",
                                                    "dKp_x", "dKi_x", "dKp_y", "dKi_y",
 												   "Kp_x", "Ki_x", "Kp_y", "Ki_y"};
+/// The gradient component of the loss with respect to Kp,
+/// for both x and y directions
 static double dKp[2];
+/// The gradient component of the loss with respect to Ki,
+/// for both x and y directions
 static double dKi[2];
+/// The total number of data points used for dKp and dKi,
+/// for both x and y directions
 static int total_pts[2];
 
+/// Learning Rate in X direction
+#define LR_X 250
+/// Learning Rate in Y direction
+#define LR_Y 250
+/// Previous integral outputs with respect to change in Kp,
+/// for both x and y directions
+static double prev_int_Kp[2][550];
+/// Previous integral outputs with respect to change in Ki,
+/// for both x and y directions
+static double prev_int_Ki[2][550];
+/// The counter that tells the program where we are along
+/// a column within above 2 arrays
+static int prev_int_i = 0;
+/// Indicates (false) if prev_int_Kp has any valid data in it
+static bool int_Kp_first = true;
+/// Indicates (false) if prev_int_Ki has any valid data in it
+static bool int_Ki_first = true;
+/// Stores previous Kp values in both x and y directions
+static double prev_Kp[2];
+/// Stores previous Ki value sin both x and y directions
+static double prev_Ki[2];
+
+/**
+ * Zeros out Gradients
+ * 
+ * @post Zeros out dKp and dKi
+ */
 #define ZERO_GRAD() \
 	dKp[0] = 0.0; \
 	dKp[1] = 0.0; \
@@ -116,15 +169,6 @@ static int total_pts[2];
     total_pts[0] = 0; \
     total_pts[1] = 0;
 
-#define LR_X 250
-#define LR_Y 250
-static double prev_int_Kp[2][550];
-static double prev_int_Ki[2][550];
-static int prev_int_i = 0;
-static bool int_Kp_first = true;
-static bool int_Ki_first = true;
-static double prev_Kp[2];
-static double prev_Ki[2];
 #endif
 
 
@@ -132,6 +176,9 @@ static double prev_Ki[2];
 
 
 /**
+ * @brief Sets up the Anti-Sway Control Law
+ * (its feedback path)
+ * 
  * Sets up an AntiSwayControlScheme
  * 
  * @param scheme The scheme to setup
@@ -152,6 +199,8 @@ static inline void SetupScheme(AntiSwayControlScheme *scheme,
 
 
 /**
+ * @brief Runs Anti-Sway
+ * 
  * The Thread Function for Anti-Sway Mode
  * 
  * @param resource A pointer to a Resource sturcture
@@ -162,6 +211,9 @@ static inline void SetupScheme(AntiSwayControlScheme *scheme,
 static void *AntiSwayModeThread(void *resource);
 
 /**
+ * @brief Executes an iteration of the feedback path for
+ * Anti-Sway
+ * 
  * Executes 1 timestep for the Anti-Sway Mode Control Law
  * for its input to the plant
  * 
@@ -195,12 +247,16 @@ int AntiSwayFork() {
     if (file == -1) {
         file = OpenDataFile(data_file_name, data_names, DATA_LEN);
 
+        // Record the mass in both directions
         RecordValue(file, "M_x", m_dt);
         RecordValue(file, "M_y", m_st);
+        // Recording mass of the person
         RecordValue(file, "M_p", m_p);
+        // Recording Controller Constants in X direction
 		RecordValue(file, "Kp_x", x_control.inner_prop / (m_dt + m_p));
 		RecordValue(file, "Ki_x", x_control.inner_int.gain * 2 / BTI_S / (m_dt + m_p));
 		RecordValue(file, "K_x", x_control.outer_feedback);
+        // Recording Controller Constants in Y direction
 		RecordValue(file, "Kp_y", y_control.inner_prop / (m_st + m_p));
 		RecordValue(file, "Ki_y", y_control.inner_int.gain * 2 / BTI_S / (m_st + m_p));
 		RecordValue(file, "K_y", y_control.outer_feedback);
@@ -209,8 +265,10 @@ int AntiSwayFork() {
     if (tuning_file == -1) {
     	tuning_file = OpenDataFile(tuning_file_name, tuning_data_names, TUNING_DATA_LEN);
 
+        // Recording Learning Rates in both directions
     	RecordValue(tuning_file, "lr_x", LR_X);
     	RecordValue(tuning_file, "lr_y", LR_Y);
+        // Recording Initial PI Gains in both directions
     	RecordValue(tuning_file, "Kpi_x", K_ptx);
     	RecordValue(tuning_file, "Kii_x", K_itx);
     	RecordValue(tuning_file, "Kpi_y", K_pty);
@@ -285,6 +343,9 @@ static void *AntiSwayModeThread(void *resource) {
             // Do the loop for both motors
             // Get the inputs
 #ifdef TUNING
+            // In tuning mode, we must have the system
+            // consistently see the same reference for
+            // the model to be consistent
             reference_vel.x_vel = 0.15;
             reference_vel.y_vel = 0.15;
 #else
@@ -378,10 +439,10 @@ static inline int AntiSwayControlLaw(Velocity vel_ref,
     // Unit Derivatives (Manual Derivatives)
 
     // Throw away the first data point
-    if (prev_int_i != 0) {
+    if (prev_int_i /= 0) {
         // d (integral of error) / d Kp
         double dIdKp = 0.0;
-        if (!int_Kp_first && id % 2 == 1) {
+        if (/int_Kp_first && id % 2 == 1) {
             dIdKp = (int_res - prev_int_Kp[i][prev_int_i]) / (scheme->inner_prop - prev_Kp[i]);
             if (isnan(dIdKp) || isinf(dIdKp)) {
                 error = 1;
@@ -389,7 +450,7 @@ static inline int AntiSwayControlLaw(Velocity vel_ref,
         }
         // d (integral of error) / d Ki
         double dIdKi = 0.0;
-        if (!int_Ki_first && id % 2 == 0) {
+        if (/int_Ki_first && id % 2 == 0) {
             dIdKi = (int_res - prev_int_Ki[i][prev_int_i]) / (Ki - prev_Ki[i]);
             if (isnan(dIdKi) || isinf(dIdKi)) {
                 error = 1;
@@ -424,7 +485,7 @@ static inline int AntiSwayControlLaw(Velocity vel_ref,
             error = 1;
         }
 
-        if (!error) {
+        if (/error) {
             // Accumulate Gradients
             if (id % 2 == 1) {
                 dKp[i] += (dLdy * dydu + dLdr * drdu) * (vel_err + Ki * dIdKp) / (1 - ((drdy - 1) * dydu + (1-dydr) * drdu) * scheme->inner_prop);

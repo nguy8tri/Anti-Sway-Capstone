@@ -1,0 +1,265 @@
+\doxysection{src/thread-\/lib.h File Reference}
+\hypertarget{thread-lib_8h}{}\label{thread-lib_8h}\index{src/thread-\/lib.h@{src/thread-\/lib.h}}
+
+
+Thread Library.  
+
+
+{\ttfamily \#include $<$stdbool.\+h$>$}\newline
+{\ttfamily \#include $<$pthread.\+h$>$}\newline
+{\ttfamily \#include "{}My\+Rio.\+h"{}}\newline
+{\ttfamily \#include "{}AIO.\+h"{}}\newline
+{\ttfamily \#include "{}Ni\+Fpga.\+h"{}}\newline
+{\ttfamily \#include "{}DIIRQ.\+h"{}}\newline
+{\ttfamily \#include "{}Timer\+IRQ.\+h"{}}\newline
+{\ttfamily \#include "{}io.\+h"{}}\newline
+{\ttfamily \#include "{}setup.\+h"{}}\newline
+Include dependency graph for thread-\/lib.h\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{thread-lib_8h__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{thread-lib_8h__dep__incl}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_thread_resource}{Thread\+Resource}}
+\begin{DoxyCompactList}\small\item\em Parameter for Threading Functions. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{thread-lib_8h_a9d6aa042ff9ec9b9024e2f0a53dade7a}\label{thread-lib_8h_a9d6aa042ff9ec9b9024e2f0a53dade7a} 
+\#define {\bfseries BTI\+\_\+\+US}~5000u
+\begin{DoxyCompactList}\small\item\em The timestep, in microseconds (us) \end{DoxyCompactList}\item 
+\Hypertarget{thread-lib_8h_a26b361f10f63dcd99c0798a77ae9f2b7}\label{thread-lib_8h_a26b361f10f63dcd99c0798a77ae9f2b7} 
+\#define {\bfseries BTI\+\_\+\+MS}~5u
+\begin{DoxyCompactList}\small\item\em The timestep, in milliseconds (ms) \end{DoxyCompactList}\item 
+\Hypertarget{thread-lib_8h_a958eb6faa8e03be0253b87bfe9c99420}\label{thread-lib_8h_a958eb6faa8e03be0253b87bfe9c99420} 
+\#define {\bfseries BTI\+\_\+S}~0.\+005
+\begin{DoxyCompactList}\small\item\em The timestep, in seconds (s) \end{DoxyCompactList}\item 
+\Hypertarget{thread-lib_8h_a167d2c0ec9b943d55f2124f7442b2f6d}\label{thread-lib_8h_a167d2c0ec9b943d55f2124f7442b2f6d} 
+\#define {\bfseries g}~9.\+81
+\begin{DoxyCompactList}\small\item\em Acceleration due to Gravity (m/s\texorpdfstring{$^\wedge$}{\string^}2) \end{DoxyCompactList}\item 
+\Hypertarget{thread-lib_8h_a598a3330b3c21701223ee0ca14316eca}\label{thread-lib_8h_a598a3330b3c21701223ee0ca14316eca} 
+\#define {\bfseries PI}~3.\+141592653549
+\begin{DoxyCompactList}\small\item\em Pi. \end{DoxyCompactList}\item 
+\Hypertarget{thread-lib_8h_a1cb503ddd20ff3cf9588d2b5abd202d8}\label{thread-lib_8h_a1cb503ddd20ff3cf9588d2b5abd202d8} 
+\#define {\bfseries l}~0.\+47
+\begin{DoxyCompactList}\small\item\em Length of Rope (m) \end{DoxyCompactList}\item 
+\Hypertarget{thread-lib_8h_a06f6b8988d1be475176190dd48049843}\label{thread-lib_8h_a06f6b8988d1be475176190dd48049843} 
+\#define {\bfseries m\+\_\+dt}~2.\+092
+\begin{DoxyCompactList}\small\item\em Mass of the double Trolley (kg) \end{DoxyCompactList}\item 
+\Hypertarget{thread-lib_8h_a3b3bdab11ed3718a7ace783292f6e1a2}\label{thread-lib_8h_a3b3bdab11ed3718a7ace783292f6e1a2} 
+\#define {\bfseries m\+\_\+st}~0.\+664
+\begin{DoxyCompactList}\small\item\em Mass of the single Trolley (kg) \end{DoxyCompactList}\item 
+\Hypertarget{thread-lib_8h_a4da22cb76511008562d997c7a7dcb6fd}\label{thread-lib_8h_a4da22cb76511008562d997c7a7dcb6fd} 
+\#define {\bfseries m\+\_\+p}~0.\+765
+\begin{DoxyCompactList}\small\item\em Mass of User (kg) \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{thread-lib_8h_a026d08b407bd5430893a2f27602adc27}{START\+\_\+\+THREAD}}(thread,  function,  resource)
+\begin{DoxyCompactList}\small\item\em Starts a thread. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{thread-lib_8h_a455689a1d61abe5203ec65135fd4b1d1}{REGISTER\+\_\+\+TIMER}}(resource)~    Irq\+\_\+\+Register\+Timer\+Irq(\&timer, \&(resource.\+irq\+\_\+context), \mbox{\hyperlink{thread-lib_8h_a9d6aa042ff9ec9b9024e2f0a53dade7a}{BTI\+\_\+\+US}})
+\begin{DoxyCompactList}\small\item\em Registers the global timer with a thread. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{thread-lib_8h_a01a443ae9ae39278e1b359175835e97a}{STOP\+\_\+\+THREAD}}(thread,  resource)
+\begin{DoxyCompactList}\small\item\em Stops a thread in this process. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{thread-lib_8h_ab532ccf23cd85b5a9fc21025170a1f41}{UNREGISTER\+\_\+\+TIMER}}(resource)~    Irq\+\_\+\+Unregister\+Timer\+Irq(\&timer, resource.\+irq\+\_\+context)
+\begin{DoxyCompactList}\small\item\em Unregisters the global timer with a thread. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{thread-lib_8h_a3940d08fbf3244247a60d85ef69a8d13}{TIMER\+\_\+\+TRIGGER}}(irq\+\_\+assert,  resource)
+\item 
+\#define \mbox{\hyperlink{thread-lib_8h_aa9e9f7c7d6b9a52c5b8835ff43504033}{EXIT\+\_\+\+THREAD}}()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{thread-lib_8h_a185bfa2d35885a0f891c399e2b5399db}\label{thread-lib_8h_a185bfa2d35885a0f891c399e2b5399db} 
+Ni\+Fpga\+\_\+\+Session {\bfseries myrio\+\_\+session}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Thread Library. 
+
+\begin{DoxyAuthor}{Author}
+Anti-\/\+Sway Team\+: Nguyen, Tri; Espinola, Malachi; Tevy, Vattanary; Hokenstad, Ethan; Neff, Callen 
+\end{DoxyAuthor}
+\begin{DoxyVersion}{Version}
+0.\+1 
+\end{DoxyVersion}
+\begin{DoxyDate}{Date}
+2024-\/06-\/03
+\end{DoxyDate}
+\begin{DoxyCopyright}{Copyright}
+Copyright (c) 2024 
+\end{DoxyCopyright}
+
+
+\doxysubsection{Macro Definition Documentation}
+\Hypertarget{thread-lib_8h_aa9e9f7c7d6b9a52c5b8835ff43504033}\index{thread-\/lib.h@{thread-\/lib.h}!EXIT\_THREAD@{EXIT\_THREAD}}
+\index{EXIT\_THREAD@{EXIT\_THREAD}!thread-\/lib.h@{thread-\/lib.h}}
+\doxysubsubsection{\texorpdfstring{EXIT\_THREAD}{EXIT\_THREAD}}
+{\footnotesize\ttfamily \label{thread-lib_8h_aa9e9f7c7d6b9a52c5b8835ff43504033} 
+\#define EXIT\+\_\+\+THREAD(\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ \ \ \ pthread\_exit(NULL);\ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \textcolor{keywordflow}{return}\ NULL}
+
+\end{DoxyCode}
+Kills a Thread
+
+\begin{DoxyPostcond}{Postcondition}
+The thread associated with the function that calls this is now gone. 
+\end{DoxyPostcond}
+\Hypertarget{thread-lib_8h_a455689a1d61abe5203ec65135fd4b1d1}\index{thread-\/lib.h@{thread-\/lib.h}!REGISTER\_TIMER@{REGISTER\_TIMER}}
+\index{REGISTER\_TIMER@{REGISTER\_TIMER}!thread-\/lib.h@{thread-\/lib.h}}
+\doxysubsubsection{\texorpdfstring{REGISTER\_TIMER}{REGISTER\_TIMER}}
+{\footnotesize\ttfamily \label{thread-lib_8h_a455689a1d61abe5203ec65135fd4b1d1} 
+\#define REGISTER\+\_\+\+TIMER(\begin{DoxyParamCaption}\item[{}]{resource}{}\end{DoxyParamCaption})~    Irq\+\_\+\+Register\+Timer\+Irq(\&timer, \&(resource.\+irq\+\_\+context), \mbox{\hyperlink{thread-lib_8h_a9d6aa042ff9ec9b9024e2f0a53dade7a}{BTI\+\_\+\+US}})}
+
+
+
+Registers the global timer with a thread. 
+
+Registers the timer (global) with a particular thread (via its resource)
+
+
+\begin{DoxyParams}{Parameters}
+{\em resource} & The \doxylink{struct_thread_resource}{Thread\+Resource} associated with a thread\\
+\hline
+\end{DoxyParams}
+\begin{DoxyPrecond}{Precondition}
+No other thread is using the global timer 
+\end{DoxyPrecond}
+\begin{DoxyPostcond}{Postcondition}
+The thread associated with resource is now associated with the global timer 
+\end{DoxyPostcond}
+\Hypertarget{thread-lib_8h_a026d08b407bd5430893a2f27602adc27}\index{thread-\/lib.h@{thread-\/lib.h}!START\_THREAD@{START\_THREAD}}
+\index{START\_THREAD@{START\_THREAD}!thread-\/lib.h@{thread-\/lib.h}}
+\doxysubsubsection{\texorpdfstring{START\_THREAD}{START\_THREAD}}
+{\footnotesize\ttfamily \label{thread-lib_8h_a026d08b407bd5430893a2f27602adc27} 
+\#define START\+\_\+\+THREAD(\begin{DoxyParamCaption}\item[{}]{thread}{, }\item[{}]{function}{, }\item[{}]{resource}{}\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ \ \ \ resource.\mbox{\hyperlink{struct_thread_resource_aa6eb541244f3ca12576b29ccbab9f641}{irq\_thread\_rdy}}\ =\ \textcolor{keyword}{true};\ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ VERIFY(\mbox{\hyperlink{anti-sway_8c_a11614f44ef4d939bdd984953346a7572}{error}},\ pthread\_create(\&thread,\ NULL,\ function,\ \&resource))}
+
+\end{DoxyCode}
+
+
+Starts a thread. 
+
+Starts a new thread within this process.
+
+
+\begin{DoxyParams}{Parameters}
+{\em thread} & The pthread\+\_\+t ID variable to hold the thread\textquotesingle{}s ID \\
+\hline
+{\em function} & The Thread Function to execute for the thread \\
+\hline
+{\em resource} & The \doxylink{struct_thread_resource}{Thread\+Resource} to give the function\\
+\hline
+\end{DoxyParams}
+\begin{DoxyPrecond}{Precondition}
+An integer variable named error must be declared in this context 
+\end{DoxyPrecond}
+\begin{DoxyPostcond}{Postcondition}
+thread will contain the new PID (Process ID) of the thread 
+
+A new thread that runs function will now be running concurrently
+\end{DoxyPostcond}
+\begin{DoxyReturn}{Returns}
+EXIT\+\_\+\+FAILURE upon failure to initialize the thread 
+\end{DoxyReturn}
+\Hypertarget{thread-lib_8h_a01a443ae9ae39278e1b359175835e97a}\index{thread-\/lib.h@{thread-\/lib.h}!STOP\_THREAD@{STOP\_THREAD}}
+\index{STOP\_THREAD@{STOP\_THREAD}!thread-\/lib.h@{thread-\/lib.h}}
+\doxysubsubsection{\texorpdfstring{STOP\_THREAD}{STOP\_THREAD}}
+{\footnotesize\ttfamily \label{thread-lib_8h_a01a443ae9ae39278e1b359175835e97a} 
+\#define STOP\+\_\+\+THREAD(\begin{DoxyParamCaption}\item[{}]{thread}{, }\item[{}]{resource}{}\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ \ \ \ resource.\mbox{\hyperlink{struct_thread_resource_aa6eb541244f3ca12576b29ccbab9f641}{irq\_thread\_rdy}}\ =\ \textcolor{keyword}{false};\ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ VERIFY(\mbox{\hyperlink{anti-sway_8c_a11614f44ef4d939bdd984953346a7572}{error}},\ pthread\_join(thread,\ NULL))}
+
+\end{DoxyCode}
+
+
+Stops a thread in this process. 
+
+Signals a Thread using a \doxylink{struct_thread_resource}{Thread\+Resource} object to stop
+
+
+\begin{DoxyParams}{Parameters}
+{\em thread} & The pthread\+\_\+t holding the ID of the thread to stop \\
+\hline
+{\em resource} & The \doxylink{struct_thread_resource}{Thread\+Resource} associated with the thread\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+EXIT\+\_\+\+FAUILURE upon failure
+\end{DoxyReturn}
+\begin{DoxyPrecond}{Precondition}
+The thread uses resource, and calls \doxylink{thread-lib_8h_aa9e9f7c7d6b9a52c5b8835ff43504033}{EXIT\+\_\+\+THREAD()} when resource.\+irq\+\_\+thread\+\_\+rdy is set to false 
+\end{DoxyPrecond}
+\begin{DoxyPostcond}{Postcondition}
+The thread associated with pthread\+\_\+t is now done 
+\end{DoxyPostcond}
+\Hypertarget{thread-lib_8h_a3940d08fbf3244247a60d85ef69a8d13}\index{thread-\/lib.h@{thread-\/lib.h}!TIMER\_TRIGGER@{TIMER\_TRIGGER}}
+\index{TIMER\_TRIGGER@{TIMER\_TRIGGER}!thread-\/lib.h@{thread-\/lib.h}}
+\doxysubsubsection{\texorpdfstring{TIMER\_TRIGGER}{TIMER\_TRIGGER}}
+{\footnotesize\ttfamily \label{thread-lib_8h_a3940d08fbf3244247a60d85ef69a8d13} 
+\#define TIMER\+\_\+\+TRIGGER(\begin{DoxyParamCaption}\item[{}]{irq\+\_\+assert}{, }\item[{}]{resource}{}\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ \ \ \ Irq\_Wait(resource-\/>irq\_context,\ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ TIMERIRQNO,\ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \&irq\_assert,\ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ (NiFpga\_Bool\ *)\ \&(resource-\/>\mbox{\hyperlink{struct_thread_resource_aa6eb541244f3ca12576b29ccbab9f641}{irq\_thread\_rdy}}));\ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ NiFpga\_WriteU32(myrio\_session,\ IRQTIMERWRITE,\ \mbox{\hyperlink{thread-lib_8h_a9d6aa042ff9ec9b9024e2f0a53dade7a}{BTI\_US}});\ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ NiFpga\_WriteBool(myrio\_session,\ IRQTIMERSETTIME,\ NiFpga\_True)}
+
+\end{DoxyCode}
+Waits for a timer trigger (at the appropriate time step)
+
+
+\begin{DoxyParams}{Parameters}
+{\em irq\+\_\+assert} & A uint32\+\_\+t that shall hold the assertion code \\
+\hline
+{\em resource} & A pointer to a \doxylink{struct_thread_resource}{Thread\+Resource} for the thread associated with the global timer\\
+\hline
+\end{DoxyParams}
+\begin{DoxyPostcond}{Postcondition}
+irq\+\_\+assert will be non-\/zero iff the timer has waited for the standard time step (BTI\+\_\+\+S/\+MS/\+US) 
+
+The timer will trigger after waiting for the standard time step (BTI\+\_\+\+S/\+MS/\+US) 
+\end{DoxyPostcond}
+\Hypertarget{thread-lib_8h_ab532ccf23cd85b5a9fc21025170a1f41}\index{thread-\/lib.h@{thread-\/lib.h}!UNREGISTER\_TIMER@{UNREGISTER\_TIMER}}
+\index{UNREGISTER\_TIMER@{UNREGISTER\_TIMER}!thread-\/lib.h@{thread-\/lib.h}}
+\doxysubsubsection{\texorpdfstring{UNREGISTER\_TIMER}{UNREGISTER\_TIMER}}
+{\footnotesize\ttfamily \label{thread-lib_8h_ab532ccf23cd85b5a9fc21025170a1f41} 
+\#define UNREGISTER\+\_\+\+TIMER(\begin{DoxyParamCaption}\item[{}]{resource}{}\end{DoxyParamCaption})~    Irq\+\_\+\+Unregister\+Timer\+Irq(\&timer, resource.\+irq\+\_\+context)}
+
+
+
+Unregisters the global timer with a thread. 
+
+Dissasociates a thread with a timer (via its resource)
+
+
+\begin{DoxyParams}{Parameters}
+{\em resource} & The \doxylink{struct_thread_resource}{Thread\+Resource} to disassociate the global timer with\\
+\hline
+\end{DoxyParams}
+\begin{DoxyPostcond}{Postcondition}
+The thread associated with resource is now disassociated with timer 
+\end{DoxyPostcond}

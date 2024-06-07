@@ -1,0 +1,282 @@
+\doxysection{src/discrete-\/lib.c File Reference}
+\hypertarget{discrete-lib_8c}{}\label{discrete-lib_8c}\index{src/discrete-\/lib.c@{src/discrete-\/lib.c}}
+
+
+Discrete Control Law Implementation Library.  
+
+
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include "{}discrete-\/lib.\+h"{}}\newline
+Include dependency graph for discrete-\/lib.c\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=218pt]{discrete-lib_8c__incl}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{discrete-lib_8c_a67a7a1104ec7e0a91b2b2273e88667ab}{SATURATE}}(val,  lo,  hi)~val $<$ lo ? lo \+: (val $>$ hi ? hi \+: val)
+\begin{DoxyCompactList}\small\item\em Saturates a value. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+static double \mbox{\hyperlink{discrete-lib_8c_aa069dddfdaabed9dc43f8180d982a908}{Evaluate\+Biquad}} (\mbox{\hyperlink{struct_biquad}{Biquad}} \texorpdfstring{$\ast$}{*}sys, double input)
+\item 
+void \mbox{\hyperlink{discrete-lib_8c_a659cfce6d9fac82a6542703423c4c765}{Integrator\+Init}} (\mbox{\hyperlink{discrete-lib_8h_a843b842e5066711775adbb4283ab7123}{Proportional}} gain, double timestep, \mbox{\hyperlink{struct_integrator}{Integrator}} \texorpdfstring{$\ast$}{*}result)
+\item 
+void \mbox{\hyperlink{discrete-lib_8c_abf49b9ab36bfb597a31aa07a181060f4}{Differentiator\+Init}} (\mbox{\hyperlink{discrete-lib_8h_a843b842e5066711775adbb4283ab7123}{Proportional}} gain, double timestep, \mbox{\hyperlink{struct_differentiator}{Differentiator}} \texorpdfstring{$\ast$}{*}result)
+\item 
+double \mbox{\hyperlink{discrete-lib_8c_a82440a88c7deb10c36dc52bd4fd9604b}{Cascade}} (double input, \mbox{\hyperlink{struct_biquad}{Biquad}} sys\mbox{[}$\,$\mbox{]}, int size, double lower\+\_\+lim, double upper\+\_\+lim)
+\item 
+double \mbox{\hyperlink{discrete-lib_8c_a86a96cf5ff64a3314aec2c32df34fc8e}{Integrate}} (double input, \mbox{\hyperlink{struct_integrator}{Integrator}} \texorpdfstring{$\ast$}{*}term, double lower\+\_\+lim, double upper\+\_\+lim)
+\item 
+double \mbox{\hyperlink{discrete-lib_8c_a1edb32f5f618b2127621dc893eca00b0}{Differentiate}} (double input, \mbox{\hyperlink{struct_differentiator}{Differentiator}} \texorpdfstring{$\ast$}{*}term, double lower\+\_\+lim, double upper\+\_\+lim)
+\item 
+double \mbox{\hyperlink{discrete-lib_8c_aaa5dc3cc4d9231b3245057fee9103d13}{PID}} (double input, \mbox{\hyperlink{discrete-lib_8h_a843b842e5066711775adbb4283ab7123}{Proportional}} \texorpdfstring{$\ast$}{*}p, \mbox{\hyperlink{struct_integrator}{Integrator}} \texorpdfstring{$\ast$}{*}i, \mbox{\hyperlink{struct_differentiator}{Differentiator}} \texorpdfstring{$\ast$}{*}d, double lower\+\_\+lim, double upper\+\_\+lim)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Discrete Control Law Implementation Library. 
+
+\begin{DoxyAuthor}{Author}
+Anti-\/\+Sway Team\+: Nguyen, Tri; Espinola, Malachi; Tevy, Vattanary; Hokenstad, Ethan; Neff, Callen) 
+\end{DoxyAuthor}
+\begin{DoxyVersion}{Version}
+0.\+1 
+\end{DoxyVersion}
+\begin{DoxyDate}{Date}
+2024-\/06-\/03
+\end{DoxyDate}
+\begin{DoxyCopyright}{Copyright}
+Copyright (c) 2024 
+\end{DoxyCopyright}
+
+
+\doxysubsection{Macro Definition Documentation}
+\Hypertarget{discrete-lib_8c_a67a7a1104ec7e0a91b2b2273e88667ab}\index{discrete-\/lib.c@{discrete-\/lib.c}!SATURATE@{SATURATE}}
+\index{SATURATE@{SATURATE}!discrete-\/lib.c@{discrete-\/lib.c}}
+\doxysubsubsection{\texorpdfstring{SATURATE}{SATURATE}}
+{\footnotesize\ttfamily \label{discrete-lib_8c_a67a7a1104ec7e0a91b2b2273e88667ab} 
+\#define SATURATE(\begin{DoxyParamCaption}\item[{}]{val}{, }\item[{}]{lo}{, }\item[{}]{hi}{}\end{DoxyParamCaption})~val $<$ lo ? lo \+: (val $>$ hi ? hi \+: val)}
+
+
+
+Saturates a value. 
+
+Saturates a value to be between some low and high value
+
+
+\begin{DoxyParams}{Parameters}
+{\em val} & The numerical value to saturate \\
+\hline
+{\em lo} & The numerical lower limit \\
+\hline
+{\em hi} & The numerical upper limit\\
+\hline
+\end{DoxyParams}
+Evaluates to val iff lo \texorpdfstring{$<$}{<}= val \texorpdfstring{$<$}{<}= hi, lo iff val \texorpdfstring{$<$}{<} lo and hi iff val \texorpdfstring{$>$}{>} hi 
+
+\doxysubsection{Function Documentation}
+\Hypertarget{discrete-lib_8c_a82440a88c7deb10c36dc52bd4fd9604b}\index{discrete-\/lib.c@{discrete-\/lib.c}!Cascade@{Cascade}}
+\index{Cascade@{Cascade}!discrete-\/lib.c@{discrete-\/lib.c}}
+\doxysubsubsection{\texorpdfstring{Cascade()}{Cascade()}}
+{\footnotesize\ttfamily \label{discrete-lib_8c_a82440a88c7deb10c36dc52bd4fd9604b} 
+double Cascade (\begin{DoxyParamCaption}\item[{double}]{input}{, }\item[{\mbox{\hyperlink{struct_biquad}{Biquad}}}]{sys}{\mbox{[}$\,$\mbox{]}, }\item[{int}]{size}{, }\item[{double}]{lower\+\_\+lim}{, }\item[{double}]{upper\+\_\+lim}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Executes a dynamic, discrete time system by using its biquad decomposition.
+
+
+\begin{DoxyParams}{Parameters}
+{\em input} & The input to the system \\
+\hline
+{\em sys} & The system, as an array of biquads \\
+\hline
+{\em size} & The size of sys \\
+\hline
+{\em lower\+\_\+lim} & The lower saturation limit of the system \\
+\hline
+{\em upper\+\_\+lim} & The upper saturation limit of the system\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The output of the system given the input
+\end{DoxyReturn}
+\begin{DoxyPrecond}{Precondition}
+The input is the next sampled value of the input to the system 
+\end{DoxyPrecond}
+\begin{DoxyPostcond}{Postcondition}
+The system is updated with current/past calculated values 
+\end{DoxyPostcond}
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=253pt]{discrete-lib_8c_a82440a88c7deb10c36dc52bd4fd9604b_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{discrete-lib_8c_a1edb32f5f618b2127621dc893eca00b0}\index{discrete-\/lib.c@{discrete-\/lib.c}!Differentiate@{Differentiate}}
+\index{Differentiate@{Differentiate}!discrete-\/lib.c@{discrete-\/lib.c}}
+\doxysubsubsection{\texorpdfstring{Differentiate()}{Differentiate()}}
+{\footnotesize\ttfamily \label{discrete-lib_8c_a1edb32f5f618b2127621dc893eca00b0} 
+double Differentiate (\begin{DoxyParamCaption}\item[{double}]{input}{, }\item[{\mbox{\hyperlink{struct_differentiator}{Differentiator}} \texorpdfstring{$\ast$}{*}}]{term}{, }\item[{double}]{lower\+\_\+lim}{, }\item[{double}]{upper\+\_\+lim}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Timesteps a Differentiation
+
+
+\begin{DoxyParams}{Parameters}
+{\em input} & The input to the differentiator \\
+\hline
+{\em term} & A pointer to an differentiator term \\
+\hline
+{\em lower\+\_\+lim} & The lower saturation limit of the system \\
+\hline
+{\em upper\+\_\+lim} & The upper saturation limit of the system\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The output of the differentiator given the input
+\end{DoxyReturn}
+\begin{DoxyPrecond}{Precondition}
+The input is the next sampled value of the input to the system 
+\end{DoxyPrecond}
+\begin{DoxyPostcond}{Postcondition}
+term is updated with current/past calculated values 
+\end{DoxyPostcond}
+\Hypertarget{discrete-lib_8c_abf49b9ab36bfb597a31aa07a181060f4}\index{discrete-\/lib.c@{discrete-\/lib.c}!DifferentiatorInit@{DifferentiatorInit}}
+\index{DifferentiatorInit@{DifferentiatorInit}!discrete-\/lib.c@{discrete-\/lib.c}}
+\doxysubsubsection{\texorpdfstring{DifferentiatorInit()}{DifferentiatorInit()}}
+{\footnotesize\ttfamily \label{discrete-lib_8c_abf49b9ab36bfb597a31aa07a181060f4} 
+void Differentiator\+Init (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{discrete-lib_8h_a843b842e5066711775adbb4283ab7123}{Proportional}}}]{gain}{, }\item[{double}]{timestep}{, }\item[{\mbox{\hyperlink{struct_differentiator}{Differentiator}} \texorpdfstring{$\ast$}{*}}]{result}{}\end{DoxyParamCaption})}
+
+Initializes a \doxylink{struct_differentiator}{Differentiator}
+
+
+\begin{DoxyParams}{Parameters}
+{\em gain} & The gain to assign the differentiator \\
+\hline
+{\em timestep} & The timestep to approximate the differentiator \\
+\hline
+{\em result} & A return parameter, which becomes the differentiator with the gain and timestep\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+result, which will be an differentiator with a gain gain, and the timestep 
+\end{DoxyReturn}
+\Hypertarget{discrete-lib_8c_aa069dddfdaabed9dc43f8180d982a908}\index{discrete-\/lib.c@{discrete-\/lib.c}!EvaluateBiquad@{EvaluateBiquad}}
+\index{EvaluateBiquad@{EvaluateBiquad}!discrete-\/lib.c@{discrete-\/lib.c}}
+\doxysubsubsection{\texorpdfstring{EvaluateBiquad()}{EvaluateBiquad()}}
+{\footnotesize\ttfamily \label{discrete-lib_8c_aa069dddfdaabed9dc43f8180d982a908} 
+static double Evaluate\+Biquad (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_biquad}{Biquad}} \texorpdfstring{$\ast$}{*}}]{sys}{, }\item[{double}]{input}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+Evaluates a singular dynamic distrete time biquad within a system, which itself is a system.
+
+
+\begin{DoxyParams}{Parameters}
+{\em sys} & The system \\
+\hline
+{\em input} & The system\textquotesingle{}s input\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The output of the system
+\end{DoxyReturn}
+\begin{DoxyPrecond}{Precondition}
+The input is the next sampled value of the input to the system 
+\end{DoxyPrecond}
+\begin{DoxyPostcond}{Postcondition}
+The system is updated with current/past calculated values 
+\end{DoxyPostcond}
+\Hypertarget{discrete-lib_8c_a86a96cf5ff64a3314aec2c32df34fc8e}\index{discrete-\/lib.c@{discrete-\/lib.c}!Integrate@{Integrate}}
+\index{Integrate@{Integrate}!discrete-\/lib.c@{discrete-\/lib.c}}
+\doxysubsubsection{\texorpdfstring{Integrate()}{Integrate()}}
+{\footnotesize\ttfamily \label{discrete-lib_8c_a86a96cf5ff64a3314aec2c32df34fc8e} 
+double Integrate (\begin{DoxyParamCaption}\item[{double}]{input}{, }\item[{\mbox{\hyperlink{struct_integrator}{Integrator}} \texorpdfstring{$\ast$}{*}}]{term}{, }\item[{double}]{lower\+\_\+lim}{, }\item[{double}]{upper\+\_\+lim}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Timesteps an Integration
+
+
+\begin{DoxyParams}{Parameters}
+{\em input} & The input to the integrator \\
+\hline
+{\em term} & A pointer to an integrator term \\
+\hline
+{\em lower\+\_\+lim} & The lower saturation limit of the system \\
+\hline
+{\em upper\+\_\+lim} & The upper saturation limit of the system\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The output of the integrator given the input
+\end{DoxyReturn}
+\begin{DoxyPrecond}{Precondition}
+The input is the next sampled value of the input to the system 
+\end{DoxyPrecond}
+\begin{DoxyPostcond}{Postcondition}
+term is updated with current/past calculated values 
+\end{DoxyPostcond}
+\Hypertarget{discrete-lib_8c_a659cfce6d9fac82a6542703423c4c765}\index{discrete-\/lib.c@{discrete-\/lib.c}!IntegratorInit@{IntegratorInit}}
+\index{IntegratorInit@{IntegratorInit}!discrete-\/lib.c@{discrete-\/lib.c}}
+\doxysubsubsection{\texorpdfstring{IntegratorInit()}{IntegratorInit()}}
+{\footnotesize\ttfamily \label{discrete-lib_8c_a659cfce6d9fac82a6542703423c4c765} 
+void Integrator\+Init (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{discrete-lib_8h_a843b842e5066711775adbb4283ab7123}{Proportional}}}]{gain}{, }\item[{double}]{timestep}{, }\item[{\mbox{\hyperlink{struct_integrator}{Integrator}} \texorpdfstring{$\ast$}{*}}]{result}{}\end{DoxyParamCaption})}
+
+Initializes an \doxylink{struct_integrator}{Integrator}
+
+
+\begin{DoxyParams}{Parameters}
+{\em gain} & The gain to assign the integrator \\
+\hline
+{\em timestep} & The timestep to approximate the integrator \\
+\hline
+{\em result} & A return parameter, which becomes the integrator with the gain and timestep\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+result, which will be an integrator with a gain gain, and the timestep 
+\end{DoxyReturn}
+\Hypertarget{discrete-lib_8c_aaa5dc3cc4d9231b3245057fee9103d13}\index{discrete-\/lib.c@{discrete-\/lib.c}!PID@{PID}}
+\index{PID@{PID}!discrete-\/lib.c@{discrete-\/lib.c}}
+\doxysubsubsection{\texorpdfstring{PID()}{PID()}}
+{\footnotesize\ttfamily \label{discrete-lib_8c_aaa5dc3cc4d9231b3245057fee9103d13} 
+double PID (\begin{DoxyParamCaption}\item[{double}]{input}{, }\item[{\mbox{\hyperlink{discrete-lib_8h_a843b842e5066711775adbb4283ab7123}{Proportional}} \texorpdfstring{$\ast$}{*}}]{p}{, }\item[{\mbox{\hyperlink{struct_integrator}{Integrator}} \texorpdfstring{$\ast$}{*}}]{i}{, }\item[{\mbox{\hyperlink{struct_differentiator}{Differentiator}} \texorpdfstring{$\ast$}{*}}]{d}{, }\item[{double}]{lower\+\_\+lim}{, }\item[{double}]{upper\+\_\+lim}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Timesteps a PID Controller
+
+
+\begin{DoxyParams}{Parameters}
+{\em input} & The input to the PID Controller \\
+\hline
+{\em p} & A pointer to the proportional term \\
+\hline
+{\em i} & A pointer to the integrator term \\
+\hline
+{\em d} & A pointer to the differentiator term \\
+\hline
+{\em lower\+\_\+lim} & The lower saturation limit of the system \\
+\hline
+{\em upper\+\_\+lim} & The upper saturation limit of the system\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The output of the PID Controller given the input
+\end{DoxyReturn}
+\begin{DoxyPrecond}{Precondition}
+The input is the next sampled value of the input to all non-\/\+NULL Control Blocks 
+
+If p, i or d is NULL, then those NULL terms don\textquotesingle{}t contribute 
+
+if p, i and d are all NULL, then the output is 0.\+0 
+\end{DoxyPrecond}
+\begin{DoxyPostcond}{Postcondition}
+i and d are updated with current/past calculated values 
+\end{DoxyPostcond}
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=215pt]{discrete-lib_8c_aaa5dc3cc4d9231b3245057fee9103d13_cgraph}
+\end{center}
+\end{figure}

@@ -1,0 +1,405 @@
+\doxysection{src/anti-\/sway.c File Reference}
+\hypertarget{anti-sway_8c}{}\label{anti-sway_8c}\index{src/anti-\/sway.c@{src/anti-\/sway.c}}
+
+
+Anti-\/\+Sway Control Law Implementation.  
+
+
+{\ttfamily \#include $<$stdbool.\+h$>$}\newline
+{\ttfamily \#include $<$pthread.\+h$>$}\newline
+{\ttfamily \#include $<$stdint.\+h$>$}\newline
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include $<$math.\+h$>$}\newline
+{\ttfamily \#include "{}setup.\+h"{}}\newline
+{\ttfamily \#include "{}io.\+h"{}}\newline
+{\ttfamily \#include "{}thread-\/lib.\+h"{}}\newline
+{\ttfamily \#include "{}discrete-\/lib.\+h"{}}\newline
+{\ttfamily \#include "{}record.\+h"{}}\newline
+{\ttfamily \#include "{}anti-\/sway.\+h"{}}\newline
+Include dependency graph for anti-\/sway.c\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{anti-sway_8c__incl}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_anti_sway_control_scheme}{Anti\+Sway\+Control\+Scheme}}
+\begin{DoxyCompactList}\small\item\em Anti-\/\+Sway Mode Feedback Control Block. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{anti-sway_8c_af02e45f15080b8ec9dd7b286157617ff}\label{anti-sway_8c_af02e45f15080b8ec9dd7b286157617ff} 
+\#define {\bfseries DATA\+\_\+\+LEN}~20
+\begin{DoxyCompactList}\small\item\em The number of entries. \end{DoxyCompactList}\item 
+\Hypertarget{anti-sway_8c_a554771ab4ad2f967a420dfc1200c61d0}\label{anti-sway_8c_a554771ab4ad2f967a420dfc1200c61d0} 
+\#define {\bfseries TUNING}
+\begin{DoxyCompactList}\small\item\em Tuning Mode. \end{DoxyCompactList}\item 
+\Hypertarget{anti-sway_8c_a1b8aa22390dcf54cefa6ed1f50ef2929}\label{anti-sway_8c_a1b8aa22390dcf54cefa6ed1f50ef2929} 
+\#define {\bfseries TUNING\+\_\+\+DATA\+\_\+\+LEN}~10
+\begin{DoxyCompactList}\small\item\em The number of array entries within the tuning file. \end{DoxyCompactList}\item 
+\Hypertarget{anti-sway_8c_a180f5fc9d3b8abf3cbe0e8741fd4e664}\label{anti-sway_8c_a180f5fc9d3b8abf3cbe0e8741fd4e664} 
+\#define {\bfseries LR\+\_\+X}~250
+\begin{DoxyCompactList}\small\item\em Learning Rate in X direction. \end{DoxyCompactList}\item 
+\Hypertarget{anti-sway_8c_aaf4d0c84ad15a19dd73131c4f3f5a9ba}\label{anti-sway_8c_aaf4d0c84ad15a19dd73131c4f3f5a9ba} 
+\#define {\bfseries LR\+\_\+Y}~250
+\begin{DoxyCompactList}\small\item\em Learning Rate in Y direction. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{anti-sway_8c_aeba75176272663471e400c1c816a8cfd}{ZERO\+\_\+\+GRAD}}()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+static void \mbox{\hyperlink{anti-sway_8c_ab0def74dd8e01a69299e90de3d908ffb}{Setup\+Scheme}} (\mbox{\hyperlink{struct_anti_sway_control_scheme}{Anti\+Sway\+Control\+Scheme}} \texorpdfstring{$\ast$}{*}scheme, \mbox{\hyperlink{discrete-lib_8h_a843b842e5066711775adbb4283ab7123}{Proportional}} K\+\_\+p, \mbox{\hyperlink{discrete-lib_8h_a843b842e5066711775adbb4283ab7123}{Proportional}} K\+\_\+i, \mbox{\hyperlink{discrete-lib_8h_a843b842e5066711775adbb4283ab7123}{Proportional}} m)
+\begin{DoxyCompactList}\small\item\em Sets up the Anti-\/\+Sway Control Law (its feedback path) \end{DoxyCompactList}\item 
+static void \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{anti-sway_8c_aec2761f3b6d968de754480d114fd4579}{Anti\+Sway\+Mode\+Thread}} (void \texorpdfstring{$\ast$}{*}resource)
+\begin{DoxyCompactList}\small\item\em Runs Anti-\/\+Sway. \end{DoxyCompactList}\item 
+static int \mbox{\hyperlink{anti-sway_8c_a37ac767cc33745df6f7e52ff6a6435d1}{Anti\+Sway\+Control\+Law}} (Velocity vel\+\_\+ref, Angle angle\+\_\+input, Velocity vel\+\_\+input, \mbox{\hyperlink{struct_anti_sway_control_scheme}{Anti\+Sway\+Control\+Scheme}} \texorpdfstring{$\ast$}{*}scheme, int(\texorpdfstring{$\ast$}{*}Set\+Voltage)(Voltage voltage))
+\begin{DoxyCompactList}\small\item\em Executes an iteration of the feedback path for Anti-\/\+Sway. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{anti-sway_8c_a05c2150260a69c98187405d22b9f9dc6}{Anti\+Sway\+Fork}} ()
+\begin{DoxyCompactList}\small\item\em Executes Anti-\/\+Sway Mode. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{anti-sway_8c_a99a2631efccd94414434bb28ce60f713}{Anti\+Sway\+Join}} ()
+\begin{DoxyCompactList}\small\item\em Stops Anti-\/\+Sway Mode. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{anti-sway_8c_ae7afeba78aea8244413fc694ff7e830a}\label{anti-sway_8c_ae7afeba78aea8244413fc694ff7e830a} 
+pthread\+\_\+t {\bfseries anti\+\_\+sway\+\_\+thread} = NULL
+\begin{DoxyCompactList}\small\item\em Thread ID. \end{DoxyCompactList}\item 
+\Hypertarget{anti-sway_8c_a2661b97128a6bfaeac3414c83d6a00fb}\label{anti-sway_8c_a2661b97128a6bfaeac3414c83d6a00fb} 
+\mbox{\hyperlink{struct_thread_resource}{Thread\+Resource}} {\bfseries anti\+\_\+sway\+\_\+resource}
+\begin{DoxyCompactList}\small\item\em Thread Resources (Shared Resources) \end{DoxyCompactList}\item 
+\Hypertarget{anti-sway_8c_a77c10c2cd372f3d9c35acf315cad24b6}\label{anti-sway_8c_a77c10c2cd372f3d9c35acf315cad24b6} 
+static double {\bfseries K\+\_\+ptx} = 51.\+55550206284189
+\begin{DoxyCompactList}\small\item\em The proportional constant for inner-\/loop. \end{DoxyCompactList}\item 
+\Hypertarget{anti-sway_8c_ad357ae182ae4ee79a8e66649efd69d9e}\label{anti-sway_8c_ad357ae182ae4ee79a8e66649efd69d9e} 
+static double {\bfseries K\+\_\+itx} = 33.\+28586146285062
+\begin{DoxyCompactList}\small\item\em The integral constant for inner-\/loop control. \end{DoxyCompactList}\item 
+\Hypertarget{anti-sway_8c_a4aac8a8bb4e6d4be451f839858e88703}\label{anti-sway_8c_a4aac8a8bb4e6d4be451f839858e88703} 
+static double {\bfseries K\+\_\+pty} = 0.\+8\texorpdfstring{$\ast$}{*}55.\+65965893434064
+\begin{DoxyCompactList}\small\item\em The proportional constant for inner-\/loop. \end{DoxyCompactList}\item 
+\Hypertarget{anti-sway_8c_a6b229bf43c8d61cf00fa72fed9b37260}\label{anti-sway_8c_a6b229bf43c8d61cf00fa72fed9b37260} 
+static double {\bfseries K\+\_\+ity} = 0.\+8\texorpdfstring{$\ast$}{*}31.\+59324977878787
+\begin{DoxyCompactList}\small\item\em The integral constant for inner-\/loop control. \end{DoxyCompactList}\item 
+\Hypertarget{anti-sway_8c_a392cea191a15637bfe8026e378b98bc0}\label{anti-sway_8c_a392cea191a15637bfe8026e378b98bc0} 
+static \mbox{\hyperlink{struct_anti_sway_control_scheme}{Anti\+Sway\+Control\+Scheme}} {\bfseries x\+\_\+control}
+\begin{DoxyCompactList}\small\item\em The Control Scheme for the X Motor. \end{DoxyCompactList}\item 
+\Hypertarget{anti-sway_8c_a629c51d39bccc6bc2623b393e8673481}\label{anti-sway_8c_a629c51d39bccc6bc2623b393e8673481} 
+static \mbox{\hyperlink{struct_anti_sway_control_scheme}{Anti\+Sway\+Control\+Scheme}} {\bfseries y\+\_\+control}
+\begin{DoxyCompactList}\small\item\em The Control Scheme for the Y Motor. \end{DoxyCompactList}\item 
+\Hypertarget{anti-sway_8c_a11614f44ef4d939bdd984953346a7572}\label{anti-sway_8c_a11614f44ef4d939bdd984953346a7572} 
+static int {\bfseries error}
+\begin{DoxyCompactList}\small\item\em Local Error Code. \end{DoxyCompactList}\item 
+\Hypertarget{anti-sway_8c_a5a1f155d95d058a0efeac0f5e1e29e51}\label{anti-sway_8c_a5a1f155d95d058a0efeac0f5e1e29e51} 
+static File\+ID\+\_\+t {\bfseries file} = -\/1
+\begin{DoxyCompactList}\small\item\em The file ID. \end{DoxyCompactList}\item 
+\Hypertarget{anti-sway_8c_a619bd77e030a7a2f68d4cc7a13bdcbf5}\label{anti-sway_8c_a619bd77e030a7a2f68d4cc7a13bdcbf5} 
+static char \texorpdfstring{$\ast$}{*} {\bfseries data\+\_\+file\+\_\+name} = "{}anti-\/sway.\+mat"{}
+\begin{DoxyCompactList}\small\item\em The file Name. \end{DoxyCompactList}\item 
+static char \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{anti-sway_8c_a3df6c268eb9de3b584cd89f9058f30f6}{data\+\_\+names}} \mbox{[}\mbox{\hyperlink{anti-sway_8c_af02e45f15080b8ec9dd7b286157617ff}{DATA\+\_\+\+LEN}}\mbox{]}
+\begin{DoxyCompactList}\small\item\em The data names. \end{DoxyCompactList}\item 
+\Hypertarget{anti-sway_8c_a7b4664587f00f51bc74963d9c3591790}\label{anti-sway_8c_a7b4664587f00f51bc74963d9c3591790} 
+static double {\bfseries data} \mbox{[}\mbox{\hyperlink{anti-sway_8c_af02e45f15080b8ec9dd7b286157617ff}{DATA\+\_\+\+LEN}}\mbox{]}
+\begin{DoxyCompactList}\small\item\em Buffer for data. \end{DoxyCompactList}\item 
+\Hypertarget{anti-sway_8c_a053a521868d16e054ab23866422b4003}\label{anti-sway_8c_a053a521868d16e054ab23866422b4003} 
+static double \texorpdfstring{$\ast$}{*} {\bfseries data\+\_\+buff} = \mbox{\hyperlink{anti-sway_8c_a7b4664587f00f51bc74963d9c3591790}{data}}
+\begin{DoxyCompactList}\small\item\em Pointer to next data point to insert into buffer. \end{DoxyCompactList}\item 
+\Hypertarget{anti-sway_8c_a7441ef0865bcb3db9b8064dd7375c1ea}\label{anti-sway_8c_a7441ef0865bcb3db9b8064dd7375c1ea} 
+static int {\bfseries id} = 1
+\begin{DoxyCompactList}\small\item\em ID variable. \end{DoxyCompactList}\item 
+\Hypertarget{anti-sway_8c_a87accd1af8e0aff4b818d891374f7cec}\label{anti-sway_8c_a87accd1af8e0aff4b818d891374f7cec} 
+static double {\bfseries t} = 0.\+0
+\begin{DoxyCompactList}\small\item\em timestamp \end{DoxyCompactList}\item 
+\Hypertarget{anti-sway_8c_a088726f01b6d19b7b3277f41af31e1ce}\label{anti-sway_8c_a088726f01b6d19b7b3277f41af31e1ce} 
+static File\+ID\+\_\+t {\bfseries tuning\+\_\+file} = -\/1
+\begin{DoxyCompactList}\small\item\em The tuning file. \end{DoxyCompactList}\item 
+\Hypertarget{anti-sway_8c_a93c18326690653eb01302bbab60c8e8a}\label{anti-sway_8c_a93c18326690653eb01302bbab60c8e8a} 
+static char \texorpdfstring{$\ast$}{*} {\bfseries tuning\+\_\+file\+\_\+name} = "{}anti-\/sway-\/tuning.\+mat"{}
+\begin{DoxyCompactList}\small\item\em The name of the tuning file. \end{DoxyCompactList}\item 
+static char \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{anti-sway_8c_afc55a566a13c0302f4264cec23baede8}{tuning\+\_\+data\+\_\+names}} \mbox{[}\mbox{\hyperlink{anti-sway_8c_a1b8aa22390dcf54cefa6ed1f50ef2929}{TUNING\+\_\+\+DATA\+\_\+\+LEN}}\mbox{]}
+\begin{DoxyCompactList}\small\item\em The names of the array entries for the tuning file. \end{DoxyCompactList}\item 
+static double \mbox{\hyperlink{anti-sway_8c_afb8d277465143ccab6da9f47e6ee87d1}{d\+Kp}} \mbox{[}2\mbox{]}
+\item 
+static double \mbox{\hyperlink{anti-sway_8c_a8b5b80d8a17499e769f0bbdd30530c48}{d\+Ki}} \mbox{[}2\mbox{]}
+\item 
+static int \mbox{\hyperlink{anti-sway_8c_a27f951997edc4c5d1ea5d521fd50980b}{total\+\_\+pts}} \mbox{[}2\mbox{]}
+\item 
+static double \mbox{\hyperlink{anti-sway_8c_a9dcb782276d37d5ab8cbc1011e8315cc}{prev\+\_\+int\+\_\+\+Kp}} \mbox{[}2\mbox{]}\mbox{[}550\mbox{]}
+\item 
+static double \mbox{\hyperlink{anti-sway_8c_a94d13d38beaab5dcfa2bc3be39890ae3}{prev\+\_\+int\+\_\+\+Ki}} \mbox{[}2\mbox{]}\mbox{[}550\mbox{]}
+\item 
+static int \mbox{\hyperlink{anti-sway_8c_abf1d0897646feb6e2c4421f06c77c3fe}{prev\+\_\+int\+\_\+i}} = 0
+\item 
+\Hypertarget{anti-sway_8c_a49572907041cf2a8fa5acd0a39a51bdd}\label{anti-sway_8c_a49572907041cf2a8fa5acd0a39a51bdd} 
+static bool {\bfseries int\+\_\+\+Kp\+\_\+first} = true
+\begin{DoxyCompactList}\small\item\em Indicates (false) if prev\+\_\+int\+\_\+\+Kp has any valid data in it. \end{DoxyCompactList}\item 
+\Hypertarget{anti-sway_8c_a616de186e2f14a419c8fc4af451386fb}\label{anti-sway_8c_a616de186e2f14a419c8fc4af451386fb} 
+static bool {\bfseries int\+\_\+\+Ki\+\_\+first} = true
+\begin{DoxyCompactList}\small\item\em Indicates (false) if prev\+\_\+int\+\_\+\+Ki has any valid data in it. \end{DoxyCompactList}\item 
+\Hypertarget{anti-sway_8c_a877efd14503b22df9a77eccc2ae8c0d2}\label{anti-sway_8c_a877efd14503b22df9a77eccc2ae8c0d2} 
+static double {\bfseries prev\+\_\+\+Kp} \mbox{[}2\mbox{]}
+\begin{DoxyCompactList}\small\item\em Stores previous Kp values in both x and y directions. \end{DoxyCompactList}\item 
+\Hypertarget{anti-sway_8c_a6fc0abc8515f2ec8029f49b35c0af1d6}\label{anti-sway_8c_a6fc0abc8515f2ec8029f49b35c0af1d6} 
+static double {\bfseries prev\+\_\+\+Ki} \mbox{[}2\mbox{]}
+\begin{DoxyCompactList}\small\item\em Stores previous Ki value sin both x and y directions. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Anti-\/\+Sway Control Law Implementation. 
+
+\begin{DoxyAuthor}{Author}
+Anti-\/\+Sway Team\+: Nguyen, Tri; Espinola, Malachi; Tevy, Vattanary; Hokenstad, Ethan; Neff, Callen) 
+\end{DoxyAuthor}
+\begin{DoxyVersion}{Version}
+0.\+1 
+\end{DoxyVersion}
+\begin{DoxyDate}{Date}
+2024-\/06-\/03
+\end{DoxyDate}
+\begin{DoxyCopyright}{Copyright}
+Copyright (c) 2024 
+\end{DoxyCopyright}
+
+
+\doxysubsection{Macro Definition Documentation}
+\Hypertarget{anti-sway_8c_aeba75176272663471e400c1c816a8cfd}\index{anti-\/sway.c@{anti-\/sway.c}!ZERO\_GRAD@{ZERO\_GRAD}}
+\index{ZERO\_GRAD@{ZERO\_GRAD}!anti-\/sway.c@{anti-\/sway.c}}
+\doxysubsubsection{\texorpdfstring{ZERO\_GRAD}{ZERO\_GRAD}}
+{\footnotesize\ttfamily \label{anti-sway_8c_aeba75176272663471e400c1c816a8cfd} 
+\#define ZERO\+\_\+\+GRAD(\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ \ \ \ \mbox{\hyperlink{anti-sway_8c_afb8d277465143ccab6da9f47e6ee87d1}{dKp}}[0]\ =\ 0.0;\ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \mbox{\hyperlink{anti-sway_8c_afb8d277465143ccab6da9f47e6ee87d1}{dKp}}[1]\ =\ 0.0;\ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \mbox{\hyperlink{anti-sway_8c_a8b5b80d8a17499e769f0bbdd30530c48}{dKi}}[0]\ =\ 0.0;\ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \mbox{\hyperlink{anti-sway_8c_a8b5b80d8a17499e769f0bbdd30530c48}{dKi}}[1]\ =\ 0.0;\ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \mbox{\hyperlink{anti-sway_8c_a27f951997edc4c5d1ea5d521fd50980b}{total\_pts}}[0]\ =\ 0;\ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \mbox{\hyperlink{anti-sway_8c_a27f951997edc4c5d1ea5d521fd50980b}{total\_pts}}[1]\ =\ 0;}
+
+\end{DoxyCode}
+Zeros out Gradients
+
+\begin{DoxyPostcond}{Postcondition}
+Zeros out d\+Kp and d\+Ki 
+\end{DoxyPostcond}
+
+
+\doxysubsection{Function Documentation}
+\Hypertarget{anti-sway_8c_a37ac767cc33745df6f7e52ff6a6435d1}\index{anti-\/sway.c@{anti-\/sway.c}!AntiSwayControlLaw@{AntiSwayControlLaw}}
+\index{AntiSwayControlLaw@{AntiSwayControlLaw}!anti-\/sway.c@{anti-\/sway.c}}
+\doxysubsubsection{\texorpdfstring{AntiSwayControlLaw()}{AntiSwayControlLaw()}}
+{\footnotesize\ttfamily \label{anti-sway_8c_a37ac767cc33745df6f7e52ff6a6435d1} 
+static int Anti\+Sway\+Control\+Law (\begin{DoxyParamCaption}\item[{Velocity}]{vel\+\_\+ref}{, }\item[{Angle}]{angle\+\_\+input}{, }\item[{Velocity}]{vel\+\_\+input}{, }\item[{\mbox{\hyperlink{struct_anti_sway_control_scheme}{Anti\+Sway\+Control\+Scheme}} \texorpdfstring{$\ast$}{*}}]{scheme}{, }\item[{int(\texorpdfstring{$\ast$}{*}}]{Set\+Voltage~}{)(Voltage voltage)}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+
+
+Executes an iteration of the feedback path for Anti-\/\+Sway. 
+
+Executes 1 timestep for the Anti-\/\+Sway Mode Control Law for its input to the plant
+
+
+\begin{DoxyParams}{Parameters}
+{\em vel\+\_\+ref} & The reference velocity for Anti-\/\+Sway Mode \\
+\hline
+{\em angle\+\_\+input} & The measured rope angle for Anti-\/\+Sway Mode \\
+\hline
+{\em vel\+\_\+input} & The measured velocity of the motor \\
+\hline
+{\em scheme} & A pointer to the \doxylink{struct_anti_sway_control_scheme}{Anti\+Sway\+Control\+Scheme} structure used to execute the control law \\
+\hline
+{\em Set\+Voltage} & The function that sets the voltage of the appropriate motor\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 upon success, negative otherwise
+\end{DoxyReturn}
+\begin{DoxyPrecond}{Precondition}
+scheme was not modified before use of this function 
+\end{DoxyPrecond}
+\begin{DoxyPostcond}{Postcondition}
+scheme is now updated with the input and outputs for the respective control scheme 
+\end{DoxyPostcond}
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{anti-sway_8c_a37ac767cc33745df6f7e52ff6a6435d1_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{anti-sway_8c_a05c2150260a69c98187405d22b9f9dc6}\index{anti-\/sway.c@{anti-\/sway.c}!AntiSwayFork@{AntiSwayFork}}
+\index{AntiSwayFork@{AntiSwayFork}!anti-\/sway.c@{anti-\/sway.c}}
+\doxysubsubsection{\texorpdfstring{AntiSwayFork()}{AntiSwayFork()}}
+{\footnotesize\ttfamily \label{anti-sway_8c_a05c2150260a69c98187405d22b9f9dc6} 
+int Anti\+Sway\+Fork (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Executes Anti-\/\+Sway Mode. 
+
+Executes Anti-\/\+Sway Mode (concurrently)
+
+\begin{DoxyPrecond}{Precondition}
+Anti-\/\+Sway Mode is not already running 
+\end{DoxyPrecond}
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{anti-sway_8c_a05c2150260a69c98187405d22b9f9dc6_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{anti-sway_8c_a99a2631efccd94414434bb28ce60f713}\index{anti-\/sway.c@{anti-\/sway.c}!AntiSwayJoin@{AntiSwayJoin}}
+\index{AntiSwayJoin@{AntiSwayJoin}!anti-\/sway.c@{anti-\/sway.c}}
+\doxysubsubsection{\texorpdfstring{AntiSwayJoin()}{AntiSwayJoin()}}
+{\footnotesize\ttfamily \label{anti-sway_8c_a99a2631efccd94414434bb28ce60f713} 
+int Anti\+Sway\+Join (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Stops Anti-\/\+Sway Mode. 
+
+Stops Anti-\/\+Sway Mode (concurrent process) Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{anti-sway_8c_a99a2631efccd94414434bb28ce60f713_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{anti-sway_8c_aec2761f3b6d968de754480d114fd4579}\index{anti-\/sway.c@{anti-\/sway.c}!AntiSwayModeThread@{AntiSwayModeThread}}
+\index{AntiSwayModeThread@{AntiSwayModeThread}!anti-\/sway.c@{anti-\/sway.c}}
+\doxysubsubsection{\texorpdfstring{AntiSwayModeThread()}{AntiSwayModeThread()}}
+{\footnotesize\ttfamily \label{anti-sway_8c_aec2761f3b6d968de754480d114fd4579} 
+static void \texorpdfstring{$\ast$}{*} Anti\+Sway\+Mode\+Thread (\begin{DoxyParamCaption}\item[{void \texorpdfstring{$\ast$}{*}}]{resource}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Runs Anti-\/\+Sway. 
+
+The Thread Function for Anti-\/\+Sway Mode
+
+
+\begin{DoxyParams}{Parameters}
+{\em resource} & A pointer to a Resource sturcture for Tracking Mode\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+NULL 
+\end{DoxyReturn}
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{anti-sway_8c_aec2761f3b6d968de754480d114fd4579_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{anti-sway_8c_ab0def74dd8e01a69299e90de3d908ffb}\index{anti-\/sway.c@{anti-\/sway.c}!SetupScheme@{SetupScheme}}
+\index{SetupScheme@{SetupScheme}!anti-\/sway.c@{anti-\/sway.c}}
+\doxysubsubsection{\texorpdfstring{SetupScheme()}{SetupScheme()}}
+{\footnotesize\ttfamily \label{anti-sway_8c_ab0def74dd8e01a69299e90de3d908ffb} 
+static void Setup\+Scheme (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_anti_sway_control_scheme}{Anti\+Sway\+Control\+Scheme}} \texorpdfstring{$\ast$}{*}}]{scheme}{, }\item[{\mbox{\hyperlink{discrete-lib_8h_a843b842e5066711775adbb4283ab7123}{Proportional}}}]{K\+\_\+p}{, }\item[{\mbox{\hyperlink{discrete-lib_8h_a843b842e5066711775adbb4283ab7123}{Proportional}}}]{K\+\_\+i}{, }\item[{\mbox{\hyperlink{discrete-lib_8h_a843b842e5066711775adbb4283ab7123}{Proportional}}}]{m}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+
+
+Sets up the Anti-\/\+Sway Control Law (its feedback path) 
+
+Sets up an \doxylink{struct_anti_sway_control_scheme}{Anti\+Sway\+Control\+Scheme}
+
+
+\begin{DoxyParams}{Parameters}
+{\em scheme} & The scheme to setup \\
+\hline
+{\em K\+\_\+p} & The proportional gain \\
+\hline
+{\em K\+\_\+i} & The integral gain \\
+\hline
+{\em m} & The combined masses\\
+\hline
+\end{DoxyParams}
+\begin{DoxyPostcond}{Postcondition}
+scheme is now setup with zero initial conditions and proper constants 
+\end{DoxyPostcond}
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=263pt]{anti-sway_8c_ab0def74dd8e01a69299e90de3d908ffb_cgraph}
+\end{center}
+\end{figure}
+
+
+\doxysubsection{Variable Documentation}
+\Hypertarget{anti-sway_8c_a3df6c268eb9de3b584cd89f9058f30f6}\index{anti-\/sway.c@{anti-\/sway.c}!data\_names@{data\_names}}
+\index{data\_names@{data\_names}!anti-\/sway.c@{anti-\/sway.c}}
+\doxysubsubsection{\texorpdfstring{data\_names}{data\_names}}
+{\footnotesize\ttfamily \label{anti-sway_8c_a3df6c268eb9de3b584cd89f9058f30f6} 
+char\texorpdfstring{$\ast$}{*} data\+\_\+names\mbox{[}\mbox{\hyperlink{anti-sway_8c_af02e45f15080b8ec9dd7b286157617ff}{DATA\+\_\+\+LEN}}\mbox{]}\hspace{0.3cm}{\ttfamily [static]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{=\ \{\textcolor{stringliteral}{"{}id"{}},\ \textcolor{stringliteral}{"{}t"{}},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}vel\_ref\_x"{}},\ \textcolor{stringliteral}{"{}vel\_ref\_y"{}},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}angle\_x"{}},\ \textcolor{stringliteral}{"{}angle\_y"{}},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}trolley\_vel\_x"{}},\ \textcolor{stringliteral}{"{}trolley\_vel\_y"{}},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}vel\_err\_x"{}},\ \textcolor{stringliteral}{"{}voltage\_x"{}},\ \textcolor{stringliteral}{"{}int\_out\_x"{}},\ \textcolor{stringliteral}{"{}Kp\_x'"{}},\ \textcolor{stringliteral}{"{}Ki\_x'"{}},\ \textcolor{stringliteral}{"{}loss\_x"{}},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}vel\_err\_y"{}},\ \textcolor{stringliteral}{"{}voltage\_y"{}},\ \textcolor{stringliteral}{"{}int\_out\_y"{}},\ \textcolor{stringliteral}{"{}Kp\_y'"{}},\ \textcolor{stringliteral}{"{}Ki\_y'"{}},\ \textcolor{stringliteral}{"{}loss\_y"{}}\}}
+
+\end{DoxyCode}
+
+
+The data names. 
+
+\Hypertarget{anti-sway_8c_a8b5b80d8a17499e769f0bbdd30530c48}\index{anti-\/sway.c@{anti-\/sway.c}!dKi@{dKi}}
+\index{dKi@{dKi}!anti-\/sway.c@{anti-\/sway.c}}
+\doxysubsubsection{\texorpdfstring{dKi}{dKi}}
+{\footnotesize\ttfamily \label{anti-sway_8c_a8b5b80d8a17499e769f0bbdd30530c48} 
+double d\+Ki\mbox{[}2\mbox{]}\hspace{0.3cm}{\ttfamily [static]}}
+
+The gradient component of the loss with respect to Ki, for both x and y directions \Hypertarget{anti-sway_8c_afb8d277465143ccab6da9f47e6ee87d1}\index{anti-\/sway.c@{anti-\/sway.c}!dKp@{dKp}}
+\index{dKp@{dKp}!anti-\/sway.c@{anti-\/sway.c}}
+\doxysubsubsection{\texorpdfstring{dKp}{dKp}}
+{\footnotesize\ttfamily \label{anti-sway_8c_afb8d277465143ccab6da9f47e6ee87d1} 
+double d\+Kp\mbox{[}2\mbox{]}\hspace{0.3cm}{\ttfamily [static]}}
+
+The gradient component of the loss with respect to Kp, for both x and y directions \Hypertarget{anti-sway_8c_abf1d0897646feb6e2c4421f06c77c3fe}\index{anti-\/sway.c@{anti-\/sway.c}!prev\_int\_i@{prev\_int\_i}}
+\index{prev\_int\_i@{prev\_int\_i}!anti-\/sway.c@{anti-\/sway.c}}
+\doxysubsubsection{\texorpdfstring{prev\_int\_i}{prev\_int\_i}}
+{\footnotesize\ttfamily \label{anti-sway_8c_abf1d0897646feb6e2c4421f06c77c3fe} 
+int prev\+\_\+int\+\_\+i = 0\hspace{0.3cm}{\ttfamily [static]}}
+
+The counter that tells the program where we are along a column within above 2 arrays \Hypertarget{anti-sway_8c_a94d13d38beaab5dcfa2bc3be39890ae3}\index{anti-\/sway.c@{anti-\/sway.c}!prev\_int\_Ki@{prev\_int\_Ki}}
+\index{prev\_int\_Ki@{prev\_int\_Ki}!anti-\/sway.c@{anti-\/sway.c}}
+\doxysubsubsection{\texorpdfstring{prev\_int\_Ki}{prev\_int\_Ki}}
+{\footnotesize\ttfamily \label{anti-sway_8c_a94d13d38beaab5dcfa2bc3be39890ae3} 
+double prev\+\_\+int\+\_\+\+Ki\mbox{[}2\mbox{]}\mbox{[}550\mbox{]}\hspace{0.3cm}{\ttfamily [static]}}
+
+Previous integral outputs with respect to change in Ki, for both x and y directions \Hypertarget{anti-sway_8c_a9dcb782276d37d5ab8cbc1011e8315cc}\index{anti-\/sway.c@{anti-\/sway.c}!prev\_int\_Kp@{prev\_int\_Kp}}
+\index{prev\_int\_Kp@{prev\_int\_Kp}!anti-\/sway.c@{anti-\/sway.c}}
+\doxysubsubsection{\texorpdfstring{prev\_int\_Kp}{prev\_int\_Kp}}
+{\footnotesize\ttfamily \label{anti-sway_8c_a9dcb782276d37d5ab8cbc1011e8315cc} 
+double prev\+\_\+int\+\_\+\+Kp\mbox{[}2\mbox{]}\mbox{[}550\mbox{]}\hspace{0.3cm}{\ttfamily [static]}}
+
+Previous integral outputs with respect to change in Kp, for both x and y directions \Hypertarget{anti-sway_8c_a27f951997edc4c5d1ea5d521fd50980b}\index{anti-\/sway.c@{anti-\/sway.c}!total\_pts@{total\_pts}}
+\index{total\_pts@{total\_pts}!anti-\/sway.c@{anti-\/sway.c}}
+\doxysubsubsection{\texorpdfstring{total\_pts}{total\_pts}}
+{\footnotesize\ttfamily \label{anti-sway_8c_a27f951997edc4c5d1ea5d521fd50980b} 
+int total\+\_\+pts\mbox{[}2\mbox{]}\hspace{0.3cm}{\ttfamily [static]}}
+
+The total number of data points used for d\+Kp and d\+Ki, for both x and y directions \Hypertarget{anti-sway_8c_afc55a566a13c0302f4264cec23baede8}\index{anti-\/sway.c@{anti-\/sway.c}!tuning\_data\_names@{tuning\_data\_names}}
+\index{tuning\_data\_names@{tuning\_data\_names}!anti-\/sway.c@{anti-\/sway.c}}
+\doxysubsubsection{\texorpdfstring{tuning\_data\_names}{tuning\_data\_names}}
+{\footnotesize\ttfamily \label{anti-sway_8c_afc55a566a13c0302f4264cec23baede8} 
+char\texorpdfstring{$\ast$}{*} tuning\+\_\+data\+\_\+names\mbox{[}\mbox{\hyperlink{anti-sway_8c_a1b8aa22390dcf54cefa6ed1f50ef2929}{TUNING\+\_\+\+DATA\+\_\+\+LEN}}\mbox{]}\hspace{0.3cm}{\ttfamily [static]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{=\ \{\textcolor{stringliteral}{"{}count\_x"{}},\ \textcolor{stringliteral}{"{}count\_y"{}},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}dKp\_x"{}},\ \textcolor{stringliteral}{"{}dKi\_x"{}},\ \textcolor{stringliteral}{"{}dKp\_y"{}},\ \textcolor{stringliteral}{"{}dKi\_y"{}},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Kp\_x"{}},\ \textcolor{stringliteral}{"{}Ki\_x"{}},\ \textcolor{stringliteral}{"{}Kp\_y"{}},\ \textcolor{stringliteral}{"{}Ki\_y"{}}\}}
+
+\end{DoxyCode}
+
+
+The names of the array entries for the tuning file. 
+

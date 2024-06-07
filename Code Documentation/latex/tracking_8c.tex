@@ -1,0 +1,254 @@
+\doxysection{src/tracking.c File Reference}
+\hypertarget{tracking_8c}{}\label{tracking_8c}\index{src/tracking.c@{src/tracking.c}}
+
+
+Tracking Mode Control Law.  
+
+
+{\ttfamily \#include $<$stdbool.\+h$>$}\newline
+{\ttfamily \#include $<$pthread.\+h$>$}\newline
+{\ttfamily \#include $<$stdint.\+h$>$}\newline
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include "{}setup.\+h"{}}\newline
+{\ttfamily \#include "{}io.\+h"{}}\newline
+{\ttfamily \#include "{}thread-\/lib.\+h"{}}\newline
+{\ttfamily \#include "{}discrete-\/lib.\+h"{}}\newline
+{\ttfamily \#include "{}record.\+h"{}}\newline
+{\ttfamily \#include "{}tracking.\+h"{}}\newline
+Include dependency graph for tracking.\+c\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{tracking_8c__incl}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_tracking_control_scheme}{Tracking\+Control\+Scheme}}
+\begin{DoxyCompactList}\small\item\em Tracking Mode Feedback Control Block. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{tracking_8c_a69c83bef9231e4ba0a0e10b42bcafd20}\label{tracking_8c_a69c83bef9231e4ba0a0e10b42bcafd20} 
+\#define {\bfseries NOMINAL\+\_\+\+REFERENCE\+\_\+\+ANGLE}~0.\+0
+\item 
+\Hypertarget{tracking_8c_aabd779802d5816bc27f860fdb5144182}\label{tracking_8c_aabd779802d5816bc27f860fdb5144182} 
+\#define {\bfseries T\+\_\+s}~0.\+1
+\item 
+\Hypertarget{tracking_8c_a49a038072f9cee822a67cbaada9b770e}\label{tracking_8c_a49a038072f9cee822a67cbaada9b770e} 
+\#define {\bfseries os}~0.\+05
+\item 
+\Hypertarget{tracking_8c_a932443f2ffea76469eaafbe4ad7c2e12}\label{tracking_8c_a932443f2ffea76469eaafbe4ad7c2e12} 
+\#define {\bfseries K\+\_\+pi}~1.\+0
+\item 
+\Hypertarget{tracking_8c_a4c258935d9952d72fd24bcce92c178e1}\label{tracking_8c_a4c258935d9952d72fd24bcce92c178e1} 
+\#define {\bfseries K\+\_\+po}~-\/2619.\+5
+\item 
+\Hypertarget{tracking_8c_aacd55bd5f09b9a0321218f0f9ca4e8c4}\label{tracking_8c_aacd55bd5f09b9a0321218f0f9ca4e8c4} 
+\#define {\bfseries B\+\_\+t}~(8 \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{thread-lib_8h_a4da22cb76511008562d997c7a7dcb6fd}{m\+\_\+p}} / T\+\_\+s)
+\item 
+\Hypertarget{tracking_8c_af02e45f15080b8ec9dd7b286157617ff}\label{tracking_8c_af02e45f15080b8ec9dd7b286157617ff} 
+\#define {\bfseries DATA\+\_\+\+LEN}~12
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+static void \mbox{\hyperlink{tracking_8c_a6534b293c80ffafaaa77d8144c9dc1ac}{Setup\+Scheme}} (\mbox{\hyperlink{struct_tracking_control_scheme}{Tracking\+Control\+Scheme}} \texorpdfstring{$\ast$}{*}scheme, \mbox{\hyperlink{discrete-lib_8h_a843b842e5066711775adbb4283ab7123}{Proportional}} K\+\_\+o, \mbox{\hyperlink{discrete-lib_8h_a843b842e5066711775adbb4283ab7123}{Proportional}} K\+\_\+i, \mbox{\hyperlink{discrete-lib_8h_a843b842e5066711775adbb4283ab7123}{Proportional}} B)
+\item 
+static void \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{tracking_8c_a3100ac6cbe8f7a8ad044a9f52c9bb1d4}{Tracking\+Mode\+Thread}} (void \texorpdfstring{$\ast$}{*}resource)
+\item 
+static int \mbox{\hyperlink{tracking_8c_aa55145b60d7d18f523619a2f0c4537a2}{Tracking\+Control\+Law}} (Angle angle\+\_\+ref, Angle angle\+\_\+input, Velocity pos\+\_\+vel, \mbox{\hyperlink{struct_tracking_control_scheme}{Tracking\+Control\+Scheme}} \texorpdfstring{$\ast$}{*}scheme, int(\texorpdfstring{$\ast$}{*}Set\+Voltage)(Voltage voltage))
+\item 
+int \mbox{\hyperlink{tracking_8c_a5b32344d5c07f1e78c46cca875e7af86}{Tracking\+Fork}} ()
+\item 
+int \mbox{\hyperlink{tracking_8c_a227acfbc56ccc8b4ef7715ce3634bd82}{Tracking\+Join}} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{tracking_8c_aca333e2112ef85b8da7c5c58461240c2}\label{tracking_8c_aca333e2112ef85b8da7c5c58461240c2} 
+pthread\+\_\+t {\bfseries tracking\+\_\+thread}
+\item 
+\Hypertarget{tracking_8c_abf4dd7d4f72545e3a4c3791318b9e3ac}\label{tracking_8c_abf4dd7d4f72545e3a4c3791318b9e3ac} 
+\mbox{\hyperlink{struct_thread_resource}{Thread\+Resource}} {\bfseries resource}
+\item 
+\Hypertarget{tracking_8c_a0e13767f4b9a8dd851c33d9d703a38af}\label{tracking_8c_a0e13767f4b9a8dd851c33d9d703a38af} 
+static \mbox{\hyperlink{struct_tracking_control_scheme}{Tracking\+Control\+Scheme}} {\bfseries x\+\_\+control}
+\item 
+\Hypertarget{tracking_8c_a628e5f5cf586791772b139df67caeb19}\label{tracking_8c_a628e5f5cf586791772b139df67caeb19} 
+static \mbox{\hyperlink{struct_tracking_control_scheme}{Tracking\+Control\+Scheme}} {\bfseries y\+\_\+control}
+\item 
+\Hypertarget{tracking_8c_a11614f44ef4d939bdd984953346a7572}\label{tracking_8c_a11614f44ef4d939bdd984953346a7572} 
+static int {\bfseries error}
+\item 
+\Hypertarget{tracking_8c_a5a1f155d95d058a0efeac0f5e1e29e51}\label{tracking_8c_a5a1f155d95d058a0efeac0f5e1e29e51} 
+static File\+ID\+\_\+t {\bfseries file} = -\/1
+\item 
+\Hypertarget{tracking_8c_a619bd77e030a7a2f68d4cc7a13bdcbf5}\label{tracking_8c_a619bd77e030a7a2f68d4cc7a13bdcbf5} 
+static char \texorpdfstring{$\ast$}{*} {\bfseries data\+\_\+file\+\_\+name} = "{}tracking.\+mat"{}
+\item 
+static char \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{tracking_8c_a3df6c268eb9de3b584cd89f9058f30f6}{data\+\_\+names}} \mbox{[}\mbox{\hyperlink{anti-sway_8c_af02e45f15080b8ec9dd7b286157617ff}{DATA\+\_\+\+LEN}}\mbox{]}
+\item 
+\Hypertarget{tracking_8c_a7b4664587f00f51bc74963d9c3591790}\label{tracking_8c_a7b4664587f00f51bc74963d9c3591790} 
+static double {\bfseries data} \mbox{[}\mbox{\hyperlink{anti-sway_8c_af02e45f15080b8ec9dd7b286157617ff}{DATA\+\_\+\+LEN}}\mbox{]}
+\item 
+\Hypertarget{tracking_8c_a053a521868d16e054ab23866422b4003}\label{tracking_8c_a053a521868d16e054ab23866422b4003} 
+static double \texorpdfstring{$\ast$}{*} {\bfseries data\+\_\+buff} = \mbox{\hyperlink{anti-sway_8c_a7b4664587f00f51bc74963d9c3591790}{data}}
+\item 
+\Hypertarget{tracking_8c_a7441ef0865bcb3db9b8064dd7375c1ea}\label{tracking_8c_a7441ef0865bcb3db9b8064dd7375c1ea} 
+static int {\bfseries id} = 1
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Tracking Mode Control Law. 
+
+\begin{DoxyAuthor}{Author}
+Anti-\/\+Sway Team\+: Nguyen, Tri; Espinola, Malachi; Tevy, Vattanary; Hokenstad, Ethan; Neff, Callen) 
+\end{DoxyAuthor}
+\begin{DoxyVersion}{Version}
+0.\+1 
+\end{DoxyVersion}
+\begin{DoxyDate}{Date}
+2024-\/06-\/03
+\end{DoxyDate}
+\begin{DoxyCopyright}{Copyright}
+Copyright (c) 2024 
+\end{DoxyCopyright}
+
+
+\doxysubsection{Function Documentation}
+\Hypertarget{tracking_8c_a6534b293c80ffafaaa77d8144c9dc1ac}\index{tracking.c@{tracking.c}!SetupScheme@{SetupScheme}}
+\index{SetupScheme@{SetupScheme}!tracking.c@{tracking.c}}
+\doxysubsubsection{\texorpdfstring{SetupScheme()}{SetupScheme()}}
+{\footnotesize\ttfamily \label{tracking_8c_a6534b293c80ffafaaa77d8144c9dc1ac} 
+static void Setup\+Scheme (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_tracking_control_scheme}{Tracking\+Control\+Scheme}} \texorpdfstring{$\ast$}{*}}]{scheme}{, }\item[{\mbox{\hyperlink{discrete-lib_8h_a843b842e5066711775adbb4283ab7123}{Proportional}}}]{K\+\_\+o}{, }\item[{\mbox{\hyperlink{discrete-lib_8h_a843b842e5066711775adbb4283ab7123}{Proportional}}}]{K\+\_\+i}{, }\item[{\mbox{\hyperlink{discrete-lib_8h_a843b842e5066711775adbb4283ab7123}{Proportional}}}]{B}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+Sets up a Tracking\+Control Scheme
+
+
+\begin{DoxyParams}{Parameters}
+{\em scheme} & The scheme to setup \\
+\hline
+{\em K\+\_\+o} & The outer loop gain \\
+\hline
+{\em K\+\_\+i} & The inner loop gain \\
+\hline
+{\em B} & The artificial damping to impose\\
+\hline
+\end{DoxyParams}
+\begin{DoxyPostcond}{Postcondition}
+scheme is setup with appropriate outer/inner-\/loop control characteristics 
+\end{DoxyPostcond}
+\Hypertarget{tracking_8c_aa55145b60d7d18f523619a2f0c4537a2}\index{tracking.c@{tracking.c}!TrackingControlLaw@{TrackingControlLaw}}
+\index{TrackingControlLaw@{TrackingControlLaw}!tracking.c@{tracking.c}}
+\doxysubsubsection{\texorpdfstring{TrackingControlLaw()}{TrackingControlLaw()}}
+{\footnotesize\ttfamily \label{tracking_8c_aa55145b60d7d18f523619a2f0c4537a2} 
+static int Tracking\+Control\+Law (\begin{DoxyParamCaption}\item[{Angle}]{angle\+\_\+ref}{, }\item[{Angle}]{angle\+\_\+input}{, }\item[{Velocity}]{pos\+\_\+vel}{, }\item[{\mbox{\hyperlink{struct_tracking_control_scheme}{Tracking\+Control\+Scheme}} \texorpdfstring{$\ast$}{*}}]{scheme}{, }\item[{int(\texorpdfstring{$\ast$}{*}}]{Set\+Voltage~}{)(Voltage voltage)}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+Executes 1 timestep for the Tracking Mode Control Law for its input to the plant
+
+
+\begin{DoxyParams}{Parameters}
+{\em angle\+\_\+ref} & The reference angle for Tracking Mode \\
+\hline
+{\em angle\+\_\+input} & The measured rope angle for Tracking Mode \\
+\hline
+{\em pos\+\_\+vel} & The measured velocity of the motor \\
+\hline
+{\em scheme} & A pointer to the \doxylink{struct_tracking_control_scheme}{Tracking\+Control\+Scheme} structure used to execute the control law \\
+\hline
+{\em Set\+Voltage} & The function that sets the voltage of the appropriate motor\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 upon success, negative otherwise
+\end{DoxyReturn}
+\begin{DoxyPrecond}{Precondition}
+scheme was not modified before use of this function 
+\end{DoxyPrecond}
+\begin{DoxyPostcond}{Postcondition}
+scheme is now updated with the input and outputs for the respective control scheme 
+\end{DoxyPostcond}
+\Hypertarget{tracking_8c_a5b32344d5c07f1e78c46cca875e7af86}\index{tracking.c@{tracking.c}!TrackingFork@{TrackingFork}}
+\index{TrackingFork@{TrackingFork}!tracking.c@{tracking.c}}
+\doxysubsubsection{\texorpdfstring{TrackingFork()}{TrackingFork()}}
+{\footnotesize\ttfamily \label{tracking_8c_a5b32344d5c07f1e78c46cca875e7af86} 
+int Tracking\+Fork (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+Executes Tracking Mode (concurrently)
+
+\begin{DoxyPrecond}{Precondition}
+Tracking Mode is not already running
+\end{DoxyPrecond}
+\begin{DoxyReturn}{Returns}
+0 upon success, negative if error 
+\end{DoxyReturn}
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{tracking_8c_a5b32344d5c07f1e78c46cca875e7af86_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{tracking_8c_a227acfbc56ccc8b4ef7715ce3634bd82}\index{tracking.c@{tracking.c}!TrackingJoin@{TrackingJoin}}
+\index{TrackingJoin@{TrackingJoin}!tracking.c@{tracking.c}}
+\doxysubsubsection{\texorpdfstring{TrackingJoin()}{TrackingJoin()}}
+{\footnotesize\ttfamily \label{tracking_8c_a227acfbc56ccc8b4ef7715ce3634bd82} 
+int Tracking\+Join (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+Stops Tracking Mode (concurrent process)
+
+\begin{DoxyReturn}{Returns}
+0 upon success, negative if error 
+\end{DoxyReturn}
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=257pt]{tracking_8c_a227acfbc56ccc8b4ef7715ce3634bd82_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{tracking_8c_a3100ac6cbe8f7a8ad044a9f52c9bb1d4}\index{tracking.c@{tracking.c}!TrackingModeThread@{TrackingModeThread}}
+\index{TrackingModeThread@{TrackingModeThread}!tracking.c@{tracking.c}}
+\doxysubsubsection{\texorpdfstring{TrackingModeThread()}{TrackingModeThread()}}
+{\footnotesize\ttfamily \label{tracking_8c_a3100ac6cbe8f7a8ad044a9f52c9bb1d4} 
+static void \texorpdfstring{$\ast$}{*} Tracking\+Mode\+Thread (\begin{DoxyParamCaption}\item[{void \texorpdfstring{$\ast$}{*}}]{resource}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+The Thread Function for Tracking Mode
+
+
+\begin{DoxyParams}{Parameters}
+{\em resource} & A pointer to a Resource sturcture for Tracking Mode\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+NULL 
+\end{DoxyReturn}
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{tracking_8c_a3100ac6cbe8f7a8ad044a9f52c9bb1d4_cgraph}
+\end{center}
+\end{figure}
+
+
+\doxysubsection{Variable Documentation}
+\Hypertarget{tracking_8c_a3df6c268eb9de3b584cd89f9058f30f6}\index{tracking.c@{tracking.c}!data\_names@{data\_names}}
+\index{data\_names@{data\_names}!tracking.c@{tracking.c}}
+\doxysubsubsection{\texorpdfstring{data\_names}{data\_names}}
+{\footnotesize\ttfamily \label{tracking_8c_a3df6c268eb9de3b584cd89f9058f30f6} 
+char\texorpdfstring{$\ast$}{*} data\+\_\+names\mbox{[}\mbox{\hyperlink{anti-sway_8c_af02e45f15080b8ec9dd7b286157617ff}{DATA\+\_\+\+LEN}}\mbox{]}\hspace{0.3cm}{\ttfamily [static]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{=\ \{\textcolor{stringliteral}{"{}id"{}},\ \textcolor{stringliteral}{"{}t"{}},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}angle\_x"{}},\ \textcolor{stringliteral}{"{}angle\_y"{}},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}trolley\_pos\_x"{}},\ \textcolor{stringliteral}{"{}trolley\_pos\_y"{}},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}trolley\_vel\_x"{}},\ \textcolor{stringliteral}{"{}trolley\_vel\_y"{}},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}inner\_x"{}},\ \textcolor{stringliteral}{"{}voltage\_x"{}},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}inner\_y"{}},\ \textcolor{stringliteral}{"{}voltage\_y"{}}\}}
+
+\end{DoxyCode}

@@ -1,5 +1,14 @@
-// Copyright 2024 Anti-Sway Team (Nguyen, Tri; Espinola, Malachi;
-// Tevy, Vattanary; Hokenstad, Ethan; Neff, Callen)
+/**
+ * @file discrete-lib.h
+ * @author Anti-Sway Team: Nguyen, Tri; Espinola, Malachi;
+ * Tevy, Vattanary; Hokenstad, Ethan; Neff, Callen)
+ * @brief Discrete Control Law Implementation Library Header
+ * @version 0.1
+ * @date 2024-06-03
+ * 
+ * @copyright Copyright (c) 2024
+ * 
+ */
 
 #ifndef DISCRETE_LIB_H_
 #define DISCRETE_LIB_H_
@@ -15,48 +24,56 @@
 
 
 /**
+ * @brief Biquad
+ * 
  * A struct representing a biquad
 */
 typedef struct {
-    // The numerator coefficients, in decreasing order of time delays
-    // (z^0, z^-1, z^-2)
+    //! The numerator coefficients, in decreasing order of time delays
+    /*! The numerator coefficients, in decreasing order of time delays
+    (z^0, z^-1, z^-2) */
     double numerator[3];
-    // The denominator coefficients, in decreasing order of time delays
-    // (z^0, z^-1, z^-2)
+    //! The denominator coefficients, in decreasing order of time delays
+    /*! The denominator coefficients, in decreasing order of time delays
+    (z^0, z^-1, z^-2) */
     double denominator[3];
-    // The previous inputs, in increasing time delays
-    // (z^-1, z^-2)
+    //! The previous inputs, in increasing time delays
+    /*! The previous inputs, in increasing time delays
+    (z^-1, z^-2) */
     double prev_input[2];
-    // The previous outputs, in increasing time delays
-    // (z^-1, z^-2)
+    //! The previous outputs, in increasing time delays
+    /*! The previous outputs, in increasing time delays
+    (z^-1, z^-2) */
     double prev_output[2];
 } Biquad;
 
 /**
+ * @brief Control Block: Proportion
+ * 
  * A proportional constant
 */
 typedef float Proportional;
 
 /**
+ * @brief Control Block: Integrator
+ * 
  * A struct representing an integrator
 */
 typedef struct {
-    Proportional gain;  // Accounts for timestep
-    // Biquad integral =
-    // {{1.0, 1.0, 0.0}, {2.0, -2.0, 0.0}, {0.0, 0.0}, {0.0, 0.0}};
-    double prev_input;
-    double prev_output;
+    Proportional gain;   //! Integral Gain (with Timestep)
+    double prev_input;   //! Previous input
+    double prev_output;  //! Previous output
 } Integrator;
 
 /**
+ * @brief Control Block: Differentiator
+ * 
  * A struct representing a derivative term
 */
 typedef struct {
-    Proportional gain;  // Accounts for timestep
-    // Biquad derivative =
-    // {{2.0, -2.0, 0.0}, {1.0, 1.0, 0.0}, {0.0, 0.0}, {0.0, 0.0}};
-    double prev_input;
-    double prev_output;
+    Proportional gain;   //! Differential Gain (with Timestep)
+    double prev_input;   //! Previous input
+    double prev_output;  //! Previous output
 } Differentiator;
 
 
@@ -108,7 +125,7 @@ void DifferentiatorInit(Proportional gain,
  * @return The output of the system given the input
  * 
  * @pre The input is the next sampled value of the input to
- * the system 
+ * the system
  * @post The system is updated with current/past calculated values
 */
 inline double Cascade(double input,
@@ -168,7 +185,7 @@ inline double Differentiate(double input,
  * @return The output of the PID Controller given the input
  * 
  * @pre The input is the next sampled value of the input to
- * the system
+ * all non-NULL Control Blocks
  * @pre If p, i or d is NULL, then those NULL terms don't contribute
  * @pre if p, i and d are all NULL, then the output is 0.0
  * @post i and d are updated with current/past calculated values

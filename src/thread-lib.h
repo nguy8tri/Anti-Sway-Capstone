@@ -1,5 +1,13 @@
-// Copyright 2024 Anti-Sway Team (Nguyen, Tri; Espinola, Malachi;
-// Tevy, Vattanary; Hokenstad, Ethan; Neff, Callen)
+/**
+ * @file thread-lib.h
+ * @author Anti-Sway Team: Nguyen, Tri; Espinola, Malachi;
+ * Tevy, Vattanary; Hokenstad, Ethan; Neff, Callen
+ * @brief Thread Library
+ * @version 0.1
+ * @date 2024-06-03
+ * 
+ * @copyright Copyright (c) 2024
+ */
 
 #ifndef THREAD_LIB_H_
 #define THREAD_LIB_H_
@@ -16,51 +24,50 @@
 
 #include "setup.h"
 
+
 /* Thread Data Structures */
 
+
 /**
- * Defines the general ThreadResource
-*/
+ * @brief Parameter for Threading Functions
+ * 
+ * Represents a resource for a thread
+ */
 typedef struct {
-    NiFpga_IrqContext irq_context;  // context
-    NiFpga_Bool irq_thread_rdy;  // stop signal
+    NiFpga_IrqContext irq_context;  /// context
+    NiFpga_Bool irq_thread_rdy;  /// stop signal
 } ThreadResource;
 
 
 /* Time Constants */
 
 
-// The timestep, in microseconds (us)
+/// The timestep, in microseconds (us)
 #define BTI_US 5000u
-// The timestep, in milliseconds (ms)
+/// The timestep, in milliseconds (ms)
 #define BTI_MS 5u
-// The timestep, in seconds (s)
+/// The timestep, in seconds (s)
 #define BTI_S 0.005
 
 
 /* Physical Constants */
 
 
-// Acceleration due to Gravity (m/s^2)
+/// Acceleration due to Gravity (m/s^2)
 #define g 9.81
-// Pi
+/// Pi
 #define PI 3.141592653549
-// Length of Rope (m)
-// TODO(nguy8tri): Define this quantity
+/// Length of Rope (m)
 #define l 0.47
-// Mass of the double Trolley (kg)
+/// Mass of the double Trolley (kg)
 #define m_dt 2.092
-// Mass of the single Trolley (kg)
+/// Mass of the single Trolley (kg)
 #define m_st 0.664
-// TODO(nguy8tri): Change the masses
-// Mass of whole system 2.092 kg
-// Mass of single trolley: 0.664 kg
-// Mass of User 0.765 kg
-// Mass of User (kg)
+/// Mass of User (kg)
 #define m_p 0.765
 
 
-/* MyRio Session */
+/*/ MyRio Session */
 extern NiFpga_Session myrio_session;
 
 
@@ -68,7 +75,9 @@ extern NiFpga_Session myrio_session;
 
 
 /**
- * Starts a thread
+ * @brief Starts a thread
+ * 
+ * Starts a new thread within this process.
  * 
  * @param thread The pthread_t ID variable to hold the thread's ID
  * @param function The Thread Function to execute for the thread
@@ -85,16 +94,21 @@ extern NiFpga_Session myrio_session;
     VERIFY(error, pthread_create(&thread, NULL, function, &resource))
 
 /**
+ * @brief Registers the global timer with a thread
+ * 
  * Registers the timer (global) with a particular thread (via its resource)
  * 
  * @param resource The ThreadResource associated with a thread
  * 
+ * @pre No other thread is using the global timer
  * @post The thread associated with resource is now associated with the global timer
 */
 #define REGISTER_TIMER(resource) \
     Irq_RegisterTimerIrq(&timer, &(resource.irq_context), BTI_US)
 
 /**
+ * @brief Stops a thread in this process
+ * 
  * Signals a Thread using a ThreadResource object to stop
  * 
  * @param thread The pthread_t holding the ID of the thread
@@ -112,6 +126,8 @@ extern NiFpga_Session myrio_session;
     VERIFY(error, pthread_join(thread, NULL))
 
 /**
+ * @brief Unregisters the global timer with a thread
+ * 
  * Dissasociates a thread with a timer (via its resource)
  * 
  * @param resource The ThreadResource to disassociate the global timer with
@@ -132,7 +148,7 @@ extern NiFpga_Session myrio_session;
  * time step (BTI_S/MS/US)
  * @post The timer will trigger after waiting for the standard time step (BTI_S/MS/US)
 */
-#define TIMER_TRIGGER(irq_assert, resource) \
+#define \
     Irq_Wait(resource->irq_context, \
              TIMERIRQNO, \
              &irq_assert, \

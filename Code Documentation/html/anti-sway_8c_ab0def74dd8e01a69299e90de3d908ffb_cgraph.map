@@ -1,0 +1,5 @@
+<map id="SetupScheme" name="SetupScheme">
+<area shape="rect" id="Node000001" title="Sets up the Anti&#45;Sway Control Law (its feedback path)" alt="" coords="5,5,109,32"/>
+<area shape="rect" id="Node000002" href="$discrete-lib_8c.html#a659cfce6d9fac82a6542703423c4c765" title=" " alt="" coords="157,5,249,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="109,16,141,16,141,21,109,21"/>
+</map>
