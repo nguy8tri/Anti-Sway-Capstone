@@ -1,5 +1,14 @@
-// Copyright 2024 Anti-Sway Team (Nguyen, Tri; Espinola, Malachi;
-// Tevy, Vattanary; Hokenstad, Ethan; Neff, Callen)
+/**
+ * @file tracking.c
+ * @author Anti-Sway Team: Nguyen, Tri; Espinola, Malachi;
+ * Tevy, Vattanary; Hokenstad, Ethan; Neff, Callen)
+ * @brief Tracking Mode Control Law
+ * @version 0.1
+ * @date 2024-06-03
+ * 
+ * @copyright Copyright (c) 2024
+ * 
+ */
 
 
 #include <stdbool.h>
@@ -29,10 +38,14 @@ ThreadResource resource;
 
 
 /**
+ * @brief Tracking Mode Feedback Control Block
+ * 
  * Represents the Inner and Outer Loop Elements
 */
 typedef struct {
+    //! Combined Outer-Loop Constant
     Proportional combined_constants;
+    //! Artifical Damping (Inner Loop Feedback Gain)
     Proportional damping;
 } TrackingControlScheme;
 

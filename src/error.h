@@ -1,5 +1,14 @@
-// Copyright 2024 Anti-Sway Team (Nguyen, Tri; Espinola, Malachi;
-// Tevy, Vattanary; Hokenstad, Ethan; Neff, Callen)
+/**
+ * @file error.h
+ * @author Anti-Sway Team: Nguyen, Tri; Espinola, Malachi;
+ * Tevy, Vattanary; Hokenstad, Ethan; Neff, Callen)
+ * @brief Universal Error Library
+ * @version 0.1
+ * @date 2024-06-03
+ * 
+ * @copyright Copyright (c) 2024
+ * 
+ */
 
 #ifndef ERROR_H_
 #define ERROR_H_
@@ -20,7 +29,7 @@ extern int u_error;
 #define EOTBD -2
 // Velocity Exceeded Error
 #define EVTYE -3
-// Unexpected Saturation Error
+// Angle Sensor Saturation Error
 #define ESTRN -4
 // Encoder Error
 #define EENCR -5

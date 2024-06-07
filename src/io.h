@@ -1,5 +1,14 @@
-// Copyright 2024 Anti-Sway Team (Nguyen, Tri; Espinola, Malachi;
-// Tevy, Vattanary; Hokenstad, Ethan; Neff, Callen)
+/**
+ * @file io.h
+ * @author Anti-Sway Team: Nguyen, Tri; Espinola, Malachi;
+ * Tevy, Vattanary; Hokenstad, Ethan; Neff, Callen)
+ * @brief Sensor/Actuator (Input/Output) Interfacing Library Header
+ * @version 0.1
+ * @date 2024-06-03
+ * 
+ * @copyright Copyright (c) 2024
+ * 
+ */
 
 #ifndef IO_H_
 #define IO_H_
@@ -11,36 +20,52 @@
 
 /* Input/Output Data Types */
 
+// Alias for an Angle
 typedef float Angle;
+// Alias for a Position
 typedef float Position;
+// Alias for Velocity
 typedef float Velocity;
+// Alias for Voltage
 typedef float Voltage;
 
 
 /**
+ * @brief A 2D Angle
+ * 
  * Defines the angle of the harness
  * along both directions, in radians
 */
 typedef struct {
+    //! Angle Parallel to X Direction
     Angle x_angle;
+    //! Angle Parallel to Y Direction
     Angle y_angle;
 } Angles;
 
 /**
+ * @brief A 2D Position
+ * 
  * Defines the position of an object
  * in 2D space, in meters
 */
 typedef struct {
+    //! X Position
     Position x_pos;
+    //! Y Position
     Position y_pos;
 } Positions;
 
 /**
+ * @brief A 2D Velocity
+ * 
  * Defines the velocity of an object
  * in 2D space, in meters/second
 */
 typedef struct {
+    //! X Velocity
     Velocity x_vel;
+    //! Y Velocity
     Velocity y_vel;
 } Velocities;
 
@@ -166,6 +191,8 @@ int GetAngle(Angles *result);
  * @return A Positions structure, which
  * defines the Position of the Motor in
  * the lateral plane
+ * 
+ * @pre This is called precisely once every BTI
 */
 int GetTrolleyPosition(Positions *result);
 
@@ -180,6 +207,8 @@ int GetTrolleyPosition(Positions *result);
  * @return A Velocities structure, which
  * defines the velocity of the trolley in
  * the lateral plane
+ * 
+ * @pre This is called precisely once every BTI
 */
 int GetTrolleyVelocity(Velocities *result);
 

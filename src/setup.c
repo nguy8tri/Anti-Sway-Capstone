@@ -1,5 +1,14 @@
-// Copyright 2024 Anti-Sway Team (Nguyen, Tri; Espinola, Malachi;
-// Tevy, Vattanary; Hokenstad, Ethan; Neff, Callen)
+/**
+ * @file setup.c
+ * @author Anti-Sway Team: Nguyen, Tri; Espinola, Malachi;
+ * Tevy, Vattanary; Hokenstad, Ethan; Neff, Callen)
+ * @brief System Setup
+ * @version 0.1
+ * @date 2024-06-03
+ * 
+ * @copyright Copyright (c) 2024
+ * 
+ */
 
 #include <stdlib.h>
 

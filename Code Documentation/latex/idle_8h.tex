@@ -1,0 +1,73 @@
+\doxysection{src/idle.h File Reference}
+\hypertarget{idle_8h}{}\label{idle_8h}\index{src/idle.h@{src/idle.h}}
+
+
+Idle Mode Header.  
+
+
+This graph shows which files directly or indirectly include this file\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=226pt]{idle_8h__dep__incl}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{idle_8h_a59c3993b84f9015712777e355ac71129}{Idle\+Fork}} ()
+\item 
+int \mbox{\hyperlink{idle_8h_aa09de38e1e81e28a0ec7c6a4f982b165}{Idle\+Join}} ()
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Idle Mode Header. 
+
+\begin{DoxyAuthor}{Author}
+Anti-\/\+Sway Team\+: Nguyen, Tri; Espinola, Malachi; Tevy, Vattanary; Hokenstad, Ethan; Neff, Callen) 
+\end{DoxyAuthor}
+\begin{DoxyVersion}{Version}
+0.\+1 
+\end{DoxyVersion}
+\begin{DoxyDate}{Date}
+2024-\/06-\/03
+\end{DoxyDate}
+\begin{DoxyCopyright}{Copyright}
+Copyright (c) 2024 
+\end{DoxyCopyright}
+
+
+\doxysubsection{Function Documentation}
+\Hypertarget{idle_8h_a59c3993b84f9015712777e355ac71129}\index{idle.h@{idle.h}!IdleFork@{IdleFork}}
+\index{IdleFork@{IdleFork}!idle.h@{idle.h}}
+\doxysubsubsection{\texorpdfstring{IdleFork()}{IdleFork()}}
+{\footnotesize\ttfamily \label{idle_8h_a59c3993b84f9015712777e355ac71129} 
+int Idle\+Fork (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+Executes Idle Mode (concurrently), so we see how badly we messed up our code/sensors
+
+\begin{DoxyPostcond}{Postcondition}
+If its already running, does nothing
+\end{DoxyPostcond}
+\begin{DoxyReturn}{Returns}
+0 upon success, negative if error 
+\end{DoxyReturn}
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{idle_8h_a59c3993b84f9015712777e355ac71129_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{idle_8h_aa09de38e1e81e28a0ec7c6a4f982b165}\index{idle.h@{idle.h}!IdleJoin@{IdleJoin}}
+\index{IdleJoin@{IdleJoin}!idle.h@{idle.h}}
+\doxysubsubsection{\texorpdfstring{IdleJoin()}{IdleJoin()}}
+{\footnotesize\ttfamily \label{idle_8h_aa09de38e1e81e28a0ec7c6a4f982b165} 
+int Idle\+Join (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+Stops Idle Mode (concurrent process) and our pain
+
+\begin{DoxyReturn}{Returns}
+0 upon success, negative if error 
+\end{DoxyReturn}

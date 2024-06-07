@@ -1,5 +1,14 @@
-// Copyright 2024 Anti-Sway Team (Nguyen, Tri; Espinola, Malachi;
-// Tevy, Vattanary; Hokenstad, Ethan; Neff, Callen)
+/**
+ * @file tracking.h
+ * @author Anti-Sway Team: Nguyen, Tri; Espinola, Malachi;
+ * Tevy, Vattanary; Hokenstad, Ethan; Neff, Callen)
+ * @brief Tracking Mode Control Law Header
+ * @version 0.1
+ * @date 2024-06-03
+ * 
+ * @copyright Copyright (c) 2024
+ * 
+ */
 
 #ifndef TRACKING_H_
 #define TRACKING_H_
@@ -11,7 +20,7 @@
 /**
  * Executes Tracking Mode (concurrently)
  * 
- * @post If its already running, does nothing
+ * @pre Tracking Mode is not already running
  * 
  * @return 0 upon success, negative if error
 */

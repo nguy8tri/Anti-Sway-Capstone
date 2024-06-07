@@ -1,0 +1,93 @@
+\doxysection{src/setup.c File Reference}
+\hypertarget{setup_8c}{}\label{setup_8c}\index{src/setup.c@{src/setup.c}}
+
+
+System Setup.  
+
+
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include "{}My\+Rio.\+h"{}}\newline
+{\ttfamily \#include "{}T1.\+h"{}}\newline
+{\ttfamily \#include "{}record.\+h"{}}\newline
+{\ttfamily \#include "{}io.\+h"{}}\newline
+{\ttfamily \#include "{}error.\+h"{}}\newline
+{\ttfamily \#include "{}setup.\+h"{}}\newline
+Include dependency graph for setup.\+c\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{setup_8c__incl}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{setup_8c_a50ac2197010a8cf188eafc647122f1a3}{Setup}} ()
+\item 
+int \mbox{\hyperlink{setup_8c_ad8f28fefdab9c8f60c69dec040dfa363}{Shutdown}} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{setup_8c_a11614f44ef4d939bdd984953346a7572}\label{setup_8c_a11614f44ef4d939bdd984953346a7572} 
+static int {\bfseries error}
+\item 
+\Hypertarget{setup_8c_ae32b98ee67efb2636c7e7ba5c8d766b1}\label{setup_8c_ae32b98ee67efb2636c7e7ba5c8d766b1} 
+int {\bfseries u\+\_\+error}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+System Setup. 
+
+\begin{DoxyAuthor}{Author}
+Anti-\/\+Sway Team\+: Nguyen, Tri; Espinola, Malachi; Tevy, Vattanary; Hokenstad, Ethan; Neff, Callen) 
+\end{DoxyAuthor}
+\begin{DoxyVersion}{Version}
+0.\+1 
+\end{DoxyVersion}
+\begin{DoxyDate}{Date}
+2024-\/06-\/03
+\end{DoxyDate}
+\begin{DoxyCopyright}{Copyright}
+Copyright (c) 2024 
+\end{DoxyCopyright}
+
+
+\doxysubsection{Function Documentation}
+\Hypertarget{setup_8c_a50ac2197010a8cf188eafc647122f1a3}\index{setup.c@{setup.c}!Setup@{Setup}}
+\index{Setup@{Setup}!setup.c@{setup.c}}
+\doxysubsubsection{\texorpdfstring{Setup()}{Setup()}}
+{\footnotesize\ttfamily \label{setup_8c_a50ac2197010a8cf188eafc647122f1a3} 
+int Setup (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+Sets up the entire System
+
+\begin{DoxyReturn}{Returns}
+0 upon success, negative otherwise 
+\end{DoxyReturn}
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=209pt]{setup_8c_a50ac2197010a8cf188eafc647122f1a3_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{setup_8c_ad8f28fefdab9c8f60c69dec040dfa363}\index{setup.c@{setup.c}!Shutdown@{Shutdown}}
+\index{Shutdown@{Shutdown}!setup.c@{setup.c}}
+\doxysubsubsection{\texorpdfstring{Shutdown()}{Shutdown()}}
+{\footnotesize\ttfamily \label{setup_8c_ad8f28fefdab9c8f60c69dec040dfa363} 
+int Shutdown (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+Shuts the entire System down
+
+\begin{DoxyReturn}{Returns}
+0 upon success, negative otherwise 
+\end{DoxyReturn}
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{setup_8c_ad8f28fefdab9c8f60c69dec040dfa363_cgraph}
+\end{center}
+\end{figure}

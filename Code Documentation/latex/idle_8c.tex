@@ -1,0 +1,129 @@
+\doxysection{src/idle.c File Reference}
+\hypertarget{idle_8c}{}\label{idle_8c}\index{src/idle.c@{src/idle.c}}
+
+
+Idle Mode Implementation.  
+
+
+{\ttfamily \#include $<$stdbool.\+h$>$}\newline
+{\ttfamily \#include $<$pthread.\+h$>$}\newline
+{\ttfamily \#include $<$stdint.\+h$>$}\newline
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include "{}T1.\+h"{}}\newline
+{\ttfamily \#include "{}setup.\+h"{}}\newline
+{\ttfamily \#include "{}io.\+h"{}}\newline
+{\ttfamily \#include "{}thread-\/lib.\+h"{}}\newline
+{\ttfamily \#include "{}discrete-\/lib.\+h"{}}\newline
+{\ttfamily \#include "{}idle.\+h"{}}\newline
+Include dependency graph for idle.\+c\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{idle_8c__incl}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{idle_8c_affe74f468bbe096b398a01dcaa8ea3dd}\label{idle_8c_affe74f468bbe096b398a01dcaa8ea3dd} 
+\#define {\bfseries DECIMAL\+\_\+\+PRECISION}~"{}3"{}
+\item 
+\Hypertarget{idle_8c_acfa7ec22a16bd572e34dc56a2ce195fa}\label{idle_8c_acfa7ec22a16bd572e34dc56a2ce195fa} 
+\#define {\bfseries RAD\+\_\+2\+\_\+\+DEG}(value)~value \texorpdfstring{$\ast$}{*} 180.\+0 / \mbox{\hyperlink{thread-lib_8h_a598a3330b3c21701223ee0ca14316eca}{PI}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+static void \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{idle_8c_a5e05a5fb119e55f4d0b643d63b573812}{Idle\+Mode\+Thread}} (void \texorpdfstring{$\ast$}{*}resource)
+\item 
+int \mbox{\hyperlink{idle_8c_a59c3993b84f9015712777e355ac71129}{Idle\+Fork}} ()
+\item 
+int \mbox{\hyperlink{idle_8c_aa09de38e1e81e28a0ec7c6a4f982b165}{Idle\+Join}} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{idle_8c_a2a29cea2cce22171afec6fae8b1512fe}\label{idle_8c_a2a29cea2cce22171afec6fae8b1512fe} 
+pthread\+\_\+t {\bfseries idle\+\_\+thread}
+\item 
+\Hypertarget{idle_8c_abf4dd7d4f72545e3a4c3791318b9e3ac}\label{idle_8c_abf4dd7d4f72545e3a4c3791318b9e3ac} 
+\mbox{\hyperlink{struct_thread_resource}{Thread\+Resource}} {\bfseries resource}
+\item 
+\Hypertarget{idle_8c_a11614f44ef4d939bdd984953346a7572}\label{idle_8c_a11614f44ef4d939bdd984953346a7572} 
+static int {\bfseries error}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Idle Mode Implementation. 
+
+\begin{DoxyAuthor}{Author}
+Anti-\/\+Sway Team\+: Nguyen, Tri; Espinola, Malachi; Tevy, Vattanary; Hokenstad, Ethan; Neff, Callen) 
+\end{DoxyAuthor}
+\begin{DoxyVersion}{Version}
+0.\+1 
+\end{DoxyVersion}
+\begin{DoxyDate}{Date}
+2024-\/06-\/03
+\end{DoxyDate}
+\begin{DoxyCopyright}{Copyright}
+Copyright (c) 2024 
+\end{DoxyCopyright}
+
+
+\doxysubsection{Function Documentation}
+\Hypertarget{idle_8c_a59c3993b84f9015712777e355ac71129}\index{idle.c@{idle.c}!IdleFork@{IdleFork}}
+\index{IdleFork@{IdleFork}!idle.c@{idle.c}}
+\doxysubsubsection{\texorpdfstring{IdleFork()}{IdleFork()}}
+{\footnotesize\ttfamily \label{idle_8c_a59c3993b84f9015712777e355ac71129} 
+int Idle\+Fork (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+Executes Idle Mode (concurrently), so we see how badly we messed up our code/sensors
+
+\begin{DoxyPostcond}{Postcondition}
+If its already running, does nothing
+\end{DoxyPostcond}
+\begin{DoxyReturn}{Returns}
+0 upon success, negative if error 
+\end{DoxyReturn}
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{idle_8c_a59c3993b84f9015712777e355ac71129_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{idle_8c_aa09de38e1e81e28a0ec7c6a4f982b165}\index{idle.c@{idle.c}!IdleJoin@{IdleJoin}}
+\index{IdleJoin@{IdleJoin}!idle.c@{idle.c}}
+\doxysubsubsection{\texorpdfstring{IdleJoin()}{IdleJoin()}}
+{\footnotesize\ttfamily \label{idle_8c_aa09de38e1e81e28a0ec7c6a4f982b165} 
+int Idle\+Join (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+Stops Idle Mode (concurrent process) and our pain
+
+\begin{DoxyReturn}{Returns}
+0 upon success, negative if error 
+\end{DoxyReturn}
+\Hypertarget{idle_8c_a5e05a5fb119e55f4d0b643d63b573812}\index{idle.c@{idle.c}!IdleModeThread@{IdleModeThread}}
+\index{IdleModeThread@{IdleModeThread}!idle.c@{idle.c}}
+\doxysubsubsection{\texorpdfstring{IdleModeThread()}{IdleModeThread()}}
+{\footnotesize\ttfamily \label{idle_8c_a5e05a5fb119e55f4d0b643d63b573812} 
+static void \texorpdfstring{$\ast$}{*} Idle\+Mode\+Thread (\begin{DoxyParamCaption}\item[{void \texorpdfstring{$\ast$}{*}}]{resource}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+The Thread Function for Idle Mode
+
+
+\begin{DoxyParams}{Parameters}
+{\em resource} & A pointer to a Resource sturcture for Idle Mode\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+NULL 
+\end{DoxyReturn}
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{idle_8c_a5e05a5fb119e55f4d0b643d63b573812_cgraph}
+\end{center}
+\end{figure}

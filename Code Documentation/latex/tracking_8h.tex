@@ -1,0 +1,80 @@
+\doxysection{src/tracking.h File Reference}
+\hypertarget{tracking_8h}{}\label{tracking_8h}\index{src/tracking.h@{src/tracking.h}}
+
+
+Tracking Mode Control Law Header.  
+
+
+This graph shows which files directly or indirectly include this file\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=246pt]{tracking_8h__dep__incl}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{tracking_8h_a5b32344d5c07f1e78c46cca875e7af86}{Tracking\+Fork}} ()
+\item 
+int \mbox{\hyperlink{tracking_8h_a227acfbc56ccc8b4ef7715ce3634bd82}{Tracking\+Join}} ()
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Tracking Mode Control Law Header. 
+
+\begin{DoxyAuthor}{Author}
+Anti-\/\+Sway Team\+: Nguyen, Tri; Espinola, Malachi; Tevy, Vattanary; Hokenstad, Ethan; Neff, Callen) 
+\end{DoxyAuthor}
+\begin{DoxyVersion}{Version}
+0.\+1 
+\end{DoxyVersion}
+\begin{DoxyDate}{Date}
+2024-\/06-\/03
+\end{DoxyDate}
+\begin{DoxyCopyright}{Copyright}
+Copyright (c) 2024 
+\end{DoxyCopyright}
+
+
+\doxysubsection{Function Documentation}
+\Hypertarget{tracking_8h_a5b32344d5c07f1e78c46cca875e7af86}\index{tracking.h@{tracking.h}!TrackingFork@{TrackingFork}}
+\index{TrackingFork@{TrackingFork}!tracking.h@{tracking.h}}
+\doxysubsubsection{\texorpdfstring{TrackingFork()}{TrackingFork()}}
+{\footnotesize\ttfamily \label{tracking_8h_a5b32344d5c07f1e78c46cca875e7af86} 
+int Tracking\+Fork (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+Executes Tracking Mode (concurrently)
+
+\begin{DoxyPrecond}{Precondition}
+Tracking Mode is not already running
+\end{DoxyPrecond}
+\begin{DoxyReturn}{Returns}
+0 upon success, negative if error 
+\end{DoxyReturn}
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{tracking_8h_a5b32344d5c07f1e78c46cca875e7af86_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{tracking_8h_a227acfbc56ccc8b4ef7715ce3634bd82}\index{tracking.h@{tracking.h}!TrackingJoin@{TrackingJoin}}
+\index{TrackingJoin@{TrackingJoin}!tracking.h@{tracking.h}}
+\doxysubsubsection{\texorpdfstring{TrackingJoin()}{TrackingJoin()}}
+{\footnotesize\ttfamily \label{tracking_8h_a227acfbc56ccc8b4ef7715ce3634bd82} 
+int Tracking\+Join (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+Stops Tracking Mode (concurrent process)
+
+\begin{DoxyReturn}{Returns}
+0 upon success, negative if error 
+\end{DoxyReturn}
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=257pt]{tracking_8h_a227acfbc56ccc8b4ef7715ce3634bd82_cgraph}
+\end{center}
+\end{figure}

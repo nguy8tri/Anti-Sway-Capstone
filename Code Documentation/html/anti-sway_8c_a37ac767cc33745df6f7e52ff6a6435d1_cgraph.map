@@ -1,0 +1,9 @@
+<map id="AntiSwayControlLaw" name="AntiSwayControlLaw">
+<area shape="rect" id="Node000001" title="Executes an iteration of the feedback path for Anti&#45;Sway." alt="" coords="5,31,146,57"/>
+<area shape="rect" id="Node000002" href="$discrete-lib_8c.html#aaa5dc3cc4d9231b3245057fee9103d13" title=" " alt="" coords="194,31,236,57"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="146,41,178,41,178,47,146,47"/>
+<area shape="rect" id="Node000003" href="$discrete-lib_8c.html#a1edb32f5f618b2127621dc893eca00b0" title=" " alt="" coords="284,5,373,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="236,37,268,29,270,35,237,42"/>
+<area shape="rect" id="Node000004" href="$discrete-lib_8c.html#a86a96cf5ff64a3314aec2c32df34fc8e" title=" " alt="" coords="293,56,364,83"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="237,46,278,55,277,61,236,51"/>
+</map>

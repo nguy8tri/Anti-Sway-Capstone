@@ -1,0 +1,263 @@
+\doxysection{src/system.c File Reference}
+\hypertarget{system_8c}{}\label{system_8c}\index{src/system.c@{src/system.c}}
+
+
+System (Turing Machine)  
+
+
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include $<$stdbool.\+h$>$}\newline
+{\ttfamily \#include "{}My\+Rio.\+h"{}}\newline
+{\ttfamily \#include "{}T1.\+h"{}}\newline
+{\ttfamily \#include "{}thread-\/lib.\+h"{}}\newline
+{\ttfamily \#include "{}setup.\+h"{}}\newline
+{\ttfamily \#include "{}anti-\/sway.\+h"{}}\newline
+{\ttfamily \#include "{}tracking.\+h"{}}\newline
+{\ttfamily \#include "{}idle.\+h"{}}\newline
+{\ttfamily \#include "{}io.\+h"{}}\newline
+{\ttfamily \#include "{}error.\+h"{}}\newline
+{\ttfamily \#include "{}system.\+h"{}}\newline
+Include dependency graph for system.\+c\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{system_8c__incl}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \mbox{\hyperlink{system_8c_a808e5cd4979462d3bbe3070d7d147444}{States}} \{ \newline
+{\bfseries ANTI\+\_\+\+SWAY}
+, {\bfseries TRACKING}
+, {\bfseries IDLE}
+, {\bfseries MENU}
+, \newline
+{\bfseries ERROR}
+, {\bfseries START}
+, {\bfseries END}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+static int \mbox{\hyperlink{system_8c_a3af9843dcaf4749093935663833b7782}{Anti\+Sway\+State}} ()
+\item 
+static int \mbox{\hyperlink{system_8c_a89289f349b93e0a82d71620b6a24f669}{Tracking\+State}} ()
+\item 
+static int \mbox{\hyperlink{system_8c_af5f61976a22be427ca2e16fa8398a196}{Idle\+State}} ()
+\item 
+static int \mbox{\hyperlink{system_8c_ae6deed8eb4a20ab01743edb8128e04c1}{Menu\+State}} ()
+\item 
+static int \mbox{\hyperlink{system_8c_a2fe797d97469a1a9f3790da5c96fce9d}{Error\+State}} ()
+\item 
+static int \mbox{\hyperlink{system_8c_adc3ab61e4ca8d053b467b289bc3daea5}{Start\+State}} ()
+\item 
+static int \mbox{\hyperlink{system_8c_a18cede420c7127fd30faa8a42a706c86}{End\+State}} ()
+\item 
+int \mbox{\hyperlink{system_8c_ac77ad98d17b18e4ae128ee73209c6ca9}{System\+Exec}} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+static int(\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{system_8c_adb70b98f8761af28098a1c076211258a}{states}} \mbox{[}$\,$\mbox{]})()
+\item 
+\Hypertarget{system_8c_a916fe7fdc3b0ac19a1a096f4943ce954}\label{system_8c_a916fe7fdc3b0ac19a1a096f4943ce954} 
+static \mbox{\hyperlink{system_8c_a808e5cd4979462d3bbe3070d7d147444}{States}} {\bfseries state} = START
+\item 
+\Hypertarget{system_8c_a11614f44ef4d939bdd984953346a7572}\label{system_8c_a11614f44ef4d939bdd984953346a7572} 
+static int {\bfseries error}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+System (Turing Machine) 
+
+\begin{DoxyAuthor}{Author}
+Anti-\/\+Sway Team\+: Nguyen, Tri; Espinola, Malachi; Tevy, Vattanary; Hokenstad, Ethan; Neff, Callen) 
+\end{DoxyAuthor}
+\begin{DoxyVersion}{Version}
+0.\+1 
+\end{DoxyVersion}
+\begin{DoxyDate}{Date}
+2024-\/06-\/03
+\end{DoxyDate}
+\begin{DoxyCopyright}{Copyright}
+Copyright (c) 2024 
+\end{DoxyCopyright}
+
+
+\doxysubsection{Enumeration Type Documentation}
+\Hypertarget{system_8c_a808e5cd4979462d3bbe3070d7d147444}\index{system.c@{system.c}!States@{States}}
+\index{States@{States}!system.c@{system.c}}
+\doxysubsubsection{\texorpdfstring{States}{States}}
+{\footnotesize\ttfamily \label{system_8c_a808e5cd4979462d3bbe3070d7d147444} 
+enum \mbox{\hyperlink{system_8c_a808e5cd4979462d3bbe3070d7d147444}{States}}}
+
+The possible states 
+
+\doxysubsection{Function Documentation}
+\Hypertarget{system_8c_a3af9843dcaf4749093935663833b7782}\index{system.c@{system.c}!AntiSwayState@{AntiSwayState}}
+\index{AntiSwayState@{AntiSwayState}!system.c@{system.c}}
+\doxysubsubsection{\texorpdfstring{AntiSwayState()}{AntiSwayState()}}
+{\footnotesize\ttfamily \label{system_8c_a3af9843dcaf4749093935663833b7782} 
+static int Anti\+Sway\+State (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Executes the Anti-\/\+Sway State, which includes 1) Running Anti-\/\+Sway Mode 2) Executing Transitions from this State
+
+\begin{DoxyReturn}{Returns}
+0 upon success, negative otherwise 
+\end{DoxyReturn}
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{system_8c_a3af9843dcaf4749093935663833b7782_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{system_8c_a18cede420c7127fd30faa8a42a706c86}\index{system.c@{system.c}!EndState@{EndState}}
+\index{EndState@{EndState}!system.c@{system.c}}
+\doxysubsubsection{\texorpdfstring{EndState()}{EndState()}}
+{\footnotesize\ttfamily \label{system_8c_a18cede420c7127fd30faa8a42a706c86} 
+static int End\+State (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Executes the End State, which includes 1) Stopping the System 2) Stopping all Concurrent Processes 3) Deallocating all Resources
+
+\begin{DoxyReturn}{Returns}
+0 upon success, negative otherwise 
+\end{DoxyReturn}
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{system_8c_a18cede420c7127fd30faa8a42a706c86_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{system_8c_a2fe797d97469a1a9f3790da5c96fce9d}\index{system.c@{system.c}!ErrorState@{ErrorState}}
+\index{ErrorState@{ErrorState}!system.c@{system.c}}
+\doxysubsubsection{\texorpdfstring{ErrorState()}{ErrorState()}}
+{\footnotesize\ttfamily \label{system_8c_a2fe797d97469a1a9f3790da5c96fce9d} 
+static int Error\+State (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Executes the Error State, which includes 1) Stopping the System 2) Stopping any Concurrent Processes 3) Deallocating all Resources 4) Outputting the error
+
+\begin{DoxyReturn}{Returns}
+The error code from the failure 
+\end{DoxyReturn}
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{system_8c_a2fe797d97469a1a9f3790da5c96fce9d_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{system_8c_af5f61976a22be427ca2e16fa8398a196}\index{system.c@{system.c}!IdleState@{IdleState}}
+\index{IdleState@{IdleState}!system.c@{system.c}}
+\doxysubsubsection{\texorpdfstring{IdleState()}{IdleState()}}
+{\footnotesize\ttfamily \label{system_8c_af5f61976a22be427ca2e16fa8398a196} 
+static int Idle\+State (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Executes the Idle State, which includes 1) Doing Nothing 2) Executing Transitions from this State
+
+\begin{DoxyReturn}{Returns}
+0 upon success, negative otherwise 
+\end{DoxyReturn}
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=250pt]{system_8c_af5f61976a22be427ca2e16fa8398a196_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{system_8c_ae6deed8eb4a20ab01743edb8128e04c1}\index{system.c@{system.c}!MenuState@{MenuState}}
+\index{MenuState@{MenuState}!system.c@{system.c}}
+\doxysubsubsection{\texorpdfstring{MenuState()}{MenuState()}}
+{\footnotesize\ttfamily \label{system_8c_ae6deed8eb4a20ab01743edb8128e04c1} 
+static int Menu\+State (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Executes the Menu State, which includes 1) Prompting for the next state 2) Executing the next state
+
+\begin{DoxyReturn}{Returns}
+0 upon success, negative otherwise 
+\end{DoxyReturn}
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{system_8c_ae6deed8eb4a20ab01743edb8128e04c1_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{system_8c_adc3ab61e4ca8d053b467b289bc3daea5}\index{system.c@{system.c}!StartState@{StartState}}
+\index{StartState@{StartState}!system.c@{system.c}}
+\doxysubsubsection{\texorpdfstring{StartState()}{StartState()}}
+{\footnotesize\ttfamily \label{system_8c_adc3ab61e4ca8d053b467b289bc3daea5} 
+static int Start\+State (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Executes the Start State, which includes 1) Setting up the System 2) Executing the next state Note\+: This is a once-\/only state
+
+\begin{DoxyReturn}{Returns}
+0 upon success, negative otherwise 
+\end{DoxyReturn}
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=305pt]{system_8c_adc3ab61e4ca8d053b467b289bc3daea5_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{system_8c_ac77ad98d17b18e4ae128ee73209c6ca9}\index{system.c@{system.c}!SystemExec@{SystemExec}}
+\index{SystemExec@{SystemExec}!system.c@{system.c}}
+\doxysubsubsection{\texorpdfstring{SystemExec()}{SystemExec()}}
+{\footnotesize\ttfamily \label{system_8c_ac77ad98d17b18e4ae128ee73209c6ca9} 
+int System\+Exec (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+Executes the entire System
+
+\begin{DoxyReturn}{Returns}
+0 upon success, negative otherwise 
+\end{DoxyReturn}
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{system_8c_ac77ad98d17b18e4ae128ee73209c6ca9_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{system_8c_a89289f349b93e0a82d71620b6a24f669}\index{system.c@{system.c}!TrackingState@{TrackingState}}
+\index{TrackingState@{TrackingState}!system.c@{system.c}}
+\doxysubsubsection{\texorpdfstring{TrackingState()}{TrackingState()}}
+{\footnotesize\ttfamily \label{system_8c_a89289f349b93e0a82d71620b6a24f669} 
+static int Tracking\+State (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Executes the Tracking Mode State, which includes 1) Running Tracking Mode 2) Executing Transitions from this State
+
+\begin{DoxyReturn}{Returns}
+0 upon success, negative otherwise 
+\end{DoxyReturn}
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{system_8c_a89289f349b93e0a82d71620b6a24f669_cgraph}
+\end{center}
+\end{figure}
+
+
+\doxysubsection{Variable Documentation}
+\Hypertarget{system_8c_adb70b98f8761af28098a1c076211258a}\index{system.c@{system.c}!states@{states}}
+\index{states@{states}!system.c@{system.c}}
+\doxysubsubsection{\texorpdfstring{states}{states}}
+{\footnotesize\ttfamily \label{system_8c_adb70b98f8761af28098a1c076211258a} 
+int(\texorpdfstring{$\ast$}{*} states\mbox{[}$\,$\mbox{]})() (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{=\ \{\mbox{\hyperlink{system_8c_a3af9843dcaf4749093935663833b7782}{AntiSwayState}},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{system_8c_a89289f349b93e0a82d71620b6a24f669}{TrackingState}},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{system_8c_af5f61976a22be427ca2e16fa8398a196}{IdleState}},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{system_8c_ae6deed8eb4a20ab01743edb8128e04c1}{MenuState}},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{system_8c_a2fe797d97469a1a9f3790da5c96fce9d}{ErrorState}},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{system_8c_adc3ab61e4ca8d053b467b289bc3daea5}{StartState}},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{system_8c_a18cede420c7127fd30faa8a42a706c86}{EndState}}\}}
+
+\end{DoxyCode}
