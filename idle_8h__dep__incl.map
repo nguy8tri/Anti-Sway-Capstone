@@ -1,7 +1,7 @@
-<map id="C:/Users/tring/PycharmProjects/Capstone&#45;Stuff/src/idle.h" name="C:/Users/tring/PycharmProjects/Capstone&#45;Stuff/src/idle.h">
-<area shape="rect" id="Node000001" title="Idle Mode Header." alt="" coords="120,5,325,48"/>
-<area shape="rect" id="Node000002" href="$idle_8c.html" title="Idle Mode Implementation." alt="" coords="5,96,211,139"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="186,60,136,98,133,93,183,55"/>
-<area shape="rect" id="Node000003" href="$system_8c.html" title="System (Turing Machine)" alt="" coords="235,96,440,139"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="263,55,312,93,309,98,259,60"/>
+<map id="src/idle.h" name="src/idle.h">
+<area shape="rect" id="Node000001" title="Idle Mode Header." alt="" coords="60,5,134,32"/>
+<area shape="rect" id="Node000002" href="$idle_8c.html" title="Idle Mode Implementation." alt="" coords="5,80,80,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="80,46,54,81,50,78,76,43"/>
+<area shape="rect" id="Node000003" href="$system_8c.html" title="System (Turing Machine)" alt="" coords="103,80,201,107"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="118,43,145,78,140,81,114,46"/>
 </map>
