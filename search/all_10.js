@@ -15,7 +15,8 @@ var searchData=
   ['states_12',['States',['../system_8c.html#a808e5cd4979462d3bbe3070d7d147444',1,'system.c']]],
   ['states_13',['states',['../system_8c.html#adb70b98f8761af28098a1c076211258a',1,'system.c']]],
   ['stop_5fthread_14',['STOP_THREAD',['../thread-lib_8h.html#a01a443ae9ae39278e1b359175835e97a',1,'thread-lib.h']]],
-  ['system_2ec_15',['system.c',['../system_8c.html',1,'']]],
-  ['system_2eh_16',['system.h',['../system_8h.html',1,'']]],
-  ['systemexec_17',['SystemExec',['../system_8c.html#ac77ad98d17b18e4ae128ee73209c6ca9',1,'SystemExec():&#160;system.c'],['../system_8h.html#ac77ad98d17b18e4ae128ee73209c6ca9',1,'SystemExec():&#160;system.c']]]
+  ['sway_20capstone_15',['Anti-Sway Capstone',['../index.html',1,'']]],
+  ['system_2ec_16',['system.c',['../system_8c.html',1,'']]],
+  ['system_2eh_17',['system.h',['../system_8h.html',1,'']]],
+  ['systemexec_18',['SystemExec',['../system_8c.html#ac77ad98d17b18e4ae128ee73209c6ca9',1,'SystemExec():&#160;system.c'],['../system_8h.html#ac77ad98d17b18e4ae128ee73209c6ca9',1,'SystemExec():&#160;system.c']]]
 ];
